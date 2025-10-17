@@ -117,6 +117,19 @@ In the crypto world, "HODL" means to hold onto your investments through market v
 
 ## <a name="quick-start">🤸 Quick Start</a>
 
+### 🚀 **GitHub Repository**
+
+**Repository**: [github.com/YOUR_USERNAME/hodl-portfolio-tracker](https://github.com/YOUR_USERNAME/hodl-portfolio-tracker)  
+**Live Demo**: [Coming Soon]  
+**Hackathon**: START HACK 2025 - Team HODL
+
+### 📥 **Clone the Repository**
+
+```bash
+git clone https://github.com/YOUR_USERNAME/hodl-portfolio-tracker.git
+cd hodl-portfolio-tracker
+```
+
 Follow these steps to set up the project locally on your machine.
 
 **Prerequisites**
@@ -194,6 +207,23 @@ npx inngest-cli@latest dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
+
+### 🔄 **Development Workflow**
+
+```bash
+# Switch to hackathon development branch
+git checkout hackathon-development
+
+# Make your changes, then commit
+git add .
+git commit -m "✨ Add new feature for hackathon"
+
+# Push to GitHub
+git push origin hackathon-development
+
+# Create a pull request for review
+# Merge to main when ready for demo
+```
 
 ## 🏆 START HACK 2025 - Team HODL
 
