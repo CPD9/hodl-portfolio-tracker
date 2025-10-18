@@ -113,7 +113,7 @@ const AIChatOverlay: React.FC = () => {
             <CardHeader className="flex-shrink-0 pb-3 border-b border-gray-700">
               <CardTitle className="flex items-center gap-2 text-yellow-500">
                 <Bot size={20} />
-                HODL AI Assistant
+                Hodlini - Your Crypto Bro
               </CardTitle>
             </CardHeader>
             
