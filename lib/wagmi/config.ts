@@ -9,6 +9,9 @@ export const wagmiConfig = createConfig({
     coinbaseWallet({
       appName: 'HODL Portfolio Tracker',
       preference: 'smartWalletOnly', // Base mini apps use Smart Wallets
+      headlessMode: false,
+      reloadOnDisconnect: false,
+      enableMobileWalletLink: true,
     }),
   ],
   ssr: true,
