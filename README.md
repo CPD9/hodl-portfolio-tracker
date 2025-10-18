@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-    <h1>🚀 HODL - Advanced Stock & Crypto Tracker</h1>
+    <h1>HODL - Advanced Stock & Crypto Tracker</h1>
   <br />
 
   <div>

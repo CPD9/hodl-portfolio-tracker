@@ -1,10 +1,13 @@
-import TradingViewWidget from "@/components/TradingViewWidget";
 import {
     HEATMAP_WIDGET_CONFIG,
     MARKET_DATA_WIDGET_CONFIG,
     MARKET_OVERVIEW_WIDGET_CONFIG,
     TOP_STORIES_WIDGET_CONFIG
 } from "@/lib/constants";
+
+import AITradingCompanion from "@/components/AITradingCompanion";
+import BaseIntegration from "@/components/BaseIntegration";
+import TradingViewWidget from "@/components/TradingViewWidget";
 import {sendDailyNewsSummary} from "@/lib/inngest/functions";
 
 const Home = () => {
@@ -12,6 +15,26 @@ const Home = () => {
 
     return (
         <div className="flex min-h-screen home-wrapper">
+          {/* Base Integration Section */}
+          <section className="w-full mb-8">
+            <div className="container mx-auto px-4">
+              <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
+                Base Chain Integration
+              </h2>
+              <BaseIntegration />
+            </div>
+          </section>
+
+          {/* AI Trading Companion Section */}
+          <section className="w-full mb-8">
+            <div className="container mx-auto px-4">
+              <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center">
+                AI Trading Companion
+              </h2>
+              <AITradingCompanion />
+            </div>
+          </section>
+
           <section className="grid w-full gap-8 home-section">
               <div className="md:col-span-1 xl:col-span-1">
                   <TradingViewWidget
