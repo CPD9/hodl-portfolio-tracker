@@ -25,6 +25,12 @@
    <div align="center">
      <strong>Team HODL</strong> presents an AI-powered stock & crypto tracking platform with seamless Base blockchain integration for the next generation of traders and investors.
     </div>
+
+  <div align="center" style="margin-top: 20px;">
+    <a href="https://hodl-portfolio-tracker.vercel.app" target="_blank">
+      <img src="https://img.shields.io/badge/🚀_Live_Demo-Visit_HODL-FDD458?style=for-the-badge" alt="Live Demo"/>
+    </a>
+  </div>
 </div>
 
 ## 📋 <a name="table">Table of Contents</a>
@@ -130,7 +136,7 @@ In the crypto world, "HODL" means to hold onto your investments through market v
 ### 🚀 **GitHub Repository**
 
 **Repository**: [github.com/YOUR_USERNAME/hodl-portfolio-tracker](https://github.com/YOUR_USERNAME/hodl-portfolio-tracker)  
-**Live Demo**: [Coming Soon]  
+**Live Demo**: [https://hodl-portfolio-tracker.vercel.app](https://hodl-portfolio-tracker.vercel.app) 🌐  
 **Hackathon**: START HACK 2025 - Team HODL
 
 ### 📥 **Clone the Repository**

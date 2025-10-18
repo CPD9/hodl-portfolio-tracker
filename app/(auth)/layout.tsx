@@ -28,8 +28,8 @@ const Layout = async ({ children }: { children : React.ReactNode }) => {
                     </blockquote>
                     <div className="flex items-center justify-between">
                         <div>
-                            <cite className="auth-testimonial-author">- Ethan R.</cite>
-                            <p className="max-md:text-xs text-gray-500">Retail Investor</p>
+                            <cite className="auth-testimonial-author">- Kamsy U.</cite>
+                            <p className="max-md:text-xs text-gray-500">Not A Finance Bro, But Still Wants To HODL</p>
                         </div>
                         <div className="flex items-center gap-0.5">
                             {[1, 2, 3, 4, 5].map((star) => (
