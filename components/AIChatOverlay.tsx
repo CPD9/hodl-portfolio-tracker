@@ -8,7 +8,15 @@ import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
 import { cn } from '@/lib/utils';
 
-const AIChatOverlay: React.FC = () => {
+interface AIChatOverlayProps {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -129,8 +137,8 @@ const AIChatOverlay: React.FC = () => {
                     )}
                   >
                     {message.role === 'assistant' && (
-                      <div className="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                        <Bot size={14} className="text-black" />
+                      <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
+                        <Bot size={14} className="text-gray-200" />
                       </div>
                     )}
                     
@@ -149,8 +157,8 @@ const AIChatOverlay: React.FC = () => {
                     </div>
                     
                     {message.role === 'user' && (
-                      <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                        <User size={14} className="text-gray-200" />
+                      <div className="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                        <span className="text-yellow-900 text-xs font-bold">{user.name[0]}</span>
                       </div>
                     )}
                   </div>
@@ -158,8 +166,8 @@ const AIChatOverlay: React.FC = () => {
                 
                 {isLoading && (
                   <div className="flex gap-2 justify-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                      <Bot size={14} className="text-black" />
+                    <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
+                      <Bot size={14} className="text-gray-200" />
                     </div>
                     <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100">
                       <div className="flex space-x-1">
