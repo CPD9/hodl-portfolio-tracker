@@ -2,6 +2,7 @@
 
 import { Link as LinkIcon, TrendingDown, TrendingUp } from 'lucide-react';
 import React from 'react';
+import Link from 'next/link';
 
 interface SectorCorrelationWidgetProps {
   sector: string | null;
@@ -67,63 +68,69 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
 
       {/* Crypto List */}
       <div className="space-y-3">
-        {cryptos.map((crypto) => (
-          <div
-            key={crypto.symbol}
-            onClick={() => onCryptoSelect(crypto.symbol)}
-            className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all ${
-              selectedCrypto === crypto.symbol
-                ? 'bg-gray-600 ring-2 ring-blue-500'
-                : 'bg-gray-700 hover:bg-gray-600'
-            }`}
-          >
-            <div className="flex items-center flex-1 space-x-3">
-              {/* Checkbox */}
-              <input
-                type="checkbox"
-                checked={selectedCrypto === crypto.symbol}
-                onChange={() => onCryptoSelect(crypto.symbol)}
-                className="h-5 w-5 rounded border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              />
-              
-              <div className="flex-1">
-                <div className="flex items-center space-x-2">
-                  <h4 className="text-sm font-semibold text-gray-100">
-                    {crypto.symbol.replace('BINANCE:', '').replace('USD', '')}
-                  </h4>
-                  <span className="text-xs text-gray-400">{crypto.name}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  MCap: {formatMarketCap(crypto.marketCap)}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <div className="text-right">
-                <p className="text-sm font-mono text-gray-100">
-                  {formatPrice(crypto.price)}
-                </p>
-                <div
-                  className={`flex items-center space-x-1 text-xs ${
-                    crypto.change24h >= 0 ? 'text-green-400' : 'text-red-400'
-                  }`}
+        {cryptos.map((crypto) => {
+          const cryptoSlug = crypto.symbol.replace('BINANCE:', '').replace('USD', '');
+          
+          return (
+            <div
+              key={crypto.symbol}
+              className={`flex items-center justify-between p-4 rounded-lg transition-all ${
+                selectedCrypto === crypto.symbol
+                  ? 'bg-gray-600 ring-2 ring-blue-500'
+                  : 'bg-gray-700 hover:bg-gray-600'
+              }`}
+            >
+              <div className="flex items-center flex-1 space-x-3">
+                {/* Checkbox */}
+                <input
+                  type="checkbox"
+                  checked={selectedCrypto === crypto.symbol}
+                  onChange={() => onCryptoSelect(crypto.symbol)}
+                  className="h-5 w-5 rounded border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
+                  onClick={(e) => e.stopPropagation()}
+                />
+                
+                <Link 
+                  href={`/crypto/${crypto.symbol}`}
+                  className="flex-1 hover:opacity-80 transition-opacity"
                 >
-                  {crypto.change24h >= 0 ? (
-                    <TrendingUp className="w-3 h-3" />
-                  ) : (
-                    <TrendingDown className="w-3 h-3" />
-                  )}
-                  <span>
-                    {crypto.change24h >= 0 ? '+' : ''}
-                    {crypto.change24h.toFixed(2)}%
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <h4 className="text-sm font-semibold text-gray-100">
+                      {cryptoSlug}
+                    </h4>
+                    <span className="text-xs text-gray-400">{crypto.name}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    MCap: {formatMarketCap(crypto.marketCap)}
+                  </p>
+                </Link>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="text-right">
+                  <p className="text-sm font-mono text-gray-100">
+                    {formatPrice(crypto.price)}
+                  </p>
+                  <div
+                    className={`flex items-center space-x-1 text-xs ${
+                      crypto.change24h >= 0 ? 'text-green-400' : 'text-red-400'
+                    }`}
+                  >
+                    {crypto.change24h >= 0 ? (
+                      <TrendingUp className="w-3 h-3" />
+                    ) : (
+                      <TrendingDown className="w-3 h-3" />
+                    )}
+                    <span>
+                      {crypto.change24h >= 0 ? '+' : ''}
+                      {crypto.change24h.toFixed(2)}%
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Info Footer */}
