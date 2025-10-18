@@ -28,7 +28,17 @@ const AIChatOverlay: React.FC = () => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [isOpen]);
+    
+    // Add welcome message when chat is first opened
+    if (isOpen && messages.length === 0) {
+      const welcomeMessage: ChatMessage = {
+        role: 'assistant',
+        content: 'Hello! I\'m Hodlini, your personal crypto assistant. 🚀\n\nI help you make the transition from traditional stocks to cryptocurrencies by recommending coins that match the themes of your stock investments.\n\nFeel free to ask me about crypto recommendations, portfolio strategies, or anything related to trading!',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [isOpen, messages.length]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -110,14 +120,6 @@ const AIChatOverlay: React.FC = () => {
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
               {/* Messages Container */}
               <div className="flex-1 overflow-y-auto space-y-4 p-4 pr-2 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500">
-                {messages.length === 0 && (
-                  <div className="text-center text-gray-400 py-8">
-                    <Bot className="mx-auto mb-2" size={32} />
-                    <p>Hello! I'm your HODL AI assistant.</p>
-                    <p className="text-sm mt-1">Ask me about stocks, crypto, or portfolio management!</p>
-                  </div>
-                )}
-                
                 {messages.map((message, index) => (
                   <div
                     key={index}
