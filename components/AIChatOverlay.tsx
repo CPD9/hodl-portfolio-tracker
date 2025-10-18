@@ -109,7 +109,7 @@ const AIChatOverlay: React.FC = () => {
             
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
               {/* Messages Container */}
-              <div className="flex-1 overflow-y-auto space-y-4 p-4 pr-2">
+              <div className="flex-1 overflow-y-auto space-y-4 p-4 pr-2 scrollbar-thin scrollbar-track-gray-800 scrollbar-thumb-gray-600 hover:scrollbar-thumb-gray-500">
                 {messages.length === 0 && (
                   <div className="text-center text-gray-400 py-8">
                     <Bot className="mx-auto mb-2" size={32} />
