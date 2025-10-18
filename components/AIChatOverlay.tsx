@@ -137,8 +137,12 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                     )}
                   >
                     {message.role === 'assistant' && (
-                      <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                        <Bot size={14} className="text-gray-200" />
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                        <img 
+                          src="/assets/characters/idle.gif" 
+                          alt="Hodlini" 
+                          className="w-6 h-6 object-cover"
+                        />
                       </div>
                     )}
                     
@@ -166,8 +170,12 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                 
                 {isLoading && (
                   <div className="flex gap-2 justify-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                      <Bot size={14} className="text-gray-200" />
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                      <img 
+                        src="/assets/characters/idle.gif" 
+                        alt="Hodlini" 
+                        className="w-6 h-6 object-cover"
+                      />
                     </div>
                     <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100">
                       <div className="flex space-x-1">
