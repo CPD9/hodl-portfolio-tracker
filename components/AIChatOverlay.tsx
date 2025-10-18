@@ -24,6 +24,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userContext, setUserContext] = useState<string | null>(null);
   const [isLoadingContext, setIsLoadingContext] = useState(false);
+  const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,20 +38,27 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
   // Fetch user context when chat opens
   useEffect(() => {
-    if (isOpen && !userContext && !isLoadingContext) {
+    if (isOpen && !isLoadingContext && !contextLoadedRef.current) {
       setIsLoadingContext(true);
+      contextLoadedRef.current = true; // Mark as loaded for this session
       getUserContext(user.id)
         .then((context) => {
           setUserContext(context);
         })
         .catch((error) => {
           console.error('Error fetching user context:', error);
+          contextLoadedRef.current = false; // Reset on error to allow retry
         })
         .finally(() => {
           setIsLoadingContext(false);
         });
     }
-  }, [isOpen, user.id, userContext, isLoadingContext]);
+    
+    // Reset context loaded flag when chat is closed
+    if (!isOpen && contextLoadedRef.current) {
+      contextLoadedRef.current = false;
+    }
+  }, [isOpen, user.id, isLoadingContext]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
