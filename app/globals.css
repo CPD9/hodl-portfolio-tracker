@@ -518,3 +518,78 @@
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
 }
+
+/* Base Mini App - Mobile Optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .header-wrapper {
+    gap: 0.5rem;
+  }
+  
+  /* Trading interface mobile */
+  .trading-interface {
+    max-width: 100%;
+    padding: 1rem;
+  }
+  
+  /* Portfolio cards mobile */
+  .portfolio-card {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  /* Charts mobile */
+  .custom-chart {
+    height: 300px !important;
+  }
+  
+  /* Navigation mobile */
+  .nav-items {
+    display: none;
+  }
+  
+  /* Reduce font sizes on mobile */
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* Wallet connect mobile */
+  .onchain-wallet {
+    font-size: 0.875rem;
+  }
+}
+
+/* PWA-specific styles */
+@media (display-mode: standalone) {
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  
+  /* Add safe area padding for notched devices */
+  .header {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* OnchainKit custom styling */
+.ock-wallet {
+  --ock-bg-default: #1f2937;
+  --ock-bg-alternate: #111827;
+  --ock-text-primary: #f9fafb;
+  --ock-text-secondary: #9ca3af;
+  --ock-accent: #FFB800;
+}

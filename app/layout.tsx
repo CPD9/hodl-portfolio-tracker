@@ -1,9 +1,11 @@
 import "./globals.css";
+import '@coinbase/onchainkit/styles.css';
 
 import { Geist, Geist_Mono } from "next/font/google";
 
 import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/sonner"
+import { OnchainProviders } from "@/components/OnchainProviders";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +22,16 @@ export const metadata: Metadata = {
   description: "AI-powered stock & crypto tracking platform with Base blockchain integration. Track real-time prices, get personalized alerts, and explore detailed insights for both traditional and digital assets.",
   keywords: ["HODL", "START HACK", "Base", "Coinbase", "crypto", "stocks", "portfolio", "trading", "Web3", "DeFi"],
   authors: [{ name: "Team HODL - START HACK 2025" }],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'HODL',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: '#FFB800',
   openGraph: {
     title: "HODL - Advanced Portfolio Tracker",
     description: "AI-powered stock & crypto tracking platform with Base blockchain integration",
@@ -37,8 +49,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
-        <Toaster />
+        <OnchainProviders>
+          {children}
+          <Toaster />
+        </OnchainProviders>
       </body>
     </html>
   );
