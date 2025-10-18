@@ -24,17 +24,21 @@ export default function CryptoDetailsClient({
   const [currentPrice, setCurrentPrice] = useState(0);
   const [cryptoData, setCryptoData] = useState<any>(null);
   
-  // Convert symbol format: BINANCE:BTCUSD -> BTC
-  const cleanSymbol = symbol.replace('BINANCE:', '').replace('USD', '').replace('USDT', '');
-  // For TradingView, use the full symbol
+  // Convert symbol format to clean symbol (BTC, ETH, etc.)
+  // Handle both formats: "BTC" and "BINANCE:BTCUSD"
+  const cleanSymbol = symbol.includes(':') 
+    ? symbol.replace('BINANCE:', '').replace('USD', '').replace('USDT', '')
+    : symbol;
+  
+  // For TradingView, always use the full format
   const tradingViewSymbol = symbol.includes(':') ? symbol : `BINANCE:${symbol}USD`;
 
   useEffect(() => {
     const fetchCryptoData = async () => {
       try {
-        // Fetch price data from CoinGecko
-        const coinId = cleanSymbol.toLowerCase();
-        const price = await getCryptoPrice(coinId);
+        // Use cleanSymbol (e.g., "BTC") for CoinGecko API
+        // getCryptoPrice will handle the conversion to CoinGecko ID
+        const price = await getCryptoPrice(cleanSymbol.toLowerCase());
         setCurrentPrice(price || 0);
         setCryptoData({ symbol: cleanSymbol, price });
       } catch (error) {
