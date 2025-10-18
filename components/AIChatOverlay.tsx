@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
+import { getUserContext } from '@/lib/actions/user-context.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -21,6 +22,8 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userContext, setUserContext] = useState<string | null>(null);
+  const [isLoadingContext, setIsLoadingContext] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,6 +34,23 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Fetch user context when chat opens
+  useEffect(() => {
+    if (isOpen && !userContext && !isLoadingContext) {
+      setIsLoadingContext(true);
+      getUserContext(user.id)
+        .then((context) => {
+          setUserContext(context);
+        })
+        .catch((error) => {
+          console.error('Error fetching user context:', error);
+        })
+        .finally(() => {
+          setIsLoadingContext(false);
+        });
+    }
+  }, [isOpen, user.id, userContext, isLoadingContext]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -63,7 +83,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
-      const assistantMessage = await sendChatMessage(updatedMessages);
+      const assistantMessage = await sendChatMessage(updatedMessages, userContext);
       
       if (assistantMessage) {
         setMessages([...updatedMessages, assistantMessage]);
@@ -123,6 +143,16 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                 <Bot size={20} />
                 Hodlini - Your Crypto Bro
               </CardTitle>
+              {isLoadingContext && (
+                <p className="text-xs text-gray-400 mt-1">
+                  Loading your investment profile...
+                </p>
+              )}
+              {userContext && !isLoadingContext && (
+                <p className="text-xs text-green-400 mt-1">
+                  ✓ Personalized context loaded
+                </p>
+              )}
             </CardHeader>
             
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
