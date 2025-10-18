@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner"
+import AIChatOverlay from "@/components/AIChatOverlay"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <AIChatOverlay />
       </body>
     </html>
   );
