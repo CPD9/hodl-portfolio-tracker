@@ -137,3 +137,23 @@ export const getFormattedTodayDate = () => new Date().toLocaleDateString('en-US'
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+// Serialize MongoDB objects to plain objects for client components
+export const serializeMongoObject = (obj: any) => {
+  if (!obj || typeof obj !== 'object') return obj;
+  
+  const serialized: any = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (key === '_id' || key === '__v') continue; // Skip MongoDB internal fields
+    
+    if (value instanceof Date) {
+      serialized[key] = value.toISOString();
+    } else if (typeof value === 'object' && value !== null) {
+      serialized[key] = serializeMongoObject(value);
+    } else {
+      serialized[key] = value;
+    }
+  }
+  
+  return serialized;
+};

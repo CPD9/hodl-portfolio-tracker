@@ -1,17 +1,28 @@
+import {
+  BASELINE_WIDGET_CONFIG,
+  CANDLE_CHART_WIDGET_CONFIG,
+  COMPANY_FINANCIALS_WIDGET_CONFIG,
+  COMPANY_PROFILE_WIDGET_CONFIG,
+  SYMBOL_INFO_WIDGET_CONFIG,
+  TECHNICAL_ANALYSIS_WIDGET_CONFIG,
+} from "@/lib/constants";
+
 import TradingViewWidget from "@/components/TradingViewWidget";
 import WatchlistButton from "@/components/WatchlistButton";
-import {
-  SYMBOL_INFO_WIDGET_CONFIG,
-  CANDLE_CHART_WIDGET_CONFIG,
-  BASELINE_WIDGET_CONFIG,
-  TECHNICAL_ANALYSIS_WIDGET_CONFIG,
-  COMPANY_PROFILE_WIDGET_CONFIG,
-  COMPANY_FINANCIALS_WIDGET_CONFIG,
-} from "@/lib/constants";
+import { auth } from "@/lib/better-auth/auth";
+import { headers } from "next/headers";
+import { isInWatchlist } from "@/lib/actions/watchlist.actions";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
   const { symbol } = await params;
   const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
+
+  // Get user session and check if stock is in watchlist
+  const session = await auth.api.getSession({ headers: await headers() });
+  let isInUserWatchlist = false;
+  if (session?.user?.id) {
+    isInUserWatchlist = await isInWatchlist(session.user.id, symbol);
+  }
 
   return (
     <div className="flex min-h-screen p-4 md:p-6 lg:p-8">
@@ -42,7 +53,12 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
         {/* Right column */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <WatchlistButton symbol={symbol.toUpperCase()} company={symbol.toUpperCase()} isInWatchlist={false} />
+            <WatchlistButton 
+              symbol={symbol.toUpperCase()} 
+              company={symbol.toUpperCase()} 
+              isInWatchlist={isInUserWatchlist}
+              userId={session?.user?.id}
+            />
           </div>
 
           <TradingViewWidget

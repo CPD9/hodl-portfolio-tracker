@@ -1,7 +1,7 @@
 export const NAV_ITEMS = [
     { href: '/', label: 'Dashboard' },
     { href: '/search', label: 'Search' },
-    // { href: '/watchlist', label: 'Watchlist' },
+    { href: '/watchlist', label: 'Watchlist' },
 ];
 
 // Sign-up form select options
@@ -24,6 +24,7 @@ export const PREFERRED_INDUSTRIES = [
     { value: 'Finance', label: 'Finance' },
     { value: 'Energy', label: 'Energy' },
     { value: 'Consumer Goods', label: 'Consumer Goods' },
+    { value: 'Crypto', label: 'Crypto' },
 ];
 
 export const ALERT_TYPE_OPTIONS = [

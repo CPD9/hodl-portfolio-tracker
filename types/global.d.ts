@@ -109,6 +109,7 @@ declare global {
         showTrashIcon?: boolean;
         type?: 'button' | 'icon';
         onWatchlistChange?: (symbol: string, isAdded: boolean) => void;
+        userId?: string;
     };
 
     type QuoteData = {
@@ -139,13 +140,12 @@ declare global {
         userId: string;
         symbol: string;
         company: string;
-        addedAt: Date;
-        currentPrice?: number;
-        changePercent?: number;
-        priceFormatted?: string;
-        changeFormatted?: string;
-        marketCap?: string;
-        peRatio?: string;
+        addedAt: string;
+        currentPrice: number;
+        change: number;
+        changePercent: number;
+        marketCap: number;
+        pe: number;
     };
 
     type AlertsListProps = {

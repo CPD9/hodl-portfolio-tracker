@@ -1,6 +1,7 @@
 'use server';
 
-import { getDateRange, validateArticle, formatArticle } from '@/lib/utils';
+import { formatArticle, getDateRange, validateArticle } from '@/lib/utils';
+
 import { POPULAR_STOCK_SYMBOLS } from '@/lib/constants';
 import { cache } from 'react';
 
@@ -21,6 +22,21 @@ async function fetchJSON<T>(url: string, revalidateSeconds?: number): Promise<T>
 }
 
 export { fetchJSON };
+
+export async function getStockQuote(symbol: string): Promise<any> {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) {
+      throw new Error('Finnhub API key not found');
+    }
+
+    const url = `${FINNHUB_BASE_URL}/quote?symbol=${symbol}&token=${token}`;
+    return await fetchJSON(url, 60); // Cache for 1 minute
+  } catch (error) {
+    console.error('getStockQuote error:', error);
+    return null;
+  }
+}
 
 export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> {
   try {

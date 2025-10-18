@@ -1,10 +1,11 @@
-import {inngest} from "@/lib/inngest/client";
 import {NEWS_SUMMARY_EMAIL_PROMPT, PERSONALIZED_WELCOME_EMAIL_PROMPT} from "@/lib/inngest/prompts";
 import {sendNewsSummaryEmail, sendWelcomeEmail} from "@/lib/nodemailer";
+
 import {getAllUsersForNewsEmail} from "@/lib/actions/user.actions";
-import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
-import { getNews } from "@/lib/actions/finnhub.actions";
 import { getFormattedTodayDate } from "@/lib/utils";
+import { getNews } from "@/lib/actions/finnhub.actions";
+import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
+import {inngest} from "@/lib/inngest/client";
 
 export const sendSignUpEmail = inngest.createFunction(
     { id: 'sign-up-email' },
@@ -34,7 +35,7 @@ export const sendSignUpEmail = inngest.createFunction(
 
         await step.run('send-welcome-email', async () => {
             const part = response.candidates?.[0]?.content?.parts?.[0];
-            const introText = (part && 'text' in part ? part.text : null) ||'Thanks for joining Signalist. You now have the tools to track markets and make smarter moves.'
+            const introText = (part && 'text' in part ? part.text : null) ||'Thanks for joining HODL. You now have the tools to track markets and make smarter moves.'
 
             const { data: { email, name } } = event;
 
