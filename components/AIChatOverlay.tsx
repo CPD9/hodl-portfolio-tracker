@@ -99,17 +99,17 @@ const AIChatOverlay: React.FC = () => {
       {/* Chat Overlay */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 z-40 w-96 h-[500px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-8rem)]">
-          <Card className="h-full flex flex-col bg-gray-900 border-gray-700 shadow-2xl">
-            <CardHeader className="flex-shrink-0 pb-3">
+          <Card className="h-full flex flex-col bg-gray-900 border-2 border-yellow-500 shadow-2xl">
+            <CardHeader className="flex-shrink-0 pb-3 border-b border-gray-700">
               <CardTitle className="flex items-center gap-2 text-yellow-500">
                 <Bot size={20} />
                 HODL AI Assistant
               </CardTitle>
             </CardHeader>
             
-            <CardContent className="flex-1 flex flex-col p-4 pt-0">
+            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
               {/* Messages Container */}
-              <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+              <div className="flex-1 overflow-y-auto space-y-4 p-4 pr-2">
                 {messages.length === 0 && (
                   <div className="text-center text-gray-400 py-8">
                     <Bot className="mx-auto mb-2" size={32} />
@@ -173,7 +173,7 @@ const AIChatOverlay: React.FC = () => {
               </div>
 
               {/* Input Area */}
-              <div className="flex gap-2 border-t border-gray-700 pt-4">
+              <div className="flex-shrink-0 flex gap-2 border-t border-gray-700 p-4 bg-gray-900">
                 <Input
                   ref={inputRef}
                   value={inputValue}
