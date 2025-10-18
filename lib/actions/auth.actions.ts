@@ -1,8 +1,8 @@
 'use server';
 
 import {auth} from "@/lib/better-auth/auth";
-import {inngest} from "@/lib/inngest/client";
 import {headers} from "next/headers";
+import {inngest} from "@/lib/inngest/client";
 
 export const signUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
     try {
@@ -16,9 +16,27 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
         }
 
         return { success: true, data: response }
-    } catch (e) {
-        console.log('Sign up failed', e)
-        return { success: false, error: 'Sign up failed' }
+    } catch (e: any) {
+        console.error('Sign up failed:', e)
+        
+        // Parse error message
+        let errorMessage = 'Sign up failed. Please try again.';
+        
+        if (e?.body?.message) {
+            errorMessage = e.body.message;
+        } else if (e?.message) {
+            if (e.message.includes('duplicate') || e.message.includes('already exists')) {
+                errorMessage = 'An account with this email already exists';
+            } else if (e.message.includes('password')) {
+                errorMessage = 'Password must be at least 8 characters';
+            } else if (e.message.includes('email')) {
+                errorMessage = 'Please enter a valid email address';
+            } else {
+                errorMessage = e.message;
+            }
+        }
+        
+        return { success: false, error: errorMessage }
     }
 }
 
@@ -27,17 +45,36 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
         const response = await auth.api.signInEmail({ body: { email, password } })
 
         return { success: true, data: response }
-    } catch (e) {
-        console.log('Sign in failed', e)
-        return { success: false, error: 'Sign in failed' }
+    } catch (e: any) {
+        console.error('Sign in failed:', e)
+        
+        // Parse error message
+        let errorMessage = 'Sign in failed. Please check your credentials.';
+        
+        if (e?.body?.message) {
+            errorMessage = e.body.message;
+        } else if (e?.message) {
+            if (e.message.includes('credentials') || e.message.includes('password') || e.message.includes('incorrect')) {
+                errorMessage = 'Incorrect email or password';
+            } else if (e.message.includes('not found') || e.message.includes('user')) {
+                errorMessage = 'No account found with this email';
+            } else if (e.message.includes('email')) {
+                errorMessage = 'Please enter a valid email address';
+            } else {
+                errorMessage = e.message;
+            }
+        }
+        
+        return { success: false, error: errorMessage }
     }
 }
 
 export const signOut = async () => {
     try {
         await auth.api.signOut({ headers: await headers() });
-    } catch (e) {
-        console.log('Sign out failed', e)
-        return { success: false, error: 'Sign out failed' }
+        return { success: true }
+    } catch (e: any) {
+        console.error('Sign out failed:', e)
+        return { success: false, error: e?.message || 'Sign out failed' }
     }
 }
