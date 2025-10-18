@@ -1,8 +1,6 @@
 'use client';
 
 import { Link as LinkIcon, TrendingDown, TrendingUp } from 'lucide-react';
-
-import Link from 'next/link';
 import React from 'react';
 
 interface SectorCorrelationWidgetProps {
@@ -10,6 +8,8 @@ interface SectorCorrelationWidgetProps {
   sectorDescription: string;
   cryptos: CorrelatedCrypto[];
   stockSymbol: string;
+  selectedCrypto: string | null;
+  onCryptoSelect: (symbol: string) => void;
 }
 
 const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
@@ -17,6 +17,8 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
   sectorDescription,
   cryptos,
   stockSymbol,
+  selectedCrypto,
+  onCryptoSelect,
 }) => {
   if (!sector || cryptos.length === 0) {
     return (
@@ -68,18 +70,34 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
         {cryptos.map((crypto) => (
           <div
             key={crypto.symbol}
-            className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
+            onClick={() => onCryptoSelect(crypto.symbol)}
+            className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all ${
+              selectedCrypto === crypto.symbol
+                ? 'bg-gray-600 ring-2 ring-blue-500'
+                : 'bg-gray-700 hover:bg-gray-600'
+            }`}
           >
-            <div className="flex-1">
-              <div className="flex items-center space-x-2">
-                <h4 className="text-sm font-semibold text-gray-100">
-                  {crypto.symbol}
-                </h4>
-                <span className="text-xs text-gray-400">{crypto.name}</span>
+            <div className="flex items-center flex-1 space-x-3">
+              {/* Checkbox */}
+              <input
+                type="checkbox"
+                checked={selectedCrypto === crypto.symbol}
+                onChange={() => onCryptoSelect(crypto.symbol)}
+                className="h-5 w-5 rounded border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-0 cursor-pointer"
+                onClick={(e) => e.stopPropagation()}
+              />
+              
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <h4 className="text-sm font-semibold text-gray-100">
+                    {crypto.symbol.replace('BINANCE:', '').replace('USD', '')}
+                  </h4>
+                  <span className="text-xs text-gray-400">{crypto.name}</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  MCap: {formatMarketCap(crypto.marketCap)}
+                </p>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                MCap: {formatMarketCap(crypto.marketCap)}
-              </p>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -114,16 +132,6 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
           <strong className="text-blue-400">Sector Correlation:</strong> These cryptocurrencies operate in the same {sectorDescription.toLowerCase()} sector as {stockSymbol}, potentially showing correlated price movements.
         </p>
       </div>
-
-      {/* Compare Button */}
-      <Link 
-        href={`/stocks/${stockSymbol}#comparison`}
-        className="mt-4 block w-full"
-      >
-        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors">
-          Compare {stockSymbol} with Crypto
-        </button>
-      </Link>
     </div>
   );
 };
