@@ -98,3 +98,53 @@ export async function isInWatchlist(userId: string, symbol: string): Promise<boo
     return false;
   }
 }
+
+export async function triggerDailyNewsSummary(userId: string): Promise<{ success: boolean; message: string }> {
+  if (!userId) {
+    return { success: false, message: 'User not authenticated' };
+  }
+
+  try {
+    // Call our API endpoint which will trigger the Inngest event
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/trigger-news`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to trigger news summary');
+    }
+
+    return { success: true, message: data.message };
+  } catch (err) {
+    console.error('triggerDailyNewsSummary error:', err);
+    return { 
+      success: false, 
+      message: err instanceof Error ? err.message : 'Failed to trigger news summary. Make sure Inngest dev server is running.' 
+    };
+  }
+}
+
+export async function exportWatchlistToCSV(watchlist: StockWithData[]): Promise<string> {
+  const headers = ['Symbol', 'Company', 'Price', 'Change', 'Change %', 'Market Cap', 'P/E Ratio'];
+  const rows = watchlist.map(stock => [
+    stock.symbol,
+    stock.company,
+    stock.currentPrice?.toFixed(2) || 'N/A',
+    stock.change?.toFixed(2) || 'N/A',
+    stock.changePercent?.toFixed(2) || 'N/A',
+    stock.marketCap?.toString() || 'N/A',
+    stock.pe?.toFixed(2) || 'N/A',
+  ]);
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map(row => row.join(',')),
+  ].join('\n');
+
+  return csvContent;
+}

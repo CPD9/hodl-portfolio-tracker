@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { RiskProfile, TradingSignal, generateTradingSignals, getRecommendedSymbols } from '@/lib/actions/ai-trading.actions';
 
 import { Button } from '@/components/ui/button';
+import PixelCharacter from '@/components/PixelCharacter';
 import { toast } from 'sonner';
 
 // Types are now imported from ai-trading.actions
@@ -77,7 +78,7 @@ const AITradingCompanion: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <Brain className="w-6 h-6 text-purple-400" />
+          <PixelCharacter variant="hero" size="md" />
           <h3 className="text-lg font-semibold text-gray-100">AI Trading Companion</h3>
           <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
         </div>

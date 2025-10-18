@@ -1,15 +1,17 @@
 'use client';
 
-import {useForm} from "react-hook-form";
-import {Button} from "@/components/ui/button";
-import InputField from "@/components/forms/InputField";
-import SelectField from "@/components/forms/SelectField";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
+
+import {Button} from "@/components/ui/button";
 import {CountrySelectField} from "@/components/forms/CountrySelectField";
 import FooterLink from "@/components/forms/FooterLink";
+import InputField from "@/components/forms/InputField";
+import PixelCharacter from "@/components/PixelCharacter";
+import SelectField from "@/components/forms/SelectField";
 import {signUpWithEmail} from "@/lib/actions/auth.actions";
-import {useRouter} from "next/navigation";
 import {toast} from "sonner";
+import {useForm} from "react-hook-form";
+import {useRouter} from "next/navigation";
 
 const SignUp = () => {
     const router = useRouter()
@@ -45,7 +47,10 @@ const SignUp = () => {
 
     return (
         <>
-            <h1 className="form-title">Sign Up & Personalize</h1>
+            <div className="flex flex-col items-center mb-6">
+                <PixelCharacter variant="jump" size="xl" animated={true} />
+                <h1 className="form-title mt-4">Sign Up & Personalize</h1>
+            </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <InputField
@@ -60,7 +65,7 @@ const SignUp = () => {
                 <InputField
                     name="email"
                     label="Email"
-                    placeholder="contact@jsmastery.com"
+                    placeholder="start@hack.com"
                     register={register}
                     error={errors.email}
                     validation={{ required: 'Email name is required', pattern: /^\w+@\w+\.\w+$/, message: 'Email address is required' }}

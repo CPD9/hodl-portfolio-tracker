@@ -2,6 +2,7 @@
 
 import { Coins, Shield, Star, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 
+import PixelCharacter from '@/components/PixelCharacter';
 import React from 'react';
 
 interface CryptoData {
@@ -109,11 +110,11 @@ const CryptoHeatmap: React.FC = () => {
           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
         </div>
         <div className="flex items-center space-x-4 text-sm text-gray-400">
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
             <span>Gainers</span>
           </div>
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-red-500 rounded"></div>
             <span>Losers</span>
           </div>

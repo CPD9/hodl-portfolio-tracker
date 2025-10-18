@@ -9,6 +9,7 @@ import {
 import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
 import CryptoHeatmap from "@/components/CryptoHeatmap";
+import PixelCharacter from "@/components/PixelCharacter";
 import TradingViewWidget from "@/components/TradingViewWidget";
 
 const GamificationPage = () => {
@@ -35,9 +36,7 @@ const GamificationPage = () => {
                         <div className="bg-gray-800 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
-                                        <Trophy className="w-6 h-6 text-yellow-400" />
-                                    </div>
+                                    <PixelCharacter variant="hero" size="md" />
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-100">Trading Level</h3>
                                         <p className="text-sm text-gray-400">Expert Trader</p>
@@ -57,9 +56,7 @@ const GamificationPage = () => {
                         <div className="bg-gray-800 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                                        <TrendingUp className="w-6 h-6 text-green-400" />
-                                    </div>
+                                    <PixelCharacter variant="walk" size="md" />
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-100">Portfolio Value</h3>
                                         <p className="text-sm text-gray-400">Total Assets</p>
@@ -75,9 +72,7 @@ const GamificationPage = () => {
                         <div className="bg-gray-800 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                                        <Target className="w-6 h-6 text-blue-400" />
-                                    </div>
+                                    <PixelCharacter variant="jump" size="md" />
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-100">Win Rate</h3>
                                         <p className="text-sm text-gray-400">Last 30 Days</p>
@@ -93,9 +88,7 @@ const GamificationPage = () => {
                         <div className="bg-gray-800 rounded-lg p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
-                                        <Award className="w-6 h-6 text-purple-400" />
-                                    </div>
+                                    <PixelCharacter variant="draft" size="md" />
                                     <div>
                                         <h3 className="text-lg font-semibold text-gray-100">Achievements</h3>
                                         <p className="text-sm text-gray-400">Unlocked</p>
@@ -115,7 +108,7 @@ const GamificationPage = () => {
             <section className="w-full mb-8">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold text-gray-100 mb-6 flex items-center">
-                        <Users className="w-6 h-6 mr-3 text-blue-400" />
+                        <PixelCharacter variant="group" size="lg" className="mr-3" />
                         Global Leaderboard
                     </h2>
                     <div className="bg-gray-800 rounded-lg p-6">

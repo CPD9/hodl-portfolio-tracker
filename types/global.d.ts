@@ -152,6 +152,55 @@ declare global {
         alertData: Alert[] | undefined;
     };
 
+    // Trading System Types
+    type PortfolioHolding = {
+        symbol: string;
+        type: 'STOCK' | 'CRYPTO';
+        quantity: number;
+        avgPrice: number;
+        currentPrice: number;
+        totalInvested: number;
+        currentValue: number;
+        pnl: number;
+        pnlPercentage: number;
+        lastUpdated: string;
+    };
+
+    type TradeTransaction = {
+        id: string;
+        symbol: string;
+        type: 'STOCK' | 'CRYPTO';
+        action: 'BUY' | 'SELL';
+        quantity: number;
+        price: number;
+        total: number;
+        fee: number;
+        timestamp: string;
+        txHash?: string;
+        status: 'PENDING' | 'COMPLETED' | 'FAILED';
+    };
+
+    type TradingInterfaceProps = {
+        symbol: string;
+        currentPrice: number;
+        userId: string;
+        type: 'STOCK' | 'CRYPTO';
+    };
+
+    type CorrelatedCrypto = {
+        symbol: string;
+        name: string;
+        price: number;
+        change24h: number;
+        marketCap: number;
+        sector: string;
+    };
+
+    type SectorCorrelationProps = {
+        stockSymbol: string;
+        stockSector: string;
+    };
+
     type MarketNewsArticle = {
         id: number;
         headline: string;

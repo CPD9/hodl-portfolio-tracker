@@ -1,4 +1,5 @@
 import SearchCommand from "@/components/SearchCommand";
+import WatchlistQuickActions from "@/components/WatchlistQuickActions";
 import WatchlistTable from "@/components/WatchlistTable";
 import { auth } from "@/lib/better-auth/auth";
 import { getStockQuote } from "@/lib/actions/finnhub.actions";
@@ -9,6 +10,7 @@ export default async function WatchlistPage() {
   // Get user session (authentication is already handled by the root layout)
   const session = await auth.api.getSession({ headers: await headers() });
   const userId = session?.user?.id;
+  const userEmail = session?.user?.email;
 
   if (!userId) {
     return (
@@ -99,22 +101,11 @@ export default async function WatchlistPage() {
               <div className="watchlist">
                 <WatchlistTable watchlist={watchlistWithData} userId={userId} />
               </div>
-              <div className="watchlist-alerts">
-                <div className="bg-gray-800 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-gray-100 mb-4">Quick Actions</h3>
-                  <div className="space-y-3">
-                    <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors">
-                      Set Price Alert
-                    </button>
-                    <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
-                      Export to CSV
-                    </button>
-                    <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors">
-                      Share Watchlist
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <WatchlistQuickActions 
+                watchlist={watchlistWithData} 
+                userId={userId} 
+                userEmail={userEmail}
+              />
             </div>
           )}
         </div>

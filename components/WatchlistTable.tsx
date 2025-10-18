@@ -1,7 +1,9 @@
 "use client";
 
+import React, { useState } from "react";
+
 import Link from "next/link";
-import React from "react";
+import SetAlertDialog from "./SetAlertDialog";
 import { WATCHLIST_TABLE_HEADER } from "@/lib/constants";
 import WatchlistButton from "./WatchlistButton";
 
@@ -11,6 +13,18 @@ interface WatchlistTableProps {
 }
 
 const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) => {
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [selectedStock, setSelectedStock] = useState<{ symbol: string; company: string; currentPrice: number } | undefined>();
+
+  const handleSetAlert = (stock: StockWithData) => {
+    setSelectedStock({
+      symbol: stock.symbol,
+      company: stock.company,
+      currentPrice: stock.currentPrice || 0,
+    });
+    setAlertDialogOpen(true);
+  };
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -38,9 +52,15 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="watchlist-table">
+    <>
+      <SetAlertDialog
+        isOpen={alertDialogOpen}
+        onClose={() => setAlertDialogOpen(false)}
+        stock={selectedStock}
+      />
+      <div className="bg-gray-800 rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="watchlist-table">
           <thead>
             <tr className="table-header-row">
               {WATCHLIST_TABLE_HEADER.map((header, index) => (
@@ -101,7 +121,10 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                   </Link>
                 </td>
                 <td className="py-4 px-4">
-                  <button className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1 rounded text-sm font-medium transition-colors">
+                  <button
+                    onClick={() => handleSetAlert(stock)}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1 rounded text-sm font-medium transition-colors"
+                  >
                     Set Alert
                   </button>
                 </td>
@@ -119,8 +142,9 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
             ))}
           </tbody>
         </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

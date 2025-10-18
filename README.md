@@ -86,9 +86,15 @@ In the crypto world, "HODL" means to hold onto your investments through market v
 
 👉 **Powerful Search**: Quickly find the best stocks with an intelligent search system that helps you navigate through HODL.
 
+👉 **Paper Trading**: Practice trading with $100,000 virtual money - buy and sell stocks without risking real capital.
+
+👉 **Portfolio Management**: Track all your positions with detailed P&L analysis, asset allocation, and performance metrics.
+
 👉 **Watchlist & Alerts**: Create a personalized watchlist, set alert thresholds for price changes or volume spikes, and receive instant email notifications to stay on top of the market.
 
 👉 **Company Insights**: Explore detailed financial data such as PE ratio, EPS, revenue, recent news, filings, analyst ratings, and sentiment scores for informed decision-making.
+
+👉 **Transaction History**: View complete trading history with filtering, sorting, and CSV export functionality.
 
 ### 🪙 **Crypto & Web3 Integration**
 👉 **Base Chain Integration**: Seamlessly interact with Base blockchain for fast, low-cost transactions and DeFi protocols.
@@ -110,6 +116,10 @@ In the crypto world, "HODL" means to hold onto your investments through market v
 
 ### 📈 **Analytics & Insights**
 👉 **Unified Portfolio Analytics**: Gain insights into your combined stock and crypto portfolio performance.
+
+👉 **Sector Correlation**: Discover crypto assets in the same sector as your stocks (e.g., NVDA → AI tokens like FET, RNDR, GRT).
+
+👉 **Stock vs Crypto Comparison**: Compare stock performance with correlated cryptocurrency assets using TradingView charts.
 
 👉 **Market Sentiment Analysis**: Track both traditional and crypto market sentiment with AI-powered analysis.
 
@@ -187,9 +197,12 @@ NEXT_PUBLIC_BASE_CHAIN_ID=8453
 NEXT_PUBLIC_BASE_EXPLORER_URL=https://basescan.org
 NEXT_PUBLIC_ALCHEMY_API_KEY=
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
+
+# COINGECKO API (for crypto prices)
+COINGECKO_API_KEY=
 ```
 
-Replace the placeholder values with your real credentials. You can get these by signing up at: [**MongoDB**](https://www.mongodb.com/products/platform/atlas-database), [**Gemini**](https://aistudio.google.com/prompts/new_chat?utm_source=chatgpt.com), [**Inngest**](https://jsm.dev/stocks-inggest), [**Finnhub**](https://finnhub.io), [**Alchemy**](https://www.alchemy.com/), [**WalletConnect**](https://cloud.walletconnect.com/).
+Replace the placeholder values with your real credentials. You can get these by signing up at: [**MongoDB**](https://www.mongodb.com/products/platform/atlas-database), [**Gemini**](https://aistudio.google.com/prompts/new_chat?utm_source=chatgpt.com), [**Inngest**](https://jsm.dev/stocks-inggest), [**Finnhub**](https://finnhub.io), [**Alchemy**](https://www.alchemy.com/), [**WalletConnect**](https://cloud.walletconnect.com/), [**CoinGecko**](https://www.coingecko.com/en/api).
 
 ## <a name="base-integration">🔗 Base Integration</a>
 

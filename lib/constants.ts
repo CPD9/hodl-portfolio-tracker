@@ -2,6 +2,7 @@ export const NAV_ITEMS = [
   { href: '/', label: 'Dashboard' },
   { href: '/search', label: 'Search' },
   { href: '/watchlist', label: 'Watchlist' },
+  { href: '/portfolio', label: 'Portfolio' },
   { href: '/base', label: 'Base Chain' },
   { href: '/gamification', label: 'Gamification' },
 ];
@@ -230,6 +231,35 @@ export const BASELINE_WIDGET_CONFIG = (symbol: string) => ({
     withdateranges: false,
     compareSymbols: [],
     studies: [],
+    width: '100%',
+    height: 600,
+});
+
+export const COMPARISON_WIDGET_CONFIG = (symbol: string, compareSymbols: string[]) => ({
+    allow_symbol_change: false,
+    calendar: false,
+    details: true,
+    hide_side_toolbar: false,
+    hide_top_toolbar: false,
+    hide_legend: false,
+    hide_volume: false,
+    hotlist: false,
+    interval: 'D',
+    locale: 'en',
+    save_image: true,
+    style: 1, // Candlestick
+    symbol: symbol.toUpperCase(),
+    theme: 'dark',
+    timezone: 'Etc/UTC',
+    backgroundColor: '#141414',
+    gridColor: '#141414',
+    watchlist: [],
+    withdateranges: true,
+    compareSymbols: compareSymbols.map((s, i) => ({
+        symbol: s,
+        position: 'SameScale',
+    })),
+    studies: ['MASimple@tv-basicstudies'],
     width: '100%',
     height: 600,
 });
