@@ -6,7 +6,10 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
-export async function sendChatMessage(messages: ChatMessage[]): Promise<ChatMessage | null> {
+export async function sendChatMessage(
+  messages: ChatMessage[],
+  userContext?: string | null
+): Promise<ChatMessage | null> {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/chat`, {
       method: 'POST',
@@ -18,6 +21,7 @@ export async function sendChatMessage(messages: ChatMessage[]): Promise<ChatMess
           role: msg.role,
           content: msg.content,
         })),
+        userContext: userContext || undefined,
       }),
     });
 

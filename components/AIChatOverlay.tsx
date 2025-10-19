@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
+import { getUserContext } from '@/lib/actions/user-context.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -21,6 +22,9 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userContext, setUserContext] = useState<string | null>(null);
+  const [isLoadingContext, setIsLoadingContext] = useState(false);
+  const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,6 +35,30 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Fetch user context when chat opens
+  useEffect(() => {
+    if (isOpen && !isLoadingContext && !contextLoadedRef.current) {
+      setIsLoadingContext(true);
+      contextLoadedRef.current = true; // Mark as loaded for this session
+      getUserContext(user.id)
+        .then((context) => {
+          setUserContext(context);
+        })
+        .catch((error) => {
+          console.error('Error fetching user context:', error);
+          contextLoadedRef.current = false; // Reset on error to allow retry
+        })
+        .finally(() => {
+          setIsLoadingContext(false);
+        });
+    }
+    
+    // Reset context loaded flag when chat is closed
+    if (!isOpen && contextLoadedRef.current) {
+      contextLoadedRef.current = false;
+    }
+  }, [isOpen, user.id, isLoadingContext]);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -63,7 +91,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
-      const assistantMessage = await sendChatMessage(updatedMessages);
+      const assistantMessage = await sendChatMessage(updatedMessages, userContext);
       
       if (assistantMessage) {
         setMessages([...updatedMessages, assistantMessage]);
@@ -123,6 +151,16 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                 <Bot size={20} />
                 Hodlini - Your Crypto Bro
               </CardTitle>
+              {isLoadingContext && (
+                <p className="text-xs text-gray-400 mt-1">
+                  Loading your investment profile...
+                </p>
+              )}
+              {userContext && !isLoadingContext && (
+                <p className="text-xs text-green-400 mt-1">
+                  ✓ Personalized context loaded
+                </p>
+              )}
             </CardHeader>
             
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
@@ -137,8 +175,12 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                     )}
                   >
                     {message.role === 'assistant' && (
-                      <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                        <Bot size={14} className="text-gray-200" />
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                        <img 
+                          src="/assets/characters/idle.gif" 
+                          alt="Hodlini" 
+                          className="w-6 h-6 object-cover"
+                        />
                       </div>
                     )}
                     
@@ -166,8 +208,12 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                 
                 {isLoading && (
                   <div className="flex gap-2 justify-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
-                      <Bot size={14} className="text-gray-200" />
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
+                      <img 
+                        src="/assets/characters/idle.gif" 
+                        alt="Hodlini" 
+                        className="w-6 h-6 object-cover"
+                      />
                     </div>
                     <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100">
                       <div className="flex space-x-1">

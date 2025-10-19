@@ -1,8 +1,8 @@
 'use server';
 
-import { getCorrelatedCryptoSymbols, getCryptoName, getSectorDescription, getStockSector } from '@/lib/services/sector-correlation';
-
+import { findCorrelatedCryptos, getStockIndustry } from '@/lib/services/crypto-correlation-algorithm';
 import { getMultipleCryptoData } from './coingecko.actions';
+import { getCryptoName } from '@/lib/services/sector-correlation';
 
 export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
   sector: string | null;
@@ -10,31 +10,30 @@ export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
   cryptos: CorrelatedCrypto[];
 }> {
   try {
-    const sector = getStockSector(stockSymbol);
+    // Step 1: Get stock industry information
+    const industry = await getStockIndustry(stockSymbol);
     
-    if (!sector) {
+    // Step 2: Use AI algorithm to find correlated cryptos
+    const correlatedSymbols = await findCorrelatedCryptos(
+      stockSymbol,
+      industry,
+      undefined, // Market cap could be fetched from Finnhub in production
+      10 // Limit to 10 cryptos
+    );
+
+    if (!correlatedSymbols || correlatedSymbols.length === 0) {
       return {
-        sector: null,
-        sectorDescription: 'No sector mapping found',
+        sector: industry || null,
+        sectorDescription: industry ? `${industry} sector` : 'No industry mapping found',
         cryptos: [],
       };
     }
 
-    const cryptoSymbols = getCorrelatedCryptoSymbols(stockSymbol);
-    
-    if (!cryptoSymbols || cryptoSymbols.length === 0) {
-      return {
-        sector,
-        sectorDescription: getSectorDescription(sector),
-        cryptos: [],
-      };
-    }
+    // Step 3: Fetch market data for all correlated cryptos
+    const cryptos = await getMultipleCryptoData(correlatedSymbols);
 
-    // Fetch market data for all correlated cryptos
-    const cryptos = await getMultipleCryptoData(cryptoSymbols);
-
-    // Fill in any missing data with fallback
-    const result = cryptoSymbols.map(symbol => {
+    // Step 4: Fill in any missing data with fallback
+    const result = correlatedSymbols.map(symbol => {
       const existingData = cryptos.find(c => c.symbol === symbol);
       if (existingData) return existingData;
 
@@ -45,20 +44,22 @@ export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
         price: 0,
         change24h: 0,
         marketCap: 0,
-        sector: getSectorDescription(sector),
+        sector: industry || 'Technology',
       };
     });
 
     return {
-      sector,
-      sectorDescription: getSectorDescription(sector),
-      cryptos: result.slice(0, 5), // Return top 5
+      sector: industry || null,
+      sectorDescription: industry 
+        ? `Cryptocurrencies correlated with ${stockSymbol} (${industry} sector)`
+        : `Cryptocurrencies correlated with ${stockSymbol}`,
+      cryptos: result.slice(0, 10), // Ensure max 10
     };
   } catch (error) {
     console.error('getCorrelatedCrypto error:', error);
     return {
       sector: null,
-      sectorDescription: 'Error fetching data',
+      sectorDescription: 'Error fetching correlation data',
       cryptos: [],
     };
   }
@@ -69,19 +70,26 @@ export async function getStockCryptoComparison(stockSymbol: string): Promise<{
   sector: string | null;
   comparisonSymbols: string[];
 }> {
-  const sector = getStockSector(stockSymbol);
-  const cryptoSymbols = getCorrelatedCryptoSymbols(stockSymbol) || [];
+  try {
+    const industry = await getStockIndustry(stockSymbol);
+    const cryptoSymbols = await findCorrelatedCryptos(stockSymbol, industry, undefined, 3);
 
-  // Format symbols for TradingView comparison
-  // TradingView uses format like "BINANCE:BTCUSD" for crypto
-  const comparisonSymbols = cryptoSymbols
-    .slice(0, 3) // Limit to 3 for better visualization
-    .map(symbol => `BINANCE:${symbol}USD`);
+    // Format symbols for TradingView comparison
+    // TradingView uses format like "BINANCE:BTCUSD" for crypto
+    const comparisonSymbols = cryptoSymbols.map((symbol: string) => `BINANCE:${symbol}USD`);
 
-  return {
-    stockSymbol,
-    sector,
-    comparisonSymbols,
-  };
+    return {
+      stockSymbol,
+      sector: industry || null,
+      comparisonSymbols,
+    };
+  } catch (error) {
+    console.error('getStockCryptoComparison error:', error);
+    return {
+      stockSymbol,
+      sector: null,
+      comparisonSymbols: [],
+    };
+  }
 }
 
