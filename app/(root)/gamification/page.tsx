@@ -1,4 +1,4 @@
-import { Award, BarChart3, Star, Target, TrendingUp, Trophy, Users, Zap } from 'lucide-react';
+import { Award, BarChart3, Star, Target, TrendingUp, Trophy, Users, Video, Zap } from 'lucide-react';
 import {
     HEATMAP_WIDGET_CONFIG,
     MARKET_DATA_WIDGET_CONFIG,
@@ -8,11 +8,49 @@ import {
 
 import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
+import { Button } from "@/components/ui/button";
+import ConsultationsTable from "@/components/consultation/ConsultationsTable";
 import CryptoHeatmap from "@/components/CryptoHeatmap";
 import PixelCharacter from "@/components/PixelCharacter";
+import { Suspense } from "react";
 import TradingViewWidget from "@/components/TradingViewWidget";
+import { auth } from "@/lib/better-auth/auth";
+import { getConsultations } from "@/lib/actions/consultation.actions";
+import { headers } from "next/headers";
 
-const GamificationPage = () => {
+async function ConsultationsQuickView() {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userId = session?.user?.id;
+
+    if (!userId) {
+        return null; // Don't show if not logged in
+    }
+
+    const consultationsData = await getConsultations(userId, { pageSize: 3 });
+
+    if (consultationsData.consultations.length === 0) {
+        return null; // Don't show if no consultations
+    }
+
+    return (
+        <section className="w-full mb-8">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-purple-500 flex items-center">
+                        <Video className="w-6 h-6 mr-3" />
+                        Recent AI Consultations
+                    </h2>
+                    <Button asChild className="bg-purple-500 hover:bg-purple-600 text-white font-semibold">
+                        <a href="/consultation">View All</a>
+                    </Button>
+                </div>
+                <ConsultationsTable consultations={consultationsData.consultations} />
+            </div>
+        </section>
+    );
+}
+
+const GamificationPage = async () => {
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
     return (
@@ -251,6 +289,11 @@ const GamificationPage = () => {
                     </div>
                 </div>
             </section>
+
+            {/* AI Consultations Section */}
+            <Suspense fallback={null}>
+                <ConsultationsQuickView />
+            </Suspense>
 
             {/* Market Analysis Section */}
             <section className="grid w-full gap-8 home-section">

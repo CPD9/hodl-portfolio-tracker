@@ -1,4 +1,73 @@
 import BaseIntegration from "@/components/BaseIntegration";
+import { Button } from "@/components/ui/button";
+import ConsultationsTable from "@/components/consultation/ConsultationsTable";
+import { Suspense } from "react";
+import { Video } from "lucide-react";
+import { auth } from "@/lib/better-auth/auth";
+import { getConsultations } from "@/lib/actions/consultation.actions";
+import { headers } from "next/headers";
+
+async function ConsultationsSection() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return (
+      <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+        <Video className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+        <h3 className="text-lg font-semibold text-gray-100 mb-2">
+          AI Financial Consultations
+        </h3>
+        <p className="text-gray-400 mb-4">
+          Sign in to schedule video consultations with AI financial advisors
+        </p>
+        <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+          <a href="/sign-in">Sign In</a>
+        </Button>
+      </div>
+    );
+  }
+
+  const consultationsData = await getConsultations(userId, { pageSize: 5 });
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-yellow-500 mb-2">
+            🤖 AI Financial Consultations
+          </h2>
+          <p className="text-gray-400">
+            Get personalized advice from AI advisors via video consultation
+          </p>
+        </div>
+        <Button
+          asChild
+          className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
+        >
+          <a href="/consultation">View All</a>
+        </Button>
+      </div>
+
+      {consultationsData.consultations.length > 0 ? (
+        <ConsultationsTable consultations={consultationsData.consultations} />
+      ) : (
+        <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+          <Video className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+          <h3 className="text-lg font-semibold text-gray-100 mb-2">
+            No consultations yet
+          </h3>
+          <p className="text-gray-400 mb-4">
+            Schedule your first AI consultation for personalized financial guidance
+          </p>
+          <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
+            <a href="/consultation">Schedule Consultation</a>
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function BasePage() {
   return (
@@ -18,6 +87,18 @@ export default function BasePage() {
 
           {/* Base Integration Component */}
           <BaseIntegration />
+
+          {/* AI Consultations Section */}
+          <Suspense
+            fallback={
+              <div className="bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto" />
+                <p className="text-gray-400 mt-4">Loading consultations...</p>
+              </div>
+            }
+          >
+            <ConsultationsSection />
+          </Suspense>
 
           {/* Features Section */}
           <div className="grid md:grid-cols-3 gap-6 mt-12">

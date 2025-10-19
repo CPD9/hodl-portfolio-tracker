@@ -264,6 +264,55 @@ declare global {
         threshold: number;
         changePercent?: number;
     };
+
+    // AI Consultation Types
+    type AIAdvisorPersonality = 'conservative' | 'aggressive' | 'balanced' | 'analytical';
+    
+    type AIAdvisor = {
+        _id: string;
+        name: string;
+        userId: string;
+        instructions: string;
+        personality: AIAdvisorPersonality;
+        avatar: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+
+    type ConsultationStatus = 'upcoming' | 'active' | 'completed' | 'processing' | 'cancelled';
+
+    type Consultation = {
+        _id: string;
+        name: string;
+        userId: string;
+        advisorId: string;
+        advisor?: AIAdvisor;
+        status: ConsultationStatus;
+        startedAt?: string;
+        endedAt?: string;
+        transcriptUrl?: string;
+        recordingUrl?: string;
+        summary?: string;
+        duration?: number;
+        createdAt: string;
+        updatedAt: string;
+    };
+
+    type TranscriptItem = {
+        speaker_id: string;
+        start_time: number;
+        end_time: number;
+        text: string;
+        user?: {
+            name: string;
+            image?: string;
+        };
+    };
+
+    type ConsultationFormData = {
+        name: string;
+        advisorId: string;
+    };
 }
 
 export {};

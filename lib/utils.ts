@@ -144,9 +144,12 @@ export const serializeMongoObject = (obj: any) => {
   
   const serialized: any = {};
   for (const [key, value] of Object.entries(obj)) {
-    if (key === '_id' || key === '__v') continue; // Skip MongoDB internal fields
+    if (key === '__v') continue; // Skip MongoDB version field
     
-    if (value instanceof Date) {
+    // Convert _id to string
+    if (key === '_id') {
+      serialized[key] = value?.toString() || value;
+    } else if (value instanceof Date) {
       serialized[key] = value.toISOString();
     } else if (typeof value === 'object' && value !== null) {
       serialized[key] = serializeMongoObject(value);
