@@ -1,12 +1,12 @@
 'use server';
 
-import { connectToDatabase } from '@/database/mongoose';
+import OpenAI from 'openai';
 import Portfolio from '@/database/models/portfolio.model';
 import Transaction from '@/database/models/transaction.model';
 import UserBalance from '@/database/models/user-balance.model';
-import { Watchlist } from '@/database/models/watchlist.model';
 import UserContext from '@/database/models/user-context.model';
-import OpenAI from 'openai';
+import { Watchlist } from '@/database/models/watchlist.model';
+import { connectToDatabase } from '@/database/mongoose';
 import crypto from 'crypto';
 
 const openai = new OpenAI({
@@ -88,7 +88,7 @@ Keep it factual, concise, and useful for personalized recommendations.`;
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'system',

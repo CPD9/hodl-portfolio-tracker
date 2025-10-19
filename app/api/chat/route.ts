@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import OpenAI from 'openai';
 
 // Initialize OpenAI client
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
     };
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-3.5-turbo',
       messages: [systemMessage, ...messages],
       max_tokens: 500,
       temperature: 0.7,
@@ -59,8 +60,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: assistantMessage });
   } catch (error) {
     console.error('OpenAI API error:', error);
+    
+    // Log more detailed error information
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+    
+    // Return more specific error for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
     return NextResponse.json(
-      { error: 'Failed to process chat message' },
+      { 
+        error: 'Failed to process chat message',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+        apiKeyConfigured: !!process.env.OPENAI_API_KEY 
+      },
       { status: 500 }
     );
   }

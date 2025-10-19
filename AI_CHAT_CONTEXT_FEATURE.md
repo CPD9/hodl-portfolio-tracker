@@ -15,7 +15,7 @@ Main functions:
 - **`getUserContext(userId)`**: Smart function that retrieves cached context or generates new one if data changed
 - **`refreshUserContext(userId)`**: Forces context regeneration
 - **`fetchUserData(userId)`**: Gathers all user data (portfolio, transactions, watchlist, balance)
-- **`generateContextSummary(userData)`**: Uses OpenAI GPT-4o-mini to create investment profile summary
+- **`generateContextSummary(userData)`**: Uses OpenAI GPT-3.5-turbo to create investment profile summary
 - **`generateDataHash(userData)`**: Creates SHA-256 hash to detect data changes
 
 ### 3. Updated Components
@@ -80,7 +80,7 @@ Environment variables used:
 - `OPENAI_API_KEY`: For context generation
 - `MONGODB_URI`: For storing context cache
 
-Model used: `gpt-4o-mini` (cost-effective, fast)
+Model used: `gpt-3.5-turbo` (cost-effective, fast, widely available)
 Max tokens: 400 (keeps context concise)
 Temperature: 0.5 (balanced creativity/consistency)
 
