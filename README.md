@@ -135,14 +135,14 @@ In the crypto world, "HODL" means to hold onto your investments through market v
 
 ### 🚀 **GitHub Repository**
 
-**Repository**: [github.com/YOUR_USERNAME/hodl-portfolio-tracker](https://github.com/YOUR_USERNAME/hodl-portfolio-tracker)  
+**Repository**: [github.com/cpd9/hodl-portfolio-tracker](https://github.com/cpd9/hodl-portfolio-tracker)  
 **Live Demo**: [https://hodl-portfolio-tracker.vercel.app](https://hodl-portfolio-tracker.vercel.app) 🌐  
 **Hackathon**: START HACK 2025 - Team HODL
 
 ### 📥 **Clone the Repository**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hodl-portfolio-tracker.git
+git clone https://github.com/cpd9/hodl-portfolio-tracker.git
 cd hodl-portfolio-tracker
 ```
 
