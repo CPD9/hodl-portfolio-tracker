@@ -9,6 +9,7 @@ import {
 } from "@/lib/constants";
 
 import TradingViewWidget from "@/components/TradingViewWidget";
+import CryptoTradingInterface from "@/components/CryptoTradingInterface";
 import { getCryptoPrice } from "@/lib/actions/coingecko.actions";
 
 interface CryptoDetailsClientProps {
@@ -98,21 +99,13 @@ export default function CryptoDetailsClient({
             </div>
           </div>
 
-          {/* Base Trading Integration - Link to Base page */}
-          {session?.user?.id && (
-            <div className="bg-gray-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-100 mb-4">Trade on Base</h3>
-              <p className="text-gray-400 text-sm mb-4">
-                Connect your wallet on the Base Chain page to trade {cleanSymbol} and other cryptocurrencies.
-              </p>
-              <a 
-                href="/base"
-                className="block w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg text-center font-medium transition-colors"
-              >
-                Go to Base Chain Trading
-              </a>
-            </div>
-          )}
+          {/* Base Trading Integration - Direct Trading Interface */}
+          <CryptoTradingInterface 
+            symbol={cleanSymbol}
+            currentPrice={currentPrice}
+            userId={session?.user?.id}
+            session={session}
+          />
 
           <TradingViewWidget
             key={`crypto-technical-analysis-${tradingViewSymbol}`}
