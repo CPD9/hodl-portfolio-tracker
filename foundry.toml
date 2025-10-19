@@ -1,0 +1,46 @@
+# Foundry Configuration for HODL Portfolio Tracker
+
+[profile.default]
+src = "contracts/src"
+out = "contracts/out"
+libs = ["contracts/lib"]
+script = "contracts/script"
+test = "contracts/test"
+
+# Solidity compiler settings
+solc_version = "0.8.23"
+optimizer = true
+optimizer_runs = 1000000
+via_ir = false
+
+# EVM version
+evm_version = "paris"
+
+# Gas configuration
+gas_reports = ["*"]
+gas_reports_ignore = []
+
+# Test configuration
+fuzz = { runs = 256 }
+invariant = { runs = 256, depth = 15 }
+
+# Formatter
+[fmt]
+line_length = 100
+tab_width = 4
+bracket_spacing = false
+int_types = "long"
+multiline_func_header = "all"
+quote_style = "double"
+number_underscore = "thousands"
+
+# RPC endpoints for Base
+[rpc_endpoints]
+base = "${BASE_RPC_URL}"
+base-sepolia = "${BASE_SEPOLIA_RPC_URL}"
+
+# Etherscan (Basescan) configuration
+[etherscan]
+base = { key = "${BASESCAN_API_KEY}", url = "https://api.basescan.org/api" }
+base-sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }
+

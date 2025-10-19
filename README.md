@@ -116,14 +116,23 @@ View complete trading history with filtering, sorting, and CSV export functional
 **Base Chain Integration**  
 Seamlessly interact with Base blockchain for fast, low-cost transactions and DeFi protocols.
 
+**Stock ↔ Crypto Swaps (Revolutionary!)**  
+Trade Apple stock for Ethereum. Trade Bitcoin for Tesla stock. Revolutionary cross-asset swaps between stocks and crypto using Base as the intermediary. Tokenized stocks (RWAs) enable unified trading.
+
+**On-Chain Token Trading**  
+Trade cryptocurrencies directly on Base using Uniswap V3 with ~$0.01 transaction fees. Swap ETH, USDC, DAI, WETH, and cbBTC instantly.
+
+**Smart Contract Deployment**  
+Deploy custom smart contracts on Base using Foundry. Includes Stock-Crypto Swap contract for revolutionary cross-asset trading.
+
 **Crypto Portfolio Tracking**  
 Monitor cryptocurrency holdings alongside traditional stocks in a unified dashboard.
 
+**Wallet Integration**  
+Connect Coinbase Wallet or any Web3 wallet to interact with Base blockchain and manage your on-chain assets.
+
 **DeFi Protocol Integration**  
 Connect with Base-based DeFi protocols for yield farming, liquidity provision, and decentralized trading.
-
-**Cross-Chain Asset Management**  
-Manage assets across different chains with Base as your primary Layer 2 hub.
 
 ### AI & Automation
 
@@ -236,6 +245,30 @@ npx inngest-cli@latest dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### Deploy Portfolio Rebalancer (Optional)
+
+To enable automated portfolio rebalancing on the Base Chain page:
+
+1. **Install Foundry**:
+   ```bash
+   curl -L https://foundry.paradigm.xyz | bash
+   foundryup
+   ```
+
+2. **Get testnet ETH**: https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet
+
+3. **Deploy the contract**:
+   ```bash
+   bash scripts/deploy-contracts.sh
+   ```
+
+4. **Add contract address to `.env`**:
+   ```bash
+   NEXT_PUBLIC_PORTFOLIO_REBALANCER_BASE_SEPOLIA=0x...
+   ```
+
+See [DEPLOY_CONTRACTS.md](DEPLOY_CONTRACTS.md) for detailed instructions.
+
 ### Development Workflow
 
 ```bash
@@ -304,17 +337,35 @@ HODL leverages **Base L2 (Coinbase's Ethereum Layer 2)** as the core blockchain 
   - Verify smart contract interactions
   - Export transaction history with on-chain proof
 
-#### 6. Future: Tokenized Stock Trading on Base L2
+#### 6. Smart Contract Trading on Base L2
 
-- **Planned Feature**: Trade tokenized representations of stocks using ERC-20 tokens on Base
-- **Smart Contracts**: 
-  - `TokenizedStock.sol` - Create stock-pegged tokens
-  - `StockTrading.sol` - Execute trades with escrow mechanism
-- **Benefits**:
-  - 24/7 trading (stocks trade outside market hours)
-  - Fractional ownership
-  - Low transaction fees (~$0.01 per trade on Base)
-  - Instant settlement vs T+2 in traditional markets
+- **Status**: ✅ **Implemented** - Live on `/trade` page
+- **Features**:
+  - **Token Swaps**: Trade ETH, USDC, DAI, WETH, cbBTC via OnchainKit + Uniswap V3
+  - **Portfolio Rebalancing**: Automated rebalancing with custom allocations
+  - **Low Fees**: ~$0.01 per transaction on Base
+  - **Instant Settlement**: Transactions confirm in seconds
+
+- **Smart Contracts** (`contracts/src/`):
+  - `PortfolioRebalancer.sol` - Automated portfolio rebalancing with target allocations
+  - `interfaces/ISwapRouter.sol` - Uniswap V3 integration for token swaps
+  - `interfaces/IERC20.sol` - Standard token interface
+
+- **Deployment** (Using Foundry):
+  - Deploy to Base Sepolia (testnet) or Base Mainnet
+  - Verify on Basescan automatically
+  - See `contracts/DEPLOYMENT_GUIDE.md` for full instructions
+
+- **UI Components**:
+  - `OnchainSwap.tsx` - Token swap interface with OnchainKit
+  - `PortfolioRebalancerUI.tsx` - Portfolio management UI
+  - Full Wagmi + OnchainKit integration
+
+- **Future Enhancements**:
+  - Tokenized stock trading (RWAs on Base)
+  - Automated trading strategies (DCA, stop-loss)
+  - Yield optimization vaults
+  - P2P escrow for OTC trades
 
 ### Why Base L2?
 

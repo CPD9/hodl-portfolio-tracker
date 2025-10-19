@@ -40,3 +40,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# foundry / forge
+cache/
+out/
+contracts/cache/
+contracts/out/
+contracts/lib/
+broadcast/
+contracts/broadcast/

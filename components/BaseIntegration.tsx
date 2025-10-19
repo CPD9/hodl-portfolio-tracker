@@ -270,7 +270,6 @@ const BaseIntegration: React.FC = () => {
             <div className="bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Total Value</span>
-                <span className="text-green-400">↗</span>
               </div>
               <p className="text-2xl font-bold text-gray-100">
                 ${portfolio.totalValueUSD.toLocaleString()}
@@ -280,7 +279,6 @@ const BaseIntegration: React.FC = () => {
             <div className="bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Tokens</span>
-                <span className="text-blue-400">📊</span>
               </div>
               <p className="text-2xl font-bold text-gray-100">
                 {portfolio.tokenCount}
@@ -290,7 +288,6 @@ const BaseIntegration: React.FC = () => {
             <div className="bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">Gas Spent</span>
-                <span className="text-purple-400">⛽</span>
               </div>
               <p className="text-2xl font-bold text-gray-100">
                 ${portfolio.gasSpentUSD.toFixed(2)}
@@ -300,7 +297,6 @@ const BaseIntegration: React.FC = () => {
             <div className="bg-gray-700 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-gray-400">DeFi Positions</span>
-                <span className="text-orange-400">🔗</span>
               </div>
               <p className="text-2xl font-bold text-gray-100">
                 {portfolio.defiPositions.length}

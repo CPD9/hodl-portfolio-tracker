@@ -1,6 +1,8 @@
 import BaseIntegration from "@/components/BaseIntegration";
 import { Button } from "@/components/ui/button";
 import ConsultationsTable from "@/components/consultation/ConsultationsTable";
+import { OnchainSwap } from "@/components/OnchainSwap";
+import { StockCryptoSwap } from "@/components/StockCryptoSwap";
 import { Suspense } from "react";
 import { Video } from "lucide-react";
 import { auth } from "@/lib/better-auth/auth";
@@ -35,7 +37,7 @@ async function ConsultationsSection() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-bold text-yellow-500 mb-2">
-            🤖 AI Financial Consultations
+            AI Financial Consultations
           </h2>
           <p className="text-gray-400">
             Get personalized advice from AI advisors via video consultation
@@ -77,16 +79,29 @@ export default function BasePage() {
           {/* Header */}
           <div className="text-center">
             <h1 className="text-4xl font-bold text-yellow-500 mb-4">
-              🚀 Base Chain Integration
+              Base Chain Integration
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Track your Base portfolio alongside traditional stocks. Connect your wallet to see your crypto holdings, 
-              DeFi positions, and transaction history in one unified dashboard.
+              Revolutionary cross-asset trading: Swap stocks for crypto and vice versa on Base. 
+              Track your portfolio, trade tokens with low fees, and access DeFi positions in one unified dashboard.
             </p>
           </div>
 
           {/* Base Integration Component */}
           <BaseIntegration />
+
+          {/* Trading Section */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-2xl font-bold text-yellow-500 mb-4">Token Swaps</h2>
+              <OnchainSwap />
+            </div>
+            
+            <div>
+              <h2 className="text-2xl font-bold text-yellow-500 mb-4">Stock ↔ Crypto Swap</h2>
+              <StockCryptoSwap />
+            </div>
+          </div>
 
           {/* AI Consultations Section */}
           <Suspense
@@ -101,9 +116,8 @@ export default function BasePage() {
           </Suspense>
 
           {/* Features Section */}
-          <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <div className="bg-gray-800 rounded-lg p-6 text-center">
-              <div className="text-4xl mb-4">💰</div>
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h3 className="text-xl font-semibold text-yellow-500 mb-2">
                 Token Balances
               </h3>
@@ -112,8 +126,7 @@ export default function BasePage() {
               </p>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 text-center">
-              <div className="text-4xl mb-4">📊</div>
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h3 className="text-xl font-semibold text-yellow-500 mb-2">
                 Portfolio Analytics
               </h3>
@@ -122,8 +135,7 @@ export default function BasePage() {
               </p>
             </div>
 
-            <div className="bg-gray-800 rounded-lg p-6 text-center">
-              <div className="text-4xl mb-4">🔗</div>
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h3 className="text-xl font-semibold text-yellow-500 mb-2">
                 DeFi Integration
               </h3>
@@ -134,9 +146,9 @@ export default function BasePage() {
           </div>
 
           {/* Base Network Info */}
-          <div className="bg-gray-800 rounded-lg p-6 mt-8">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <h2 className="text-2xl font-semibold text-yellow-500 mb-4">
-              🌐 About Base Network
+              About Base Network
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
@@ -144,10 +156,10 @@ export default function BasePage() {
                   Why Base?
                 </h3>
                 <ul className="space-y-2 text-gray-400">
-                  <li>• Low transaction fees (up to 10x cheaper than Ethereum)</li>
-                  <li>• Fast transaction speeds (2-second block times)</li>
-                  <li>• Secure and decentralized (built on Ethereum)</li>
-                  <li>• Growing DeFi ecosystem</li>
+                  <li>Low transaction fees (up to 10x cheaper than Ethereum)</li>
+                  <li>Fast transaction speeds (2-second block times)</li>
+                  <li>Secure and decentralized (built on Ethereum)</li>
+                  <li>Growing DeFi ecosystem</li>
                 </ul>
               </div>
               <div>
@@ -155,10 +167,10 @@ export default function BasePage() {
                   Key Features
                 </h3>
                 <ul className="space-y-2 text-gray-400">
-                  <li>• Native USDC support</li>
-                  <li>• EVM compatibility</li>
-                  <li>• Coinbase integration</li>
-                  <li>• Developer-friendly tools</li>
+                  <li>Native USDC support</li>
+                  <li>EVM compatibility</li>
+                  <li>Coinbase integration</li>
+                  <li>Developer-friendly tools</li>
                 </ul>
               </div>
             </div>
