@@ -17,7 +17,7 @@ const Home = () => {
         <div className="flex min-h-screen home-wrapper">
           {/* Base Integration Section */}
           <section className="w-full mb-8">
-            <h2 className="text-2xl font-bold text-yellow-500 mb-6">
+            <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
               Base Chain Integration
             </h2>
             <BaseIntegration />
@@ -25,7 +25,7 @@ const Home = () => {
 
           {/* AI Trading Companion Section */}
           <section className="w-full mb-8">
-            <h2 className="text-2xl font-bold text-purple-500 mb-6">
+            <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center">
               AI Trading Companion
             </h2>
             <AITradingCompanion />
