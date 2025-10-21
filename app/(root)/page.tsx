@@ -14,28 +14,25 @@ const Home = () => {
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
     return (
-        <div className="flex min-h-screen home-wrapper">
+        <div className="home-wrapper">
           {/* Base Integration Section */}
-          <section className="w-full mb-8">
-            <div className="container mx-auto px-4">
-              <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
-                Base Chain Integration
-              </h2>
-              <BaseIntegration />
-            </div>
+          <section className="w-full">
+            <h2 className="text-2xl md:text-3xl font-bold text-yellow-500 mb-6">
+              Base Chain Integration
+            </h2>
+            <BaseIntegration />
           </section>
 
           {/* AI Trading Companion Section */}
-          <section className="w-full mb-8">
-            <div className="container mx-auto px-4">
-              <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center">
-                AI Trading Companion
-              </h2>
-              <AITradingCompanion />
-            </div>
+          <section className="w-full">
+            <h2 className="text-2xl md:text-3xl font-bold text-purple-500 mb-6">
+              AI Trading Companion
+            </h2>
+            <AITradingCompanion />
           </section>
 
-          <section className="grid w-full gap-8 home-section">
+          {/* Market Widgets Section */}
+          <section className="home-section">
               <div className="md:col-span-1 xl:col-span-1">
                   <TradingViewWidget
                     title="Market Overview"
@@ -45,7 +42,7 @@ const Home = () => {
                     height={600}
                   />
               </div>
-              <div className="md-col-span xl:col-span-2">
+              <div className="md:col-span-1 xl:col-span-2">
                   <TradingViewWidget
                       title="Stock Heatmap"
                       scriptUrl={`${scriptUrl}stock-heatmap.js`}
@@ -54,22 +51,26 @@ const Home = () => {
                   />
               </div>
           </section>
-            <section className="grid w-full gap-8 home-section">
-                <div className="h-full md:col-span-1 xl:col-span-1">
-                    <TradingViewWidget
-                        scriptUrl={`${scriptUrl}timeline.js`}
-                        config={TOP_STORIES_WIDGET_CONFIG}
-                        height={600}
-                    />
-                </div>
-                <div className="h-full md:col-span-1 xl:col-span-2">
-                    <TradingViewWidget
-                        scriptUrl={`${scriptUrl}market-quotes.js`}
-                        config={MARKET_DATA_WIDGET_CONFIG}
-                        height={600}
-                    />
-                </div>
-            </section>
+
+          {/* News and Market Data Section */}
+          <section className="home-section">
+              <div className="md:col-span-1 xl:col-span-1">
+                  <TradingViewWidget
+                      title="Top Stories"
+                      scriptUrl={`${scriptUrl}timeline.js`}
+                      config={TOP_STORIES_WIDGET_CONFIG}
+                      height={600}
+                  />
+              </div>
+              <div className="md:col-span-1 xl:col-span-2">
+                  <TradingViewWidget
+                      title="Market Data"
+                      scriptUrl={`${scriptUrl}market-quotes.js`}
+                      config={MARKET_DATA_WIDGET_CONFIG}
+                      height={600}
+                  />
+              </div>
+          </section>
         </div>
     )
 }
