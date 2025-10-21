@@ -67,8 +67,8 @@ const UserDropdown = ({ user, initialStocks }: {user: User, initialStocks: Stock
                 
                 {/* Navigation - Only on mobile/tablet */}
                 <div className="lg:hidden">
-                    <nav onClick={handleNavClick}>
-                        <NavItems initialStocks={initialStocks} />
+                    <nav>
+                        <NavItems initialStocks={initialStocks} vertical={true} onNavigate={handleNavClick} />
                     </nav>
                     <DropdownMenuSeparator className="bg-gray-600 my-2"/>
                 </div>
