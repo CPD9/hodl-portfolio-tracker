@@ -184,7 +184,7 @@ const AITradingCompanion: React.FC = () => {
                         width: '100%',
                         height: '100%',
                         locale: 'en',
-                        dateRange: '1D',
+                        dateRange: '1M',
                         colorTheme: 'dark',
                         trendLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 1)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 1)' : 'rgba(234, 179, 8, 1)',
                         underLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 0.3)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(234, 179, 8, 0.3)',
