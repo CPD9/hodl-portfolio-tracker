@@ -13,21 +13,28 @@ import {
 import {Button} from "@/components/ui/button";
 import {LogOut} from "lucide-react";
 import NavItems from "@/components/NavItems";
+import OnchainWalletConnect from "@/components/OnchainWalletConnect";
 import {signOut} from "@/lib/actions/auth.actions";
 import {useRouter} from "next/navigation";
+import { useState } from "react";
 
 const UserDropdown = ({ user, initialStocks }: {user: User, initialStocks: StockWithWatchlistStatus[]}) => {
     const router = useRouter();
+    const [open, setOpen] = useState(false);
 
     const handleSignOut = async () => {
         await signOut();
         router.push("/sign-in");
     }
 
+    const handleNavClick = () => {
+        setOpen(false);
+    }
+
     return (
-        <DropdownMenu>
+        <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-3 text-gray-4 hover:text-yellow-500">
+                <Button variant="ghost" className="flex items-center gap-2 md:gap-3 text-gray-400 hover:text-yellow-500">
                     <Avatar className="h-8 w-8">
                         <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
                             {user.name[0]}
@@ -57,14 +64,26 @@ const UserDropdown = ({ user, initialStocks }: {user: User, initialStocks: Stock
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-600"/>
+                
+                {/* Navigation - Only on mobile/tablet */}
+                <div className="lg:hidden">
+                    <nav onClick={handleNavClick}>
+                        <NavItems initialStocks={initialStocks} />
+                    </nav>
+                    <DropdownMenuSeparator className="bg-gray-600 my-2"/>
+                </div>
+                
+                {/* Wallet Connect - Only on mobile/tablet */}
+                <div className="lg:hidden p-2">
+                    <OnchainWalletConnect />
+                </div>
+                <DropdownMenuSeparator className="lg:hidden bg-gray-600"/>
+                
+                {/* Logout */}
                 <DropdownMenuItem onClick={handleSignOut} className="text-gray-100 text-md font-medium focus:bg-transparent focus:text-yellow-500 transition-colors cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2 hidden sm:block" />
+                    <LogOut className="h-4 w-4 mr-2" />
                     Logout
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="hidden sm:block bg-gray-600"/>
-                <nav className="sm:hidden">
-                    <NavItems initialStocks={initialStocks} />
-                </nav>
             </DropdownMenuContent>
         </DropdownMenu>
     )
