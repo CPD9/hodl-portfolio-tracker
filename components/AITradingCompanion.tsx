@@ -134,25 +134,35 @@ const AITradingCompanion: React.FC = () => {
           </h4>
           {signals.map((signal) => (
             <div key={signal.id} className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg p-3 md:p-4 border border-gray-600 hover:border-gray-500 transition-all shadow-lg">
-              <div className="flex items-start sm:items-center justify-between mb-3 gap-2">
-                <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
-                  <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs md:text-sm font-bold text-gray-200">{signal.symbol}</span>
+              <div className="flex items-start sm:items-center justify-between mb-3 gap-3">
+                <div className="flex items-center space-x-3 min-w-0 flex-1">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center border-2 shadow-lg"
+                         style={{ borderColor: signal.action === 'BUY' ? '#22c55e' : signal.action === 'SELL' ? '#ef4444' : '#eab308' }}>
+                      <span className="text-sm md:text-base font-bold text-white">{signal.symbol}</span>
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold shadow-lg"
+                         style={{ 
+                           backgroundColor: signal.action === 'BUY' ? '#22c55e' : signal.action === 'SELL' ? '#ef4444' : '#eab308',
+                           color: '#000'
+                         }}>
+                      {signal.action === 'BUY' ? '↑' : signal.action === 'SELL' ? '↓' : '→'}
+                    </div>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center flex-wrap gap-1 md:gap-2">
-                      <span className={`font-semibold text-sm md:text-base ${getActionColor(signal.action)}`}>
+                    <div className="flex items-center flex-wrap gap-2">
+                      <span className={`font-bold text-base md:text-lg ${getActionColor(signal.action)}`}>
                         {signal.action}
                       </span>
-                      <span className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-xs ${getRiskColor(signal.riskLevel)}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getRiskColor(signal.riskLevel)}`}>
                         {signal.riskLevel} RISK
                       </span>
                     </div>
-                    <p className="text-xs md:text-sm text-gray-400 truncate">{signal.timeframe}</p>
+                    <p className="text-xs md:text-sm text-gray-400 font-medium">{signal.timeframe}</p>
                   </div>
                 </div>
                 <div className="text-right flex-shrink-0">
-                  <p className={`text-base md:text-lg font-bold ${getConfidenceColor(signal.confidence)}`}>
+                  <p className={`text-xl md:text-2xl font-bold ${getConfidenceColor(signal.confidence)}`}>
                     {signal.confidence}%
                   </p>
                   <p className="text-xs text-gray-400 whitespace-nowrap">Confidence</p>

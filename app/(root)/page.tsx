@@ -7,6 +7,7 @@ import {
 
 import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
+import FearGreedIndex from "@/components/FearGreedIndex";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import {sendDailyNewsSummary} from "@/lib/inngest/functions";
 
@@ -29,6 +30,14 @@ const Home = () => {
               AI Trading Companion
             </h2>
             <AITradingCompanion />
+          </section>
+
+          {/* Market Technical Analysis / Fear & Greed */}
+          <section className="w-full mb-8">
+            <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
+              Market Sentiment & Technical Analysis
+            </h2>
+            <FearGreedIndex />
           </section>
 
           {/* First Row: Market Overview + Stock Heatmap */}

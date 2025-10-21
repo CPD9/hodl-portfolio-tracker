@@ -11,22 +11,25 @@ const Header = async ({ user }: { user: User }) => {
 
     return (
         <header className="sticky top-0 header z-50">
-            <div className="container header-wrapper">
-                <Link href="/" className="flex items-center space-x-2 md:space-x-3 hover:opacity-80 transition-opacity flex-shrink-0">
-                    <PixelCharacter size="md" />
-                    <div className="text-xl md:text-2xl font-bold text-yellow-500 cursor-pointer">
-                        HODL
-                    </div>
-                </Link>
-                <nav className="hidden lg:block flex-1 mx-4">
-                    <NavItems initialStocks={initialStocks} />
-                </nav>
+            <div className="container">
+                <div className="flex items-center justify-between px-4 md:px-6 py-4">
+                    <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity flex-shrink-0">
+                        <PixelCharacter size="md" />
+                        <div className="text-lg md:text-xl font-bold text-yellow-500">
+                            HODL
+                        </div>
+                    </Link>
+                    
+                    <nav className="hidden xl:block flex-1 max-w-2xl mx-8">
+                        <NavItems initialStocks={initialStocks} />
+                    </nav>
 
-                <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                    <div className="hidden md:block">
-                        <OnchainWalletConnect />
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="hidden xl:block">
+                            <OnchainWalletConnect />
+                        </div>
+                        <UserDropdown user={user} initialStocks={initialStocks} />
                     </div>
-                    <UserDropdown user={user} initialStocks={initialStocks} />
                 </div>
             </div>
         </header>
