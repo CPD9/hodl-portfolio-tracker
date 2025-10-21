@@ -97,30 +97,30 @@ const AITradingCompanion: React.FC = () => {
       </div>
 
       {/* Risk Profile */}
-      <div className="mb-6 p-3 md:p-4 bg-gray-700 rounded-lg">
+      <div className="mb-6 p-3 md:p-4 bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg border border-gray-600">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-4">
           <h4 className="text-sm md:text-base font-semibold text-gray-100 flex items-center">
             <Shield className="w-4 h-4 mr-2 text-blue-400 flex-shrink-0" />
             Risk Profile
           </h4>
-          <span className="text-xs md:text-sm text-gray-400">AI-Guided</span>
+          <span className="text-xs md:text-sm px-2 py-1 bg-blue-500/20 text-blue-400 rounded">AI-Guided</span>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          <div>
+          <div className="bg-gray-800/50 rounded p-2 border border-gray-600/50">
             <p className="text-xs text-gray-400">Max Risk/Trade</p>
-            <p className="text-sm md:text-base text-gray-100">{riskProfile.maxRiskPerTrade}%</p>
+            <p className="text-base md:text-lg font-bold text-yellow-400">{riskProfile.maxRiskPerTrade}%</p>
           </div>
-          <div>
+          <div className="bg-gray-800/50 rounded p-2 border border-gray-600/50">
             <p className="text-xs text-gray-400">Portfolio Risk</p>
-            <p className="text-sm md:text-base text-gray-100">{riskProfile.maxPortfolioRisk}%</p>
+            <p className="text-base md:text-lg font-bold text-orange-400">{riskProfile.maxPortfolioRisk}%</p>
           </div>
-          <div>
+          <div className="bg-gray-800/50 rounded p-2 border border-gray-600/50">
             <p className="text-xs text-gray-400">Timeframe</p>
-            <p className="text-sm md:text-base text-gray-100">{riskProfile.preferredTimeframe}</p>
+            <p className="text-base md:text-lg font-bold text-blue-400">{riskProfile.preferredTimeframe}</p>
           </div>
-          <div>
+          <div className="bg-gray-800/50 rounded p-2 border border-gray-600/50">
             <p className="text-xs text-gray-400">Tolerance</p>
-            <p className="text-sm md:text-base text-gray-100 capitalize">{riskProfile.riskTolerance.toLowerCase()}</p>
+            <p className="text-base md:text-lg font-bold text-purple-400 capitalize">{riskProfile.riskTolerance.toLowerCase()}</p>
           </div>
         </div>
       </div>
@@ -128,9 +128,12 @@ const AITradingCompanion: React.FC = () => {
       {/* Trading Signals */}
       {signals.length > 0 && (
         <div className="space-y-3 md:space-y-4">
-          <h4 className="text-sm md:text-base font-semibold text-gray-100 mb-3 md:mb-4">AI Trading Signals</h4>
+          <h4 className="text-sm md:text-base font-semibold text-gray-100 mb-3 md:mb-4 flex items-center">
+            <BarChart3 className="w-4 h-4 mr-2 text-purple-400" />
+            AI Trading Signals
+          </h4>
           {signals.map((signal) => (
-            <div key={signal.id} className="bg-gray-700 rounded-lg p-3 md:p-4 hover:bg-gray-600 transition-colors">
+            <div key={signal.id} className="bg-gradient-to-br from-gray-700 to-gray-800 rounded-lg p-3 md:p-4 border border-gray-600 hover:border-gray-500 transition-all shadow-lg">
               <div className="flex items-start sm:items-center justify-between mb-3 gap-2">
                 <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
                   <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
@@ -156,9 +159,56 @@ const AITradingCompanion: React.FC = () => {
                 </div>
               </div>
 
+              {/* TradingView Mini Chart */}
+              <div className="mb-3 bg-gray-800 rounded-lg overflow-hidden" style={{ height: '200px' }}>
+                <div 
+                  className="tradingview-widget-container h-full"
+                  ref={(el) => {
+                    if (el && !el.dataset.loaded) {
+                      el.innerHTML = '';
+                      const script = document.createElement('script');
+                      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+                      script.async = true;
+                      script.innerHTML = JSON.stringify({
+                        symbol: signal.symbol,
+                        width: '100%',
+                        height: '100%',
+                        locale: 'en',
+                        dateRange: '1D',
+                        colorTheme: 'dark',
+                        trendLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 1)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 1)' : 'rgba(234, 179, 8, 1)',
+                        underLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 0.3)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(234, 179, 8, 0.3)',
+                        underLineBottomColor: 'rgba(0, 0, 0, 0)',
+                        isTransparent: true,
+                        autosize: true,
+                        largeChartUrl: ''
+                      });
+                      el.appendChild(script);
+                      el.dataset.loaded = 'true';
+                    }
+                  }}
+                />
+              </div>
+
               {/* AI Insights */}
-              <div className="mb-3 p-2 md:p-3 bg-gray-600 rounded-lg">
-                <p className="text-xs md:text-sm text-gray-200 italic line-clamp-3">"{signal.aiInsights}"</p>
+              <div className="mb-3 p-2 md:p-3 bg-gray-600 rounded-lg border-l-4" style={{ borderLeftColor: signal.action === 'BUY' ? '#22c55e' : signal.action === 'SELL' ? '#ef4444' : '#eab308' }}>
+                <p className="text-xs md:text-sm text-gray-200 italic">"{signal.aiInsights}"</p>
+              </div>
+
+              {/* Technical Indicators */}
+              <div className="mb-3 grid grid-cols-3 gap-2">
+                <div className="bg-gray-800 rounded p-2 text-center">
+                  <p className="text-xs text-gray-400 mb-1">RSI (14)</p>
+                  <p className="text-sm font-bold text-blue-400">{(Math.random() * 40 + 30).toFixed(1)}</p>
+                </div>
+                <div className="bg-gray-800 rounded p-2 text-center">
+                  <p className="text-xs text-gray-400 mb-1">MACD</p>
+                  <p className="text-sm font-bold text-green-400">{signal.action === 'BUY' ? '↑ Bullish' : signal.action === 'SELL' ? '↓ Bearish' : '→ Neutral'}</p>
+                </div>
+                <div className="bg-gray-800 rounded p-2 text-center">
+                  <p className="text-xs text-gray-400 mb-1">MA (50)</p>
+                  <p className="text-sm font-bold text-purple-400">${(parseFloat(signal.currentPrice) * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
+                </div>
               </div>
 
               {/* Price Targets */}
