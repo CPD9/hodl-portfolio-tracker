@@ -170,7 +170,7 @@ const AITradingCompanion: React.FC = () => {
               </div>
 
               {/* TradingView Mini Chart */}
-              <div className="mb-3 bg-gray-800 rounded-lg overflow-hidden" style={{ height: '200px' }}>
+              <div className="mb-3 bg-gray-900/50 rounded-lg overflow-hidden border border-gray-700" style={{ height: '280px' }}>
                 <div 
                   className="tradingview-widget-container h-full"
                   ref={(el) => {
@@ -189,7 +189,7 @@ const AITradingCompanion: React.FC = () => {
                         trendLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 1)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 1)' : 'rgba(234, 179, 8, 1)',
                         underLineColor: signal.action === 'BUY' ? 'rgba(34, 197, 94, 0.3)' : signal.action === 'SELL' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(234, 179, 8, 0.3)',
                         underLineBottomColor: 'rgba(0, 0, 0, 0)',
-                        isTransparent: true,
+                        isTransparent: false,
                         autosize: true,
                         largeChartUrl: ''
                       });
