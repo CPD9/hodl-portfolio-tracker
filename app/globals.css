@@ -396,6 +396,14 @@
   overflow: hidden !important;
 }
 
+.tradingview-widget-container iframe {
+  overflow: hidden !important;
+}
+
+.tradingview-widget-container > div {
+  overflow: hidden !important;
+}
+
 .tv-embed-widget-wrapper__body {
   background-color: #141414 !important;
 }
@@ -592,4 +600,9 @@
   --ock-text-primary: #f9fafb;
   --ock-text-secondary: #9ca3af;
   --ock-accent: #FFB800;
+}
+
+/* Landing page - scroll offset for fixed header */
+section[id] {
+  scroll-margin-top: 80px;
 }
