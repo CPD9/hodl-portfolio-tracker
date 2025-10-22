@@ -366,7 +366,10 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                   const last = messages.length > 0 ? messages[messages.length - 1] : undefined;
                   const proposal = last?.tradeProposal;
                   return proposal ? (
-                    <div className="mt-2 rounded-lg border border-yellow-600/40 bg-gray-800/70 shadow-md">
+                    <div className={cn(
+                      "mt-2 rounded-lg border border-yellow-600/40 bg-gray-800/70 shadow-md",
+                      isExpanded && "max-w-[26rem] mx-auto"
+                    )}>
                       <div className="px-3 py-2 border-b border-gray-700 text-[11px] uppercase tracking-wide text-gray-300">
                         Trade proposal for authorization
                       </div>
