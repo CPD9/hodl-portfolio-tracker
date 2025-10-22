@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -33,6 +33,9 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [livePrices, setLivePrices] = useState<Record<string, { price: number | null; currency: string }>>({});
+  const [liveUpdatedAt, setLiveUpdatedAt] = useState<Date | null>(null);
+  const liveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -208,8 +211,62 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const authorizeTrade = async (proposal: NonNullable<ChatMessage['tradeProposal']>) => {
     try {
       if (!user?.id) return;
+      // stop live polling during execution
+      if (liveTimerRef.current) {
+        clearInterval(liveTimerRef.current);
+        liveTimerRef.current = null;
+      }
       setIsLoading(true);
-      const res = await executeTradeOrders(user.id, proposal.orders);
+
+      // Final live refresh and order reprojection to live prices
+      const symbols: { symbol: string; type: 'STOCK' | 'CRYPTO' }[] = [];
+      proposal.orders.forEach((o) => {
+        if (o.from.type !== 'CASH') symbols.push({ symbol: o.from.symbol, type: o.from.type });
+        if (o.to.type !== 'CASH') symbols.push({ symbol: o.to.symbol, type: o.to.type });
+      });
+      const unique = Array.from(
+        new Map(symbols.map((s) => [`${s.type}:${s.symbol.toUpperCase()}`, { symbol: s.symbol.toUpperCase(), type: s.type }])).values()
+      );
+      let latest: Record<string, { price: number | null; currency: string }> = {};
+      try {
+        const res = await fetch('/api/prices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symbols: unique }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          latest = data.results || {};
+        }
+      } catch {}
+
+      const adjustedOrders = proposal.orders.map((o) => {
+        const fromKey = `${o.from.type}:${o.from.symbol.toUpperCase()}`;
+        const toKey = `${o.to.type}:${o.to.symbol.toUpperCase()}`;
+        const fromLive = o.from.type !== 'CASH' ? latest[fromKey]?.price ?? livePrices[fromKey]?.price ?? null : null;
+        const toLive = o.to.type !== 'CASH' ? latest[toKey]?.price ?? livePrices[toKey]?.price ?? null : null;
+
+        // Clone to avoid mutating original
+        const next = JSON.parse(JSON.stringify(o));
+
+        // BUY: USD -> Asset. Keep USD constant, recompute asset qty using live price.
+        if (o.side === 'BUY' && o.from.type === 'CASH' && o.to.type !== 'CASH' && toLive) {
+          const usd = o.from.amount;
+          const qty = usd / toLive;
+          next.to.amount = qty;
+        }
+
+        // SELL: Asset -> USD. Keep asset qty constant, recompute USD using live price.
+        if (o.side === 'SELL' && o.to.type === 'CASH' && o.from.type !== 'CASH' && fromLive) {
+          const qty = o.from.amount;
+          const usd = qty * fromLive;
+          next.to.amount = usd;
+        }
+
+        return next;
+      });
+
+      const res = await executeTradeOrders(user.id, adjustedOrders);
       const reply: ChatMessage = {
         role: 'assistant',
         content: res.success ? 'Transaction(s) executed successfully.' : `Failed: ${res.message}`,
@@ -239,6 +296,53 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       setIsLoading(false);
     }
   };
+
+  // Live price polling when a trade proposal is visible
+  useEffect(() => {
+    const last = messages.length > 0 ? messages[messages.length - 1] : undefined;
+    const proposal = last?.tradeProposal;
+    if (!proposal) {
+      if (liveTimerRef.current) {
+        clearInterval(liveTimerRef.current);
+        liveTimerRef.current = null;
+      }
+      return;
+    }
+
+    const symbols: { symbol: string; type: 'STOCK' | 'CRYPTO' }[] = [];
+    proposal.orders.forEach((o) => {
+      if (o.from.type !== 'CASH') symbols.push({ symbol: o.from.symbol, type: o.from.type });
+      if (o.to.type !== 'CASH') symbols.push({ symbol: o.to.symbol, type: o.to.type });
+    });
+    // de-duplicate
+    const unique = Array.from(new Map(symbols.map(s => [`${s.type}:${s.symbol.toUpperCase()}`, { symbol: s.symbol.toUpperCase(), type: s.type }])).values());
+
+    const fetchOnce = async () => {
+      try {
+        const res = await fetch('/api/prices', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symbols: unique }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        setLivePrices(data.results || {});
+        setLiveUpdatedAt(data.updatedAt ? new Date(data.updatedAt) : new Date());
+      } catch {}
+    };
+
+    // initial fetch and start interval
+    fetchOnce();
+    if (liveTimerRef.current) clearInterval(liveTimerRef.current as any);
+    liveTimerRef.current = setInterval(fetchOnce, 5000);
+
+    return () => {
+      if (liveTimerRef.current) {
+        clearInterval(liveTimerRef.current);
+        liveTimerRef.current = null;
+      }
+    };
+  }, [messages]);
 
   return (
     <>
@@ -370,18 +474,65 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                       "mt-2 rounded-lg border border-yellow-600/40 bg-gray-800/70 shadow-md",
                       isExpanded && "max-w-[26rem] mx-auto"
                     )}>
-                      <div className="px-3 py-2 border-b border-gray-700 text-[11px] uppercase tracking-wide text-gray-300">
-                        Trade proposal for authorization
+                      <div className="px-3 py-2 border-b border-gray-700 text-[11px] uppercase tracking-wide text-gray-300 flex items-center justify-between">
+                        <span>Trade proposal for authorization</span>
+                        <span className="text-[10px] font-medium text-green-400 flex items-center gap-1">
+                          <span className="inline-block h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                          Live{liveUpdatedAt ? ` • updated ${formatTime(liveUpdatedAt)}` : ''}
+                        </span>
                       </div>
                       <div className="divide-y divide-gray-700">
                         {proposal.orders.map((o, idx) => {
-                          const totalUSD = o.from.type === 'CASH' ? o.from.amount : (o.to.type === 'CASH' ? o.to.amount : undefined);
                           const fmtQty = (v: number, max = o.to.type === 'CRYPTO' || o.from.type === 'CRYPTO' ? 8 : 4) => {
                             if (!Number.isFinite(v)) return String(v);
                             const s = v.toFixed(max);
                             return s.replace(/\.0+$/, '').replace(/(\.[0-9]*?)0+$/, '$1');
                           };
                           const fmtUSD = (v: number) => v.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+                          const fromKey = `${o.from.type}:${o.from.symbol.toUpperCase()}`;
+                          const toKey = `${o.to.type}:${o.to.symbol.toUpperCase()}`;
+                          const fromLive = o.from.type !== 'CASH' ? livePrices[fromKey]?.price ?? null : null;
+                          const toLive = o.to.type !== 'CASH' ? livePrices[toKey]?.price ?? null : null;
+
+                          // Dynamically compute display amounts based on live prices
+                          const display = (() => {
+                            // Defaults to original proposal amounts
+                            let fromAmount = o.from.amount;
+                            let toAmount = o.to.amount;
+
+                            if (o.side === 'BUY' && o.from.type === 'CASH') {
+                              // USD -> Asset: keep USD spend constant; recompute asset qty from live to price
+                              if (toLive && Number.isFinite(toLive)) {
+                                toAmount = o.from.amount / toLive;
+                              }
+                            } else if (o.side === 'SELL' && o.to.type === 'CASH') {
+                              // Asset -> USD: keep asset qty constant; recompute USD from live from price
+                              if (fromLive && Number.isFinite(fromLive)) {
+                                toAmount = o.from.amount * fromLive;
+                              }
+                            } else if (o.from.type !== 'CASH' && o.to.type !== 'CASH') {
+                              // Asset -> Asset: estimate toAmount via live prices when both available
+                              if (fromLive && toLive && Number.isFinite(fromLive) && Number.isFinite(toLive)) {
+                                toAmount = o.from.amount * (fromLive / toLive);
+                              }
+                            }
+
+                            // Compute bottom-right USD total dynamically
+                            let bottomRightUSD: number | undefined = undefined;
+                            if (o.side === 'BUY' && o.from.type === 'CASH') {
+                              bottomRightUSD = o.from.amount; // locked spend
+                            } else if (o.side === 'SELL' && o.to.type === 'CASH') {
+                              if (fromLive && Number.isFinite(fromLive)) bottomRightUSD = o.from.amount * fromLive;
+                              else bottomRightUSD = o.to.amount;
+                            } else {
+                              // Asset <-> Asset: show USD value of target leg if possible
+                              if (toLive && Number.isFinite(toLive)) bottomRightUSD = toAmount * toLive;
+                              else if (fromLive && Number.isFinite(fromLive)) bottomRightUSD = o.from.amount * fromLive;
+                            }
+
+                            return { fromAmount, toAmount, bottomRightUSD };
+                          })();
+
                           return (
                             <div key={idx} className="p-3 grid grid-cols-[auto,1fr,auto,1fr,auto] items-stretch gap-2">
                               <div className={cn('self-start text-[10px] px-2 py-0.5 rounded-full font-semibold',
@@ -392,7 +543,10 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                               <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
                                 <div className="text-[10px] text-gray-400">From</div>
                                 <div className="text-sm font-semibold text-gray-100 truncate">{o.from.symbol} <span className="text-[10px] opacity-70">({o.from.type})</span></div>
-                                <div className="text-xs text-gray-300">Amount: {fmtQty(o.from.amount)}</div>
+                                <div className="text-xs text-gray-300">Amount: {o.from.type === 'CASH' ? fmtUSD(display.fromAmount) : fmtQty(display.fromAmount)}</div>
+                                {o.from.type !== 'CASH' && (
+                                  <div className="text-[11px] text-gray-400 mt-0.5">Live price: {fromLive != null ? fmtUSD(fromLive) : '—'}</div>
+                                )}
                               </div>
                               <div className="flex items-center justify-center text-gray-400 px-1">
                                 <ArrowDown size={18} />
@@ -400,10 +554,22 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                               <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
                                 <div className="text-[10px] text-gray-400">To</div>
                                 <div className="text-sm font-semibold text-gray-100 truncate">{o.to.symbol} <span className="text-[10px] opacity-70">({o.to.type})</span></div>
-                                <div className="text-xs text-gray-300">Amount: {fmtQty(o.to.amount)}</div>
+                                <div className="text-xs text-gray-300">Amount: {o.to.type === 'CASH' ? fmtUSD(display.toAmount) : fmtQty(display.toAmount)}</div>
+                                {o.to.type !== 'CASH' && (
+                                  <div className="text-[11px] text-gray-400 mt-0.5">Live price: {toLive != null ? fmtUSD(toLive) : '—'}</div>
+                                )}
                               </div>
                               <div className="flex items-center justify-end text-sm font-medium text-gray-100 pl-2">
-                                {typeof totalUSD === 'number' ? <span className="whitespace-nowrap">{fmtUSD(totalUSD)}</span> : <span className="text-gray-500 text-xs">—</span>}
+                                {display.bottomRightUSD !== undefined ? (
+                                  // Use approximation glyph when value is live-derived and not locked
+                                  (o.side === 'SELL' && o.to.type === 'CASH') || (o.from.type !== 'CASH' && o.to.type !== 'CASH') ? (
+                                    <span className="whitespace-nowrap">≈ {fmtUSD(display.bottomRightUSD)}</span>
+                                  ) : (
+                                    <span className="whitespace-nowrap">{fmtUSD(display.bottomRightUSD)}</span>
+                                  )
+                                ) : (
+                                  <span className="text-gray-500 text-xs">—</span>
+                                )}
                               </div>
                             </div>
                           );
