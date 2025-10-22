@@ -181,30 +181,30 @@ const BaseIntegration: React.FC = () => {
 
   if (!wallet) {
     return (
-      <div className="bg-gray-800 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-100">Base Chain Portfolio</h3>
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+      <div className="bg-gray-800 rounded-lg p-4 md:p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+          <h3 className="text-base md:text-lg font-semibold text-gray-100">Base Chain Portfolio</h3>
+          <div className="w-2 h-2 md:w-3 md:h-3 bg-red-500 rounded-full flex-shrink-0"></div>
         </div>
         
-        <div className="text-center py-8">
+        <div className="text-center py-6 md:py-8">
           <div className="flex justify-center mb-4">
             <PixelCharacter variant="hero" size="xl" animated={true} />
           </div>
           
-          <h4 className="text-xl font-medium text-gray-100 mb-2">Connect Your Base Wallet</h4>
-          <p className="text-gray-400 mb-6 max-w-md mx-auto">
+          <h4 className="text-lg md:text-xl font-medium text-gray-100 mb-2">Connect Your Base Wallet</h4>
+          <p className="text-sm md:text-base text-gray-400 mb-6 max-w-md mx-auto px-4">
             Track your Base portfolio alongside traditional stocks with real-time data and analytics
           </p>
           
           {/* Wallet Installation Guide */}
           {error && error.includes('No wallet found') && (
-            <div className="bg-gray-700 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
-              <h5 className="text-blue-400 font-medium mb-2">Install Web3 Wallet</h5>
-              <p className="text-sm text-gray-300 mb-3">
+            <div className="bg-gray-700 rounded-lg p-3 md:p-4 mb-6 text-left max-w-md mx-auto">
+              <h5 className="text-sm md:text-base text-blue-400 font-medium mb-2">Install Web3 Wallet</h5>
+              <p className="text-xs md:text-sm text-gray-300 mb-3">
                 To connect to Base, install MetaMask:
               </p>
-              <ol className="text-sm text-gray-300 space-y-1 list-decimal list-inside">
+              <ol className="text-xs md:text-sm text-gray-300 space-y-1 list-decimal list-inside">
                 <li>Install <a href="https://metamask.io" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">MetaMask</a> extension</li>
                 <li>Create or import wallet</li>
                 <li>Add Base network</li>
@@ -216,13 +216,13 @@ const BaseIntegration: React.FC = () => {
           <Button 
             onClick={connectWallet}
             disabled={isPending}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 rounded-lg font-medium text-sm md:text-base"
           >
             {isPending ? 'Connecting...' : 'Connect Wallet'}
           </Button>
           
           {error && !error.includes('No wallet found') && (
-            <p className="text-red-400 text-sm mt-3">{error}</p>
+            <p className="text-red-400 text-xs md:text-sm mt-3 px-4">{error}</p>
           )}
         </div>
       </div>
@@ -230,35 +230,35 @@ const BaseIntegration: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
+    <div className="bg-gray-800 rounded-lg p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <h3 className="text-lg font-semibold text-gray-100">Base Chain Portfolio</h3>
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-6">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <h3 className="text-base md:text-lg font-semibold text-gray-100">Base Chain Portfolio</h3>
+          <div className="w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full flex-shrink-0"></div>
         </div>
         <Button 
           onClick={disconnectWallet}
           variant="outline"
           size="sm"
-          className="text-gray-400 hover:text-white"
+          className="text-gray-400 hover:text-white text-sm"
         >
           Disconnect
         </Button>
       </div>
 
       {/* Wallet Info */}
-      <div className="mb-6 p-4 bg-gray-700 rounded-lg">
-        <div className="flex items-center justify-between">
+      <div className="mb-6 p-3 md:p-4 bg-gray-700 rounded-lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div>
-            <p className="text-sm text-gray-400">Connected Wallet</p>
-            <p className="text-gray-100 font-mono">
+            <p className="text-xs md:text-sm text-gray-400">Connected Wallet</p>
+            <p className="text-sm md:text-base text-gray-100 font-mono break-all sm:break-normal">
               {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-sm text-gray-400">Network</p>
-            <p className="text-gray-100">{wallet.network.chainName}</p>
+          <div className="sm:text-right">
+            <p className="text-xs md:text-sm text-gray-400">Network</p>
+            <p className="text-sm md:text-base text-gray-100">{wallet.network.chainName}</p>
           </div>
         </div>
       </div>
@@ -266,39 +266,39 @@ const BaseIntegration: React.FC = () => {
       {/* Portfolio Summary - TradingView Style */}
       {portfolio && (
         <div className="mb-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-700 rounded-lg p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div className="bg-gray-700 rounded-lg p-3 md:p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Total Value</span>
+                <span className="text-xs md:text-sm text-gray-400">Total Value</span>
               </div>
-              <p className="text-2xl font-bold text-gray-100">
+              <p className="text-xl md:text-2xl font-bold text-gray-100 break-words">
                 ${portfolio.totalValueUSD.toLocaleString()}
               </p>
             </div>
             
-            <div className="bg-gray-700 rounded-lg p-4">
+            <div className="bg-gray-700 rounded-lg p-3 md:p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Tokens</span>
+                <span className="text-xs md:text-sm text-gray-400">Tokens</span>
               </div>
-              <p className="text-2xl font-bold text-gray-100">
+              <p className="text-xl md:text-2xl font-bold text-gray-100">
                 {portfolio.tokenCount}
               </p>
             </div>
             
-            <div className="bg-gray-700 rounded-lg p-4">
+            <div className="bg-gray-700 rounded-lg p-3 md:p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">Gas Spent</span>
+                <span className="text-xs md:text-sm text-gray-400">Gas Spent</span>
               </div>
-              <p className="text-2xl font-bold text-gray-100">
+              <p className="text-xl md:text-2xl font-bold text-gray-100 break-words">
                 ${portfolio.gasSpentUSD.toFixed(2)}
               </p>
             </div>
             
-            <div className="bg-gray-700 rounded-lg p-4">
+            <div className="bg-gray-700 rounded-lg p-3 md:p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-400">DeFi Positions</span>
+                <span className="text-xs md:text-sm text-gray-400">DeFi Positions</span>
               </div>
-              <p className="text-2xl font-bold text-gray-100">
+              <p className="text-xl md:text-2xl font-bold text-gray-100">
                 {portfolio.defiPositions.length}
               </p>
             </div>
@@ -309,16 +309,16 @@ const BaseIntegration: React.FC = () => {
       {/* Recent Transactions - Table Style */}
       {portfolio?.recentTransactions && portfolio.recentTransactions.length > 0 && (
         <div>
-          <h4 className="text-md font-semibold text-gray-100 mb-4">Recent Transactions</h4>
+          <h4 className="text-sm md:text-base font-semibold text-gray-100 mb-3 md:mb-4">Recent Transactions</h4>
           <div className="space-y-2">
             {portfolio.recentTransactions.slice(0, 5).map((tx, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+              <div key={index} className="flex items-center justify-between p-2 md:p-3 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors gap-2">
+                <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                  <div className="w-7 h-7 md:w-8 md:h-8 bg-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-xs text-gray-300">TX</span>
                   </div>
-                  <div>
-                    <p className="text-sm font-mono text-gray-200">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs md:text-sm font-mono text-gray-200 truncate">
                       {tx.hash.slice(0, 8)}...{tx.hash.slice(-6)}
                     </p>
                     <p className="text-xs text-gray-400">
@@ -326,11 +326,11 @@ const BaseIntegration: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-200">
+                <div className="text-right flex-shrink-0">
+                  <p className="text-xs md:text-sm text-gray-200 whitespace-nowrap">
                     {(parseInt(tx.value, 16) / 1e18).toFixed(4)} ETH
                   </p>
-                  <p className="text-xs text-gray-400">Base Network</p>
+                  <p className="text-xs text-gray-400 whitespace-nowrap">Base Network</p>
                 </div>
               </div>
             ))}

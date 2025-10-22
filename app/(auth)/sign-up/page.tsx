@@ -41,7 +41,7 @@ const SignUp = () => {
                 toast.success('Account created successfully!', {
                     description: 'Welcome to HODL Portfolio Tracker'
                 });
-                router.push('/');
+                router.push('/dashboard');
             } else {
                 toast.error('Sign up failed', {
                     description: result.error || 'Failed to create an account. Please try again.'

@@ -33,7 +33,7 @@ const SignIn = () => {
                 toast.success('Welcome back!', {
                     description: 'Successfully signed in to your account'
                 });
-                router.push('/');
+                router.push('/dashboard');
             } else {
                 toast.error('Sign in failed', {
                     description: result.error || 'Please check your credentials and try again'

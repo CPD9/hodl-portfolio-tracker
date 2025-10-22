@@ -10,20 +10,23 @@ const Header = async ({ user }: { user: User }) => {
     const initialStocks = await searchStocks();
 
     return (
-        <header className="sticky top-0 header">
+        <header className="sticky top-0 header z-50">
             <div className="container header-wrapper">
-                <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
                     <PixelCharacter size="md" />
-                    <div className="text-2xl font-bold text-yellow-500 cursor-pointer">
+                    <div className="text-xl md:text-2xl font-bold text-yellow-500">
                         HODL
                     </div>
                 </Link>
-                <nav className="hidden sm:block">
+                
+                <nav className="hidden lg:block">
                     <NavItems initialStocks={initialStocks} />
                 </nav>
 
-                <div className="flex items-center space-x-4">
-                    <OnchainWalletConnect />
+                <div className="flex items-center gap-4">
+                    <div className="hidden lg:block">
+                        <OnchainWalletConnect />
+                    </div>
                     <UserDropdown user={user} initialStocks={initialStocks} />
                 </div>
             </div>

@@ -1,11 +1,11 @@
 'use client'
 
-import {NAV_ITEMS} from "@/lib/constants";
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import {NAV_ITEMS} from "@/lib/constants";
 import SearchCommand from "@/components/SearchCommand";
+import {usePathname} from "next/navigation";
 
-const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]}) => {
+const NavItems = ({initialStocks, vertical = false, onNavigate}: { initialStocks: StockWithWatchlistStatus[], vertical?: boolean, onNavigate?: () => void }) => {
     const pathname = usePathname()
 
     const isActive = (path: string) => {
@@ -15,7 +15,7 @@ const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]})
     }
 
     return (
-        <ul className="flex flex-col sm:flex-row p-2 gap-3 sm:gap-10 font-medium">
+        <ul className={`flex ${vertical ? 'flex-col' : 'flex-col sm:flex-row'} p-2 gap-3 ${vertical ? 'gap-3' : 'sm:gap-10'} font-medium`}>
             {NAV_ITEMS.map(({ href, label }) => {
                 if(href === '/search') return (
                     <li key="search-trigger">
@@ -27,10 +27,14 @@ const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]})
                     </li>
                 )
 
-                return <li key={href}>
-                    <Link href={href} className={`hover:text-yellow-500 transition-colors ${
-                        isActive(href) ? 'text-gray-100' : ''
-                    }`}>
+                return <li key={href} className={vertical ? 'w-full' : ''}>
+                    <Link 
+                        href={href}
+                        onClick={onNavigate}
+                        className={`${vertical ? 'block py-2 px-2 rounded hover:bg-gray-700' : ''} hover:text-yellow-500 transition-colors ${
+                            isActive(href) ? 'text-gray-100' : ''
+                        }`}
+                    >
                         {label}
                     </Link>
                 </li>
