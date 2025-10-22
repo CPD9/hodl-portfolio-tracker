@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, X, Send, Bot, User, ArrowRight } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
-import { getUserContext } from '@/lib/actions/user-context.actions';
+import { getUserContext, refreshUserContext } from '@/lib/actions/user-context.actions';
 import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
-import { decideTrades, executeTradeOrders } from '@/lib/actions/ai-trade-agent.actions';
+import { decideTrades, executeTradeOrders } from '../lib/actions/ai-trade-agent.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -26,12 +26,26 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [userContext, setUserContext] = useState<string | null>(null);
   const [isLoadingContext, setIsLoadingContext] = useState(false);
+  const [contextUpdatedAt, setContextUpdatedAt] = useState<Date | null>(null);
+  const [contextJustUpdated, setContextJustUpdated] = useState(false);
   const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const extractContextAsOf = (context: string | null): Date | null => {
+    if (!context) return null;
+    const m = context.match(/BEGIN_USER_CONTEXT_JSON\n([\s\S]*?)\nEND_USER_CONTEXT_JSON/);
+    if (m && m[1]) {
+      try {
+        const obj = JSON.parse(m[1]);
+        if (obj?.asOf) return new Date(obj.asOf);
+      } catch {}
+    }
+    return null;
   };
 
   useEffect(() => {
@@ -43,9 +57,13 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     if (isOpen && !isLoadingContext && !contextLoadedRef.current) {
       setIsLoadingContext(true);
       contextLoadedRef.current = true; // Mark as loaded for this session
-      getUserContext(user.id)
+    getUserContext(user.id)
         .then((context) => {
           setUserContext(context);
+      const asOf = extractContextAsOf(context) || new Date();
+      setContextUpdatedAt(asOf);
+          setContextJustUpdated(true);
+          setTimeout(() => setContextJustUpdated(false), 2500);
         })
         .catch((error) => {
           console.error('Error fetching user context:', error);
@@ -93,6 +111,17 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
+      // Always fetch the latest user context before processing the message
+      let freshContext: string | null = userContext;
+      try {
+        const latest = await getUserContext(user.id);
+        freshContext = latest;
+        setUserContext(latest);
+        const asOf = extractContextAsOf(latest) || new Date();
+        setContextUpdatedAt(asOf);
+      } catch (e) {
+        console.warn('Could not refresh user context before message:', e);
+      }
       // Step 1: Run info/context agent first to decide and fetch price context, and produce assistant reply
       let assistantAdded = false;
       let priceContext: any | null = null;
@@ -100,7 +129,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
         const result = await runAIContextAgent(
           updatedMessages.map(m => ({ role: m.role, content: m.content })),
           user.id,
-          userContext || null
+          freshContext || null
         );
         priceContext = result?.priceContext ?? null;
         if (result?.assistantMessage) {
@@ -113,7 +142,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       // Step 2: With the price context, ask trade agent to decide if buy/sell is requested
       try {
-        const maybeProposal = await decideTrades(userMessage.content, userContext, priceContext ?? undefined);
+        const maybeProposal = await decideTrades(userMessage.content, freshContext, priceContext ?? undefined);
         if (maybeProposal && maybeProposal.orders?.length) {
           const assistantTrade: ChatMessage = {
             role: 'assistant',
@@ -130,7 +159,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       // Step 3: Fallback to plain chat if no assistant response was added yet
       if (!assistantAdded) {
-        const assistantMessage = await sendChatMessage(updatedMessages, userContext);
+  const assistantMessage = await sendChatMessage(updatedMessages, freshContext);
         if (assistantMessage) {
           setMessages(prev => [...prev, assistantMessage]);
         } else {
@@ -177,6 +206,20 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, reply]);
+
+      // Refresh server-side and local user context right after successful execution
+      if (res.success) {
+        try {
+          const refreshed = await refreshUserContext(user.id);
+          setUserContext(refreshed);
+          const now = new Date();
+          setContextUpdatedAt(now);
+          setContextJustUpdated(true);
+          setTimeout(() => setContextJustUpdated(false), 2500);
+        } catch (err) {
+          console.warn('Could not refresh user context after trade:', err);
+        }
+      }
     } catch (e: any) {
       console.error('authorizeTrade error:', e);
       setMessages((prev) => [...prev, { role: 'assistant', content: 'Autorisierung fehlgeschlagen.', timestamp: new Date() }]);
@@ -214,8 +257,16 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                 </p>
               )}
               {userContext && !isLoadingContext && (
-                <p className="text-xs text-green-400 mt-1">
+                <p
+                  className={cn(
+                    'text-xs mt-1 transition-colors',
+                    contextJustUpdated ? 'text-green-300' : 'text-green-400'
+                  )}
+                >
                   ✓ Personalized context loaded
+                  {contextUpdatedAt && (
+                    <span className="text-[11px] text-green-300/80"> {" • updated "}{formatTime(contextUpdatedAt)}</span>
+                  )}
                 </p>
               )}
             </CardHeader>

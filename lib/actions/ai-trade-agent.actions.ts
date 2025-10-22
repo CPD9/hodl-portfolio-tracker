@@ -3,6 +3,7 @@
 import OpenAI from 'openai';
 import { buyCrypto, sellCrypto } from '@/lib/actions/crypto-trading.actions';
 import { buyStock, sellStock } from '@/lib/actions/stock-trading.actions';
+import { refreshUserContext } from '@/lib/actions/user-context.actions';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -23,7 +24,8 @@ export interface TradeProposal {
 const systemGuard = `You transform the user's chat intent into concrete trade orders.
 Return ONLY valid JSON: { "orders": [ { "side": "BUY|SELL", "from": {"type": "STOCK|CRYPTO|CASH", "symbol": "USD|AAPL|BTC|...", "amount": number}, "to": {"type": "STOCK|CRYPTO|CASH", "symbol": "USD|AAPL|BTC|...", "amount": number} } ], "note"?: string }.
 - Support multiple orders per request.
-- Infer quantities and direction from message and PRICE_CONTEXT if present. If user specifies a cash budget (e.g., $500), set from.type=CASH symbol=USD amount to that budget and compute to.amount using price. If selling holdings, set from to the asset with the quantity and compute the USD in to side.
+- You will receive USER_CONTEXT_JSON which includes the user's exact portfolio quantities; ALWAYS use it to infer amounts when the user doesn't specify a quantity (e.g., "sell my NVDA" -> set from.amount to the held quantity from USER_CONTEXT_JSON; "sell half my NVDA" -> from.amount = held quantity * 0.5).
+- Infer quantities and direction from the message and PRICE_CONTEXT if present. If user specifies a cash budget (e.g., $500), set from.type=CASH symbol=USD amount to that budget and compute to.amount using price. If selling holdings, set from to the asset with the quantity and compute the USD in to side.
 - Round: cash 2 decimals; crypto quantity up to 8; stocks 4.
 - If nothing actionable, return {"orders": []}.`;
 
@@ -31,7 +33,22 @@ export async function decideTrades(userInput: string, userContext?: string | nul
   try {
     if (!process.env.OPENAI_API_KEY) return null;
     const priceCtxStr = priceContextJSON ? JSON.stringify(priceContextJSON).slice(0, 8000) : 'N/A';
-    const prompt = `USER MESSAGE:\n${userInput}\n\nUSER PROFILE:\n${userContext ?? 'N/A'}\n\nPRICE_CONTEXT:\n${priceCtxStr}\n\nRespond with JSON only.`;
+    // Extract structured context JSON block if present in userContext
+    let userSummary = userContext || 'N/A';
+    let userContextJSON: any = null;
+    if (userContext) {
+      const m = userContext.match(/BEGIN_USER_CONTEXT_JSON\n([\s\S]*?)\nEND_USER_CONTEXT_JSON/);
+      if (m && m[1]) {
+        try {
+          userContextJSON = JSON.parse(m[1]);
+          // keep the human-readable summary by stripping the JSON block
+          userSummary = userContext.replace(m[0], '').trim();
+        } catch {}
+      }
+    }
+    const userCtxStr = userContextJSON ? JSON.stringify(userContextJSON).slice(0, 8000) : 'N/A';
+
+    const prompt = `USER MESSAGE:\n${userInput}\n\nUSER PROFILE (summary):\n${userSummary}\n\nUSER_CONTEXT_JSON:\n${userCtxStr}\n\nPRICE_CONTEXT:\n${priceCtxStr}\n\nRespond with JSON only.`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -49,14 +66,43 @@ export async function decideTrades(userInput: string, userContext?: string | nul
     const jsonStr = jsonMatch ? jsonMatch[0] : raw;
     const parsed = JSON.parse(jsonStr) as TradeProposal;
     if (!parsed || !Array.isArray(parsed.orders)) return null;
-  parsed.orders = parsed.orders
+    parsed.orders = parsed.orders
       .filter(o => o && o.side && o.from && o.to)
       .map(o => ({
     side: (o.side === 'SELL' ? 'SELL' : 'BUY') as TradeSide,
         from: { type: (o.from.type || 'CASH') as AssetType, symbol: String(o.from.symbol).toUpperCase(), amount: Number(o.from.amount) },
         to: { type: (o.to.type || 'CASH') as AssetType, symbol: String(o.to.symbol).toUpperCase(), amount: Number(o.to.amount) },
       }))
-      .filter(o => Number.isFinite(o.from.amount) && Number.isFinite(o.to.amount));
+      .filter(o => Number.isFinite(o.from.amount) || o.side === 'BUY');
+
+    // Backfill missing SELL quantities from user's portfolio JSON if available
+    if (userContextJSON && Array.isArray(userContextJSON.portfolio)) {
+      for (const o of parsed.orders) {
+        if (o.side === 'SELL' && (!Number.isFinite(o.from.amount) || o.from.amount <= 0)) {
+          const holding = userContextJSON.portfolio.find((h: any) => String(h.symbol).toUpperCase() === o.from.symbol && h.type === o.from.type);
+          if (holding && Number.isFinite(holding.quantity)) {
+            o.from.amount = Number(holding.quantity);
+          }
+        }
+      }
+    }
+
+    // Apply rounding rules
+    const round = (val: number, decimals: number) => {
+      const f = Math.pow(10, decimals);
+      return Math.round(val * f) / f;
+    };
+    for (const o of parsed.orders) {
+      if (o.from.type === 'CASH') o.from.amount = round(o.from.amount, 2);
+      if (o.to.type === 'CASH') o.to.amount = round(o.to.amount, 2);
+      if (o.from.type === 'CRYPTO') o.from.amount = round(o.from.amount, 8);
+      if (o.to.type === 'CRYPTO') o.to.amount = round(o.to.amount, 8);
+      if (o.from.type === 'STOCK') o.from.amount = round(o.from.amount, 4);
+      if (o.to.type === 'STOCK') o.to.amount = round(o.to.amount, 4);
+    }
+
+    // Filter invalid after rounding
+    parsed.orders = parsed.orders.filter(o => (o.side === 'SELL' ? o.from.amount > 0 : Number.isFinite(o.to.amount)));
     if (parsed.orders.length === 0) return null;
     return parsed;
   } catch (e) {
@@ -89,6 +135,12 @@ export async function executeTradeOrders(userId: string, orders: TradeOrderSpec[
           if (!res.success) return { success: false, message: res.message };
         }
       }
+    }
+    // All orders executed successfully; refresh the user's AI context summary so chat has fresh data
+    try {
+      await refreshUserContext(userId);
+    } catch (err) {
+      console.warn('refreshUserContext failed (non-fatal):', err);
     }
     return { success: true, message: 'All orders executed' };
   } catch (e: any) {
