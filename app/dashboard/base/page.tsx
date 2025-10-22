@@ -47,7 +47,7 @@ async function ConsultationsSection() {
           asChild
           className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
         >
-          <a href="/consultation">View All</a>
+          <a href="/dashboard/consultation">View All</a>
         </Button>
       </div>
 
@@ -63,7 +63,7 @@ async function ConsultationsSection() {
             Schedule your first AI consultation for personalized financial guidance
           </p>
           <Button asChild className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold">
-            <a href="/consultation">Schedule Consultation</a>
+            <a href="/dashboard/consultation">Schedule Consultation</a>
           </Button>
         </div>
       )}

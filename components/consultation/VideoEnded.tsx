@@ -30,7 +30,7 @@ export default function VideoEnded() {
             asChild
             className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold w-full"
           >
-            <Link href="/consultation">View All Consultations</Link>
+            <Link href="/dashboard/consultation">View All Consultations</Link>
           </Button>
 
           <Button asChild variant="ghost" className="w-full">

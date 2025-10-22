@@ -67,7 +67,7 @@ export default async function ConsultationDetailPage({
         {/* Header */}
         <div className="mb-6">
           <Link
-            href="/consultation"
+            href="/dashboard/consultation"
             className="inline-flex items-center text-gray-400 hover:text-yellow-500 transition mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

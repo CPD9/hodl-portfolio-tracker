@@ -75,7 +75,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
               <tr key={`${stock.symbol}-${index}`} className="table-row">
                 <td className="py-4 px-4">
                   <Link 
-                    href={`/stocks/${stock.symbol}`}
+                    href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
                     <div className="font-medium text-gray-100">{stock.company}</div>
@@ -84,7 +84,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                 </td>
                 <td className="py-4 px-4">
                   <Link 
-                    href={`/stocks/${stock.symbol}`}
+                    href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
                     <div className="font-mono text-gray-100">
@@ -94,7 +94,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                 </td>
                 <td className="py-4 px-4">
                   <Link 
-                    href={`/stocks/${stock.symbol}`}
+                    href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
                     {formatChange(stock.change || 0, stock.changePercent || 0)}
@@ -102,7 +102,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                 </td>
                 <td className="py-4 px-4">
                   <Link 
-                    href={`/stocks/${stock.symbol}`}
+                    href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
                     <div className="text-gray-100">
@@ -112,7 +112,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                 </td>
                 <td className="py-4 px-4">
                   <Link 
-                    href={`/stocks/${stock.symbol}`}
+                    href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
                     <div className="text-gray-100">

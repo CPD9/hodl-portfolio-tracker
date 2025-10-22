@@ -83,7 +83,7 @@ export default function VideoLobby({ onJoin }: VideoLobbyProps) {
           {/* Actions */}
           <div className="flex gap-x-4 justify-between w-full">
             <Button asChild variant="ghost" className="flex-1">
-              <Link href="/consultation">Cancel</Link>
+              <Link href="/dashboard/consultation">Cancel</Link>
             </Button>
             <Button
               onClick={onJoin}
