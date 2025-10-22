@@ -28,6 +28,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [isLoadingContext, setIsLoadingContext] = useState(false);
   const [contextUpdatedAt, setContextUpdatedAt] = useState<Date | null>(null);
   const [contextJustUpdated, setContextJustUpdated] = useState(false);
+  const [resetConversationOnNext, setResetConversationOnNext] = useState(false);
   const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -111,6 +112,11 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
+      // If a trade was executed previously, start a fresh context for the model by not sending prior messages
+      const useFreshContext = resetConversationOnNext;
+      if (useFreshContext) setResetConversationOnNext(false);
+      const sendMessages = useFreshContext ? [userMessage] : updatedMessages;
+
       // Always fetch the latest user context before processing the message
       let freshContext: string | null = userContext;
       try {
@@ -127,7 +133,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       let priceContext: any | null = null;
       try {
         const result = await runAIContextAgent(
-          updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          sendMessages.map(m => ({ role: m.role, content: m.content })),
           user.id,
           freshContext || null
         );
@@ -151,6 +157,9 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
             tradeProposal: maybeProposal,
           };
           setMessages(prev => [...prev, assistantTrade]);
+          // Reset conversation context for the next user message as soon as the proposal is shown,
+          // so the model won't carry over intent if the user ignores the trade card.
+          setResetConversationOnNext(true);
           return;
         }
       } catch (e) {
@@ -159,7 +168,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       // Step 3: Fallback to plain chat if no assistant response was added yet
       if (!assistantAdded) {
-  const assistantMessage = await sendChatMessage(updatedMessages, freshContext);
+  const assistantMessage = await sendChatMessage(sendMessages, freshContext);
         if (assistantMessage) {
           setMessages(prev => [...prev, assistantMessage]);
         } else {
@@ -216,6 +225,8 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
           setContextUpdatedAt(now);
           setContextJustUpdated(true);
           setTimeout(() => setContextJustUpdated(false), 2500);
+          // Reset conversation context for the next user message so the model does not use prior chat
+          setResetConversationOnNext(true);
         } catch (err) {
           console.warn('Could not refresh user context after trade:', err);
         }
