@@ -19,15 +19,16 @@ const queryClient = new QueryClient({
 
 export function OnchainProviders({ children }: { children: ReactNode }) {
   useEffect(() => {
-    // Suppress Coinbase Wallet SDK telemetry errors in development
+    // Suppress Coinbase Wallet SDK telemetry and COOP errors in development
     const originalError = console.error;
     console.error = (...args) => {
       if (
         typeof args[0] === 'string' &&
         (args[0].includes('telemetry') || 
-         args[0].includes('Failed to execute inlined telemetry'))
+         args[0].includes('Failed to execute inlined telemetry') ||
+         args[0].includes('Cross-Origin-Opener-Policy'))
       ) {
-        // Suppress telemetry errors
+        // Suppress telemetry and COOP errors
         return;
       }
       originalError.apply(console, args);

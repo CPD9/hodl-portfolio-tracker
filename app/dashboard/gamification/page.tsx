@@ -41,7 +41,7 @@ async function ConsultationsQuickView() {
                         Recent AI Consultations
                     </h2>
                     <Button asChild className="bg-purple-500 hover:bg-purple-600 text-white font-semibold">
-                        <a href="/consultation">View All</a>
+                        <a href="/dashboard/consultation">View All</a>
                     </Button>
                 </div>
                 <ConsultationsTable consultations={consultationsData.consultations} />
