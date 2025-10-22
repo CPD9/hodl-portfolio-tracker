@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
 import { getUserContext } from '@/lib/actions/user-context.actions';
+import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -91,6 +92,21 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
+      // Prefer the AI context agent path; fallback to plain chat on failure
+      try {
+        const result = await runAIContextAgent(
+          updatedMessages.map(m => ({ role: m.role, content: m.content })),
+          user.id,
+          userContext || null
+        );
+        if (result?.assistantMessage) {
+          setMessages([...updatedMessages, { role: 'assistant', content: result.assistantMessage.content, timestamp: new Date() }]);
+          return;
+        }
+      } catch (e) {
+        console.error('Agent flow failed, falling back to direct chat:', e);
+      }
+
       const assistantMessage = await sendChatMessage(updatedMessages, userContext);
       
       if (assistantMessage) {

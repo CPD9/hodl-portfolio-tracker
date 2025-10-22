@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, userContext } = await request.json();
+  const { messages, userContext } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -17,6 +17,18 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Extract optional realtime price context injected as a special assistant message
+    let extractedPriceContext: string | null = null;
+    const cleanedMessages = Array.isArray(messages)
+      ? messages.filter((m: any) => {
+          if (typeof m?.content === 'string' && m.content.startsWith('REALTIMES_PRICES_JSON:')) {
+            extractedPriceContext = m.content.replace('REALTIMES_PRICES_JSON:\n', '').trim();
+            return false; // remove from chat history
+          }
+          return true;
+        })
+      : messages;
 
     // Create a system message to give context about the HODL portfolio tracker
     let systemContent = `You are an AI assistant for HODL called Hodlini, an advanced portfolio tracking platform with the purpose of helping users that are new to crypto, but have experience with stock investments to navigate the world of crypto. 
@@ -36,6 +48,11 @@ export async function POST(request: NextRequest) {
       systemContent += `\n\n--- USER PROFILE & CONTEXT ---\n${userContext}\n\nUse this information to provide personalized advice tailored to the user's investment style, holdings, and interests.`;
     }
 
+    // Add realtime prices context if provided
+    if (extractedPriceContext) {
+      systemContent += `\n\n--- REALTIME PRICES (JSON) ---\n${extractedPriceContext}\n\nUse these prices for calculations and keep numbers consistent with them.`;
+    }
+
     const systemMessage = {
       role: 'system',
       content: systemContent,
@@ -43,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [systemMessage, ...messages],
+  messages: [systemMessage, ...cleanedMessages],
       max_tokens: 500,
       temperature: 0.7,
     });
