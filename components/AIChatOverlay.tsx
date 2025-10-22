@@ -91,7 +91,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: ChatMessage = {
         role: 'assistant',
-        content: 'Hello! I\'m Hodlini, your personal crypto assistant. 🚀\n\nI help you make the transition from traditional stocks to cryptocurrencies by recommending coins that match the themes of your stock investments.\n\nFeel free to ask me about crypto recommendations, portfolio strategies, or anything related to trading!',
+        content: "Hi! I'm Hodlini, your personal trading companion.\n\nI use real‑time market data, and you can buy or sell crypto and stocks with USD right here in chat. Ask me for ideas, analysis, or help with your portfolio.",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
