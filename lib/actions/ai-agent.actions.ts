@@ -20,6 +20,8 @@ type PriceEntry = {
 type PriceContext = {
   generatedAt: string;
   prices: Array<{ symbol: string; type: 'STOCK' | 'CRYPTO'; price: number | null; currency: string; marketCap: number | null }>;
+  // Symbols we attempted but couldn't resolve or fetch (price is null)
+  unresolvedSymbols?: Array<{ symbol: string; type: 'STOCK' | 'CRYPTO'; reason?: string }>;
 };
 
 /**
@@ -149,6 +151,9 @@ export async function buildPriceContextJSON(entries: PriceEntry[]): Promise<Pric
       marketCap: e.marketCap ?? null,
       metrics: e.metrics ?? undefined,
     })),
+    unresolvedSymbols: entries
+      .filter(e => e.price == null)
+      .map(e => ({ symbol: e.symbol, type: e.type, reason: 'NOT_FOUND_OR_UNAVAILABLE' })),
   };
 }
 
@@ -174,7 +179,9 @@ export async function runAIContextAgent(
   }
 
   // Call existing chat API with optional priceContext serialized into a system prompt
-  const systemContext = priceContext ? `REALTIMES_PRICES_JSON:\n${JSON.stringify(priceContext)}` : undefined;
+  const systemContext = priceContext
+    ? `REALTIME_PRICES_JSON:\n${JSON.stringify(priceContext)}\n\nGUIDANCE:\n- If any item has price: null, do NOT display $0. Instead, say you currently have no price information for that asset.\n- If 'unresolvedSymbols' is present, mention that those symbols could not be resolved or found in the data sources.\n- Use clear, concise language.`
+    : undefined;
 
   // Reuse sendChatMessage which hits /api/chat; prepend system message if needed
   const toSend = [...messages];

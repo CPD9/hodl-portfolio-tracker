@@ -1,6 +1,5 @@
-'use server';
 
-import { getCoinGeckoId } from '@/lib/services/sector-correlation';
+'use server';
 
 const COINGECKO_API_BASE = 'https://api.coingecko.com/api/v3';
 const COINGECKO_API_KEY = process.env.COINGECKO_API_KEY || '';
@@ -12,45 +11,61 @@ const CACHE_DURATION = 60000; // 1 minute
 async function fetchCoinGecko(endpoint: string): Promise<any> {
   const cacheKey = endpoint;
   const cached = cache.get(cacheKey);
-  
+
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return cached.data;
   }
 
   const headers: HeadersInit = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
 
   if (COINGECKO_API_KEY) {
-    headers['x-cg-demo-api-key'] = COINGECKO_API_KEY;
+    (headers as any)['x-cg-demo-api-key'] = COINGECKO_API_KEY;
   }
 
+  const response = await fetch(`${COINGECKO_API_BASE}${endpoint}`, {
+    headers,
+    next: { revalidate: 60 },
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`CoinGecko API error: ${response.status} ${text}`);
+  }
+
+  const data = await response.json();
+  cache.set(cacheKey, { data, timestamp: Date.now() });
+  return data;
+}
+
+// Resolve a symbol or name to a CoinGecko id dynamically using /search
+async function resolveCoinGeckoId(symbolOrName: string): Promise<string | null> {
   try {
-    const response = await fetch(`${COINGECKO_API_BASE}${endpoint}`, {
-      headers,
-      next: { revalidate: 60 }, // Cache for 60 seconds
-    });
-
-    if (!response.ok) {
-      throw new Error(`CoinGecko API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    cache.set(cacheKey, { data, timestamp: Date.now() });
-    
-    return data;
-  } catch (error) {
-    console.error('CoinGecko API error:', error);
-    throw error;
+    const q = (symbolOrName || '').trim();
+    if (!q) return null;
+    const search = await fetchCoinGecko(`/search?query=${encodeURIComponent(q)}`);
+    const coins: any[] = search?.coins || [];
+    if (!Array.isArray(coins) || coins.length === 0) return null;
+    const upper = q.toUpperCase();
+    // Prefer exact symbol match, then exact name, else first result
+    const bySymbol = coins.find((c) => (c?.symbol || '').toUpperCase() === upper);
+    if (bySymbol?.id) return bySymbol.id as string;
+    const byName = coins.find((c) => (c?.name || '').toUpperCase() === upper);
+    if (byName?.id) return byName.id as string;
+    return coins[0]?.id || null;
+  } catch (e) {
+    console.error('resolveCoinGeckoId error:', e);
+    return null;
   }
 }
 
 export async function getCryptoPrice(symbol: string): Promise<number | null> {
   try {
-    const coinId = getCoinGeckoId(symbol);
-    const data = await fetchCoinGecko(`/simple/price?ids=${coinId}&vs_currencies=usd`);
-    
-    return data[coinId]?.usd || null;
+    const coinId = await resolveCoinGeckoId(symbol);
+    if (!coinId) return null;
+    const data = await fetchCoinGecko(`/simple/price?ids=${encodeURIComponent(coinId)}&vs_currencies=usd`);
+    return data?.[coinId]?.usd ?? null;
   } catch (error) {
     console.error(`Error fetching price for ${symbol}:`, error);
     return null;
@@ -59,19 +74,20 @@ export async function getCryptoPrice(symbol: string): Promise<number | null> {
 
 export async function getCryptoMarketData(symbol: string): Promise<CorrelatedCrypto | null> {
   try {
-    const coinId = getCoinGeckoId(symbol);
+    const coinId = await resolveCoinGeckoId(symbol);
+    if (!coinId) return null;
     const data = await fetchCoinGecko(
-      `/coins/${coinId}?localization=false&tickers=false&community_data=false&developer_data=false`
+      `/coins/${encodeURIComponent(coinId)}?localization=false&tickers=false&community_data=false&developer_data=false`
     );
 
     if (!data || !data.market_data) return null;
 
-  return {
+    return {
       symbol: symbol.toUpperCase(),
       name: data.name,
-      price: data.market_data.current_price.usd,
-      change24h: data.market_data.price_change_percentage_24h || 0,
-      marketCap: data.market_data.market_cap.usd || 0,
+  price: data.market_data.current_price?.usd ?? null,
+  change24h: data.market_data.price_change_percentage_24h ?? null,
+  marketCap: data.market_data.market_cap?.usd ?? null,
       sector: data.categories?.[0] || '',
     };
   } catch (error) {
@@ -82,23 +98,36 @@ export async function getCryptoMarketData(symbol: string): Promise<CorrelatedCry
 
 export async function getMultipleCryptoData(symbols: string[]): Promise<CorrelatedCrypto[]> {
   try {
-    const coinIds = symbols.map(s => getCoinGeckoId(s)).join(',');
-    const data = await fetchCoinGecko(
-      `/coins/markets?vs_currency=usd&ids=${coinIds}&order=market_cap_desc&sparkline=false&price_change_percentage=24h`
+    const idMap: Record<string, string> = {};
+    await Promise.all(
+      symbols.map(async (sym) => {
+        const id = await resolveCoinGeckoId(sym);
+        if (id) idMap[sym] = id;
+      })
     );
 
-    if (!data || !Array.isArray(data)) return [];
+    const ids = Object.values(idMap);
+    if (ids.length === 0) return [];
 
-  return data
-      .filter((coin: any) => coin.current_price !== null && coin.current_price !== undefined)
-      .map((coin: any) => ({
-        symbol: symbols.find(s => getCoinGeckoId(s) === coin.id)?.toUpperCase() || coin.symbol.toUpperCase(),
-        name: coin.name || 'Unknown',
-        price: coin.current_price || 0,
-        change24h: coin.price_change_percentage_24h || 0,
-        marketCap: coin.market_cap || 0,
-        sector: coin.category || '',
-      }));
+    const data = await fetchCoinGecko(
+      `/coins/markets?vs_currency=usd&ids=${encodeURIComponent(ids.join(','))}&order=market_cap_desc&sparkline=false&price_change_percentage=24h`
+    );
+
+    if (!Array.isArray(data)) return [];
+
+    return data
+      .filter((coin: any) => coin?.current_price != null)
+      .map((coin: any) => {
+        const original = Object.keys(idMap).find((k) => idMap[k] === coin.id) || coin.symbol?.toUpperCase();
+        return {
+          symbol: (original || '').toUpperCase(),
+          name: coin.name || 'Unknown',
+          price: coin.current_price ?? null,
+          change24h: coin.price_change_percentage_24h ?? null,
+          marketCap: coin.market_cap ?? null,
+          sector: coin.category || '',
+        } as CorrelatedCrypto;
+      });
   } catch (error) {
     console.error('Error fetching multiple crypto data:', error);
     return [];
@@ -108,17 +137,17 @@ export async function getMultipleCryptoData(symbols: string[]): Promise<Correlat
 export async function getCryptoByCategory(category: string): Promise<CorrelatedCrypto[]> {
   try {
     const data = await fetchCoinGecko(
-      `/coins/markets?vs_currency=usd&category=${category}&order=market_cap_desc&per_page=5&sparkline=false&price_change_percentage=24h`
+      `/coins/markets?vs_currency=usd&category=${encodeURIComponent(category)}&order=market_cap_desc&per_page=5&sparkline=false&price_change_percentage=24h`
     );
 
-    if (!data || !Array.isArray(data)) return [];
+    if (!Array.isArray(data)) return [];
 
     return data.map((coin: any) => ({
-      symbol: coin.symbol.toUpperCase(),
+      symbol: (coin.symbol || '').toUpperCase(),
       name: coin.name,
-      price: coin.current_price,
-      change24h: coin.price_change_percentage_24h || 0,
-      marketCap: coin.market_cap || 0,
+      price: coin.current_price ?? null,
+      change24h: coin.price_change_percentage_24h ?? null,
+      marketCap: coin.market_cap ?? null,
       sector: category,
     }));
   } catch (error) {
@@ -130,8 +159,7 @@ export async function getCryptoByCategory(category: string): Promise<CorrelatedC
 export async function searchCrypto(query: string): Promise<any[]> {
   try {
     const data = await fetchCoinGecko(`/search?query=${encodeURIComponent(query)}`);
-    
-    return data.coins?.slice(0, 10) || [];
+    return data?.coins?.slice(0, 10) || [];
   } catch (error) {
     console.error('Error searching crypto:', error);
     return [];
