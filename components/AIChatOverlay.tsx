@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, X, Send, Bot, User, ArrowRight, ArrowDown } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, ArrowRight, ArrowDown, Maximize2, Minimize2 } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
 import { getUserContext, refreshUserContext } from '@/lib/actions/user-context.actions';
 import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
@@ -29,6 +29,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
   const [contextUpdatedAt, setContextUpdatedAt] = useState<Date | null>(null);
   const [contextJustUpdated, setContextJustUpdated] = useState(false);
   const [resetConversationOnNext, setResetConversationOnNext] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const contextLoadedRef = useRef(false); // Track if context was loaded this session
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -255,13 +256,29 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       {/* Chat Overlay */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-40 w-96 h-[500px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-8rem)]">
+        <div
+          className={cn(
+            "fixed z-50 transition-all duration-300",
+            isExpanded
+              ? "inset-6"
+              : "bottom-24 right-6 w-96 h-[640px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)]"
+          )}
+        >
           <Card className="h-full flex flex-col bg-gray-900 border-2 border-yellow-500 shadow-2xl">
-            <CardHeader className="flex-shrink-0 pb-3 border-b border-gray-700">
+            <CardHeader className="relative flex-shrink-0 pb-3 border-b border-gray-700">
               <CardTitle className="flex items-center gap-2 text-yellow-500">
                 <Bot size={20} />
                 Hodlini - Your Crypto Bro
               </CardTitle>
+              {/* Expand / Collapse control */}
+              <button
+                type="button"
+                aria-label={isExpanded ? 'Shrink chat' : 'Expand chat'}
+                onClick={() => setIsExpanded(v => !v)}
+                className="absolute top-2 right-2 inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-300 hover:text-white hover:bg-gray-800/60 border border-gray-700/60"
+              >
+                {isExpanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
               {isLoadingContext && (
                 <p className="text-xs text-gray-400 mt-1">
                   Loading your investment profile...

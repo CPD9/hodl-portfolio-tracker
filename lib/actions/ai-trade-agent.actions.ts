@@ -23,11 +23,22 @@ export interface TradeProposal {
 
 const systemGuard = `You transform the user's chat intent into concrete trade orders.
 Return ONLY valid JSON: { "orders": [ { "side": "BUY|SELL", "from": {"type": "STOCK|CRYPTO|CASH", "symbol": "USD|AAPL|BTC|...", "amount": number}, "to": {"type": "STOCK|CRYPTO|CASH", "symbol": "USD|AAPL|BTC|...", "amount": number} } ], "note"?: string }.
-- Support multiple orders per request.
+
+CRITICAL CONSTRAINTS (must ALWAYS be respected):
+- Allowed trade shapes only:
+  - BUY: from.type must be CASH with symbol "USD"; to.type must be STOCK or CRYPTO (not CASH).
+  - SELL: from.type must be STOCK or CRYPTO; to.type must be CASH with symbol "USD".
+- Do NOT produce asset-to-asset swaps (e.g., BTC -> ETH) or cash-to-cash; every order MUST start or end with USD as above.
+- If the user asks for multiple transactions, you may return multiple orders, but EACH order must follow the above USD rule.
+
+Quantities and pricing:
 - You will receive USER_CONTEXT_JSON which includes the user's exact portfolio quantities; ALWAYS use it to infer amounts when the user doesn't specify a quantity (e.g., "sell my NVDA" -> set from.amount to the held quantity from USER_CONTEXT_JSON; "sell half my NVDA" -> from.amount = held quantity * 0.5).
-- Infer quantities and direction from the message and PRICE_CONTEXT if present. If user specifies a cash budget (e.g., $500), set from.type=CASH symbol=USD amount to that budget and compute to.amount using price. If selling holdings, set from to the asset with the quantity and compute the USD in to side.
-- Round: cash 2 decimals; crypto quantity up to 8; stocks 4.
-- If nothing actionable, return {"orders": []}.`;
+- Infer quantities and direction from the message and PRICE_CONTEXT if present. If user specifies a cash budget (e.g., $500), set from.type=CASH symbol=USD amount to that budget and compute to.amount using price. If selling holdings, set from to the asset with the quantity and compute the USD in the to side (but USD amount may be left implicit if not needed by the system).
+
+Rounding:
+- cash 2 decimals; crypto quantity up to 8; stocks 4.
+
+If nothing actionable or constraints would be violated, return {"orders": []} and add a helpful note explaining that only USD<->asset trades are supported.`;
 
 export async function decideTrades(userInput: string, userContext?: string | null, priceContextJSON?: any): Promise<TradeProposal | null> {
   try {
@@ -64,7 +75,7 @@ export async function decideTrades(userInput: string, userContext?: string | nul
     // Try to extract JSON if model wrapped it
     const jsonMatch = raw.match(/\{[\s\S]*\}$/);
     const jsonStr = jsonMatch ? jsonMatch[0] : raw;
-    const parsed = JSON.parse(jsonStr) as TradeProposal;
+  const parsed = JSON.parse(jsonStr) as TradeProposal;
     if (!parsed || !Array.isArray(parsed.orders)) return null;
     parsed.orders = parsed.orders
       .filter(o => o && o.side && o.from && o.to)
@@ -74,6 +85,12 @@ export async function decideTrades(userInput: string, userContext?: string | nul
         to: { type: (o.to.type || 'CASH') as AssetType, symbol: String(o.to.symbol).toUpperCase(), amount: Number(o.to.amount) },
       }))
       .filter(o => Number.isFinite(o.from.amount) || o.side === 'BUY');
+
+    // Normalize CASH symbol variants to USD
+    for (const o of parsed.orders) {
+      if (o.from.type === 'CASH') o.from.symbol = 'USD';
+      if (o.to.type === 'CASH') o.to.symbol = 'USD';
+    }
 
     // Backfill missing SELL quantities from user's portfolio JSON if available
     if (userContextJSON && Array.isArray(userContextJSON.portfolio)) {
@@ -101,7 +118,35 @@ export async function decideTrades(userInput: string, userContext?: string | nul
       if (o.to.type === 'STOCK') o.to.amount = round(o.to.amount, 4);
     }
 
-    // Filter invalid after rounding
+    // Enforce USD-only trade constraint and filter invalid after rounding
+    const isValidOrder = (o: TradeOrderSpec): boolean => {
+      if (o.side === 'BUY') {
+        // USD -> Asset
+        return (
+          o.from.type === 'CASH' && o.from.symbol === 'USD' &&
+          (o.to.type === 'STOCK' || o.to.type === 'CRYPTO') && o.to.symbol !== 'USD' &&
+          Number.isFinite(o.to.amount) && o.to.amount > 0
+        );
+      } else {
+        // Asset -> USD
+        return (
+          (o.from.type === 'STOCK' || o.from.type === 'CRYPTO') && o.from.symbol !== 'USD' && o.from.amount > 0 &&
+          o.to.type === 'CASH' && o.to.symbol === 'USD'
+        );
+      }
+    };
+
+    const originalCount = parsed.orders.length;
+    parsed.orders = parsed.orders.filter(isValidOrder);
+
+    // If we dropped any orders, add an explanatory note
+    if (parsed.orders.length < originalCount) {
+      const dropped = originalCount - parsed.orders.length;
+      const msg = `${dropped} request(s) were omitted because only USD <-> (STOCK|CRYPTO) trades are supported (no direct asset-to-asset).`;
+      parsed.note = parsed.note ? `${parsed.note} ${msg}` : msg;
+    }
+
+    // Final sanity: BUY must have to.amount; SELL must have from.amount
     parsed.orders = parsed.orders.filter(o => (o.side === 'SELL' ? o.from.amount > 0 : Number.isFinite(o.to.amount)));
     if (parsed.orders.length === 0) return null;
     return parsed;
@@ -113,6 +158,15 @@ export async function decideTrades(userInput: string, userContext?: string | nul
 
 export async function executeTradeOrders(userId: string, orders: TradeOrderSpec[]): Promise<{ success: boolean; message: string }> {
   try {
+    // Guardrail: enforce USD-only constraint at execution time as well
+    for (const o of orders) {
+      const buyValid = o.side === 'BUY' && o.from.type === 'CASH' && o.from.symbol === 'USD' && (o.to.type === 'STOCK' || o.to.type === 'CRYPTO') && o.to.symbol !== 'USD' && Number.isFinite(o.to.amount) && o.to.amount > 0;
+      const sellValid = o.side === 'SELL' && (o.from.type === 'STOCK' || o.from.type === 'CRYPTO') && o.from.symbol !== 'USD' && o.from.amount > 0 && o.to.type === 'CASH' && o.to.symbol === 'USD';
+      if (!(buyValid || sellValid)) {
+        return { success: false, message: 'Invalid order: only USD <-> (STOCK|CRYPTO) trades are allowed.' };
+      }
+    }
+
     for (const o of orders) {
       if (o.side === 'BUY') {
         if (o.to.type === 'CRYPTO') {
