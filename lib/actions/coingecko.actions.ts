@@ -66,7 +66,7 @@ export async function getCryptoMarketData(symbol: string): Promise<CorrelatedCry
 
     if (!data || !data.market_data) return null;
 
-    return {
+  return {
       symbol: symbol.toUpperCase(),
       name: data.name,
       price: data.market_data.current_price.usd,
@@ -89,7 +89,7 @@ export async function getMultipleCryptoData(symbols: string[]): Promise<Correlat
 
     if (!data || !Array.isArray(data)) return [];
 
-    return data
+  return data
       .filter((coin: any) => coin.current_price !== null && coin.current_price !== undefined)
       .map((coin: any) => ({
         symbol: symbols.find(s => getCoinGeckoId(s) === coin.id)?.toUpperCase() || coin.symbol.toUpperCase(),

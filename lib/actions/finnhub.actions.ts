@@ -38,6 +38,36 @@ export async function getStockQuote(symbol: string): Promise<any> {
   }
 }
 
+export async function getStockKeyMetrics(symbol: string): Promise<{
+  peRatio: number | null;
+  epsTtm: number | null;
+  beta: number | null;
+  dividendYield: number | null;
+  week52High: number | null;
+  week52Low: number | null;
+  marketCap: number | null;
+} | null> {
+  try {
+    const token = process.env.FINNHUB_API_KEY ?? NEXT_PUBLIC_FINNHUB_API_KEY;
+    if (!token) throw new Error('Finnhub API key not found');
+    const url = `${FINNHUB_BASE_URL}/stock/metric?symbol=${encodeURIComponent(symbol)}&metric=all&token=${token}`;
+    const data = await fetchJSON<any>(url, 600); // cache 10 min
+    const m = data?.metric || {};
+    return {
+      peRatio: m.peBasicExclExtraTTM ?? m.peTTM ?? null,
+      epsTtm: m.epsBasicExclExtraItemsTTM ?? m.epsTTM ?? null,
+      beta: m.beta ?? null,
+      dividendYield: m.dividendYieldIndicatedAnnual ?? m.dividendYieldTTM ?? null,
+      week52High: m['52WeekHigh'] ?? null,
+      week52Low: m['52WeekLow'] ?? null,
+      marketCap: m.marketCapitalization ?? null,
+    };
+  } catch (e) {
+    console.error('getStockKeyMetrics error:', e);
+    return null;
+  }
+}
+
 export async function getNews(symbols?: string[]): Promise<MarketNewsArticle[]> {
   try {
     const range = getDateRange(5);

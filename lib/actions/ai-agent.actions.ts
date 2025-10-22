@@ -1,8 +1,8 @@
 "use server";
 
 import OpenAI from 'openai';
-import { getStockQuote } from '@/lib/actions/finnhub.actions';
-import { getMultipleCryptoData } from '@/lib/actions/coingecko.actions';
+import { getStockQuote, getStockKeyMetrics } from '@/lib/actions/finnhub.actions';
+import { getMultipleCryptoData, getCryptoMarketData } from '@/lib/actions/coingecko.actions';
 import { sendChatMessage } from '@/lib/actions/chat.actions';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -13,6 +13,8 @@ type PriceEntry = {
   price: number | null;
   currency?: string;
   marketCap?: number | null;
+  // Optional enriched metrics
+  metrics?: Record<string, number | string | null>;
 };
 
 type PriceContext = {
@@ -86,14 +88,42 @@ export async function fetchPricesBatch(symbols: { symbol: string; type: 'STOCK' 
       if (s.type === 'STOCK') {
         const quote = await getStockQuote(s.symbol);
         const price = quote?.c ?? null; // finnhub quote current price `c`
-        results.push({ symbol: s.symbol, type: 'STOCK', price, currency: 'USD' });
+        const metrics = await getStockKeyMetrics(s.symbol);
+        results.push({
+          symbol: s.symbol,
+          type: 'STOCK',
+          price,
+          currency: 'USD',
+          marketCap: metrics?.marketCap ?? null,
+          metrics: metrics
+            ? {
+                peRatio: metrics.peRatio ?? null,
+                epsTtm: metrics.epsTtm ?? null,
+                beta: metrics.beta ?? null,
+                dividendYield: metrics.dividendYield ?? null,
+                week52High: metrics.week52High ?? null,
+                week52Low: metrics.week52Low ?? null,
+              }
+            : undefined,
+        });
       } else {
         // coingecko functions use ids/names; assume symbol works with helper which maps
         const data = await getMultipleCryptoData([s.symbol]);
-  const coin = data?.[0] as any;
+        const coin = data?.[0] as any;
   const price = coin?.price ?? coin?.current_price ?? null;
-  const marketCap = coin?.market_cap ?? coin?.marketCap ?? null;
-  results.push({ symbol: s.symbol, type: 'CRYPTO', price: price ?? null, currency: 'USD', marketCap });
+        const marketCap = coin?.market_cap ?? coin?.marketCap ?? null;
+        // fetch richer market data for single symbol for extra metrics (24h change already in coin)
+        const detail = await getCryptoMarketData(s.symbol);
+        results.push({
+          symbol: s.symbol,
+          type: 'CRYPTO',
+          price: price ?? null,
+          currency: 'USD',
+          marketCap,
+          metrics: {
+            change24h: (coin?.price_change_percentage_24h ?? detail?.change24h ?? null) as number | null,
+          },
+        });
       }
     } catch (error) {
       console.error('Error fetching price for', s.symbol, error);
@@ -111,7 +141,14 @@ export async function buildPriceContextJSON(entries: PriceEntry[]): Promise<Pric
   const now = new Date().toISOString();
   return {
     generatedAt: now,
-    prices: entries.map(e => ({ symbol: e.symbol, type: e.type, price: e.price, currency: e.currency ?? 'USD', marketCap: e.marketCap ?? null })),
+    prices: entries.map(e => ({
+      symbol: e.symbol,
+      type: e.type,
+      price: e.price,
+      currency: e.currency ?? 'USD',
+      marketCap: e.marketCap ?? null,
+      metrics: e.metrics ?? undefined,
+    })),
   };
 }
 
