@@ -4,10 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, ArrowRight } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
 import { getUserContext } from '@/lib/actions/user-context.actions';
 import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
+import { decideTrades, executeTradeOrders } from '@/lib/actions/ai-trade-agent.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -92,33 +93,54 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     setIsLoading(true);
 
     try {
-      // Prefer the AI context agent path; fallback to plain chat on failure
+      // Step 1: Run info/context agent first to decide and fetch price context, and produce assistant reply
+      let assistantAdded = false;
+      let priceContext: any | null = null;
       try {
         const result = await runAIContextAgent(
           updatedMessages.map(m => ({ role: m.role, content: m.content })),
           user.id,
           userContext || null
         );
+        priceContext = result?.priceContext ?? null;
         if (result?.assistantMessage) {
-          setMessages([...updatedMessages, { role: 'assistant', content: result.assistantMessage.content, timestamp: new Date() }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: result.assistantMessage!.content, timestamp: new Date() }]);
+          assistantAdded = true;
+        }
+      } catch (e) {
+        console.error('Context agent failed:', e);
+      }
+
+      // Step 2: With the price context, ask trade agent to decide if buy/sell is requested
+      try {
+        const maybeProposal = await decideTrades(userMessage.content, userContext, priceContext ?? undefined);
+        if (maybeProposal && maybeProposal.orders?.length) {
+          const assistantTrade: ChatMessage = {
+            role: 'assistant',
+            content: 'Handelsvorschlag bereit. Bitte prüfen und autorisieren.',
+            timestamp: new Date(),
+            tradeProposal: maybeProposal,
+          };
+          setMessages(prev => [...prev, assistantTrade]);
           return;
         }
       } catch (e) {
-        console.error('Agent flow failed, falling back to direct chat:', e);
+        console.error('decideTrades failed:', e);
       }
 
-      const assistantMessage = await sendChatMessage(updatedMessages, userContext);
-      
-      if (assistantMessage) {
-        setMessages([...updatedMessages, assistantMessage]);
-      } else {
-        // Add error message if API call fails
-        const errorMessage: ChatMessage = {
-          role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again later.',
-          timestamp: new Date(),
-        };
-        setMessages([...updatedMessages, errorMessage]);
+      // Step 3: Fallback to plain chat if no assistant response was added yet
+      if (!assistantAdded) {
+        const assistantMessage = await sendChatMessage(updatedMessages, userContext);
+        if (assistantMessage) {
+          setMessages(prev => [...prev, assistantMessage]);
+        } else {
+          const errorMessage: ChatMessage = {
+            role: 'assistant',
+            content: 'Sorry, I encountered an error. Please try again later.',
+            timestamp: new Date(),
+          };
+          setMessages(prev => [...prev, errorMessage]);
+        }
       }
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -142,6 +164,25 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const authorizeTrade = async (proposal: NonNullable<ChatMessage['tradeProposal']>) => {
+    try {
+      if (!user?.id) return;
+      setIsLoading(true);
+      const res = await executeTradeOrders(user.id, proposal.orders);
+      const reply: ChatMessage = {
+        role: 'assistant',
+        content: res.success ? 'Transaktion(en) erfolgreich ausgeführt.' : `Fehlgeschlagen: ${res.message}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, reply]);
+    } catch (e: any) {
+      console.error('authorizeTrade error:', e);
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Autorisierung fehlgeschlagen.', timestamp: new Date() }]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -241,6 +282,61 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                   </div>
                 )}
                 
+                {/* Render trade proposal card below the last assistant message if present */}
+                {(() => {
+                  const last = messages.length > 0 ? messages[messages.length - 1] : undefined;
+                  const proposal = last?.tradeProposal;
+                  return proposal ? (
+                    <div className="mt-2 rounded-lg border border-yellow-600/40 bg-gray-800/70 shadow-md">
+                      <div className="px-3 py-2 border-b border-gray-700 text-[11px] uppercase tracking-wide text-gray-300">
+                        Handelsvorschlag zur Autorisierung
+                      </div>
+                      <div className="divide-y divide-gray-700">
+                        {proposal.orders.map((o, idx) => {
+                          const totalUSD = o.from.type === 'CASH' ? o.from.amount : (o.to.type === 'CASH' ? o.to.amount : undefined);
+                          const fmtQty = (v: number, max = o.to.type === 'CRYPTO' || o.from.type === 'CRYPTO' ? 8 : 4) => {
+                            if (!Number.isFinite(v)) return String(v);
+                            const s = v.toFixed(max);
+                            return s.replace(/\.0+$/, '').replace(/(\.[0-9]*?)0+$/, '$1');
+                          };
+                          const fmtUSD = (v: number) => v.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+                          return (
+                            <div key={idx} className="p-3 grid grid-cols-[auto,1fr,auto,1fr,auto] items-stretch gap-2">
+                              <div className={cn('self-start text-[10px] px-2 py-0.5 rounded-full font-semibold',
+                                o.side === 'BUY' ? 'bg-green-600/20 text-green-300 border border-green-600/40' : 'bg-red-600/20 text-red-300 border border-red-600/40'
+                              )}>
+                                {o.side}
+                              </div>
+                              <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
+                                <div className="text-[10px] text-gray-400">Von</div>
+                                <div className="text-sm font-semibold text-gray-100 truncate">{o.from.symbol} <span className="text-[10px] opacity-70">({o.from.type})</span></div>
+                                <div className="text-xs text-gray-300">Menge: {fmtQty(o.from.amount)}</div>
+                              </div>
+                              <div className="flex items-center justify-center text-gray-400 px-1">
+                                <ArrowRight size={18} />
+                              </div>
+                              <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
+                                <div className="text-[10px] text-gray-400">Nach</div>
+                                <div className="text-sm font-semibold text-gray-100 truncate">{o.to.symbol} <span className="text-[10px] opacity-70">({o.to.type})</span></div>
+                                <div className="text-xs text-gray-300">Menge: {fmtQty(o.to.amount)}</div>
+                              </div>
+                              <div className="flex items-center justify-end text-sm font-medium text-gray-100 pl-2">
+                                {typeof totalUSD === 'number' ? <span className="whitespace-nowrap">{fmtUSD(totalUSD)}</span> : <span className="text-gray-500 text-xs">—</span>}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="p-3 flex justify-end">
+                        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold disabled:opacity-60"
+                          onClick={() => authorizeTrade(proposal)} disabled={isLoading}>
+                          Autorisieren
+                        </button>
+                      </div>
+                    </div>
+                  ) : null;
+                })()}
+
                 <div ref={messagesEndRef} />
               </div>
 
