@@ -4,6 +4,15 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  // Optional trade proposal attached to assistant responses
+  tradeProposal?: {
+    orders: Array<{
+      side: 'BUY' | 'SELL';
+      from: { type: 'STOCK' | 'CRYPTO' | 'CASH'; symbol: string; amount: number };
+      to: { type: 'STOCK' | 'CRYPTO' | 'CASH'; symbol: string; amount: number };
+    }>;
+    note?: string;
+  };
 }
 
 export async function sendChatMessage(

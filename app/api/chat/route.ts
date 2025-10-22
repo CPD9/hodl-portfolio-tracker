@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, userContext } = await request.json();
+  const { messages, userContext } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -18,8 +18,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Extract optional realtime price context injected as a special assistant message
+    let extractedPriceContext: string | null = null;
+    const cleanedMessages = Array.isArray(messages)
+      ? messages.filter((m: any) => {
+          if (typeof m?.content === 'string' && m.content.startsWith('REALTIMES_PRICES_JSON:')) {
+            extractedPriceContext = m.content.replace('REALTIMES_PRICES_JSON:\n', '').trim();
+            return false; // remove from chat history
+          }
+          return true;
+        })
+      : messages;
+
     // Create a system message to give context about the HODL portfolio tracker
-    let systemContent = `You are an AI assistant for HODL called Hodlini, an advanced portfolio tracking platform with the purpose of helping users that are new to crypto, but have experience with stock investments to navigate the world of crypto. 
+  let systemContent = `You are an AI assistant for HODL called Hodlini, an advanced portfolio tracking platform with the purpose of helping users that are new to crypto, but have experience with stock investments to navigate the world of crypto. 
       The USP of this system is to help users making the steps toward crypto, by showing cryptos, that are related to stocks in terms of topic and past movements, so users better understand the coins. You help users with:
 
         - Provide personalized crypto recommendations related with their stock interests
@@ -29,11 +41,18 @@ export async function POST(request: NextRequest) {
         - General financial questions
         - Platform navigation and features
 
-        Keep your responses helpful, concise, and focused on financial markets and portfolio management.`;
+  Keep your responses helpful, concise, and focused on financial markets and portfolio management.
+
+  RESPONSE STYLE: Output plain text only. Do not use Markdown formatting, no bold/italics/code blocks/lists. Avoid asterisks, underscores, backticks, hash signs, dashes as formatting. Use simple sentences and line breaks only.`;
 
     // Add user context if available
     if (userContext) {
       systemContent += `\n\n--- USER PROFILE & CONTEXT ---\n${userContext}\n\nUse this information to provide personalized advice tailored to the user's investment style, holdings, and interests.`;
+    }
+
+    // Add realtime prices context if provided
+    if (extractedPriceContext) {
+      systemContent += `\n\n--- REALTIME PRICES (JSON) ---\n${extractedPriceContext}\n\nUse these prices for calculations and keep numbers consistent with them.`;
     }
 
     const systemMessage = {
@@ -43,12 +62,12 @@ export async function POST(request: NextRequest) {
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [systemMessage, ...messages],
+  messages: [systemMessage, ...cleanedMessages],
       max_tokens: 500,
       temperature: 0.7,
     });
 
-    const assistantMessage = completion.choices[0]?.message;
+  const assistantMessage = completion.choices[0]?.message;
 
     if (!assistantMessage) {
       return NextResponse.json(
@@ -57,7 +76,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ message: assistantMessage });
+    // Sanitize any residual markdown-like syntax to ensure plain text output
+    const toPlainText = (text: string) => {
+      if (!text) return text;
+      let out = text;
+      // Remove code fences and inline backticks
+      out = out.replace(/```/g, '');
+      out = out.replace(/`/g, '');
+      // Remove bold/italic markers
+      out = out.replace(/\*\*|__/g, '');
+      // Remove leading markdown headings and list markers
+      out = out.replace(/^#{1,6}\s+/gm, '');
+      out = out.replace(/^\s*[-*+]\s+/gm, '');
+      // Convert markdown links [text](url) to "text (url)"
+      out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)');
+      return out;
+    };
+
+    const sanitized = { ...assistantMessage, content: toPlainText(assistantMessage.content || '') };
+    return NextResponse.json({ message: sanitized });
   } catch (error) {
     console.error('OpenAI API error:', error);
     

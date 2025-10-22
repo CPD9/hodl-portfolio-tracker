@@ -49,3 +49,6 @@ contracts/out/
 contracts/lib/
 broadcast/
 contracts/broadcast/
+
+#virtual environment
+venv/

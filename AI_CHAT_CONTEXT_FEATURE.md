@@ -80,7 +80,7 @@ Environment variables used:
 - `OPENAI_API_KEY`: For context generation
 - `MONGODB_URI`: For storing context cache
 
-Model used: `gpt-3.5-turbo` (cost-effective, fast, widely available)
+Model used: `gpt-4o-mini` (cost-effective, fast, widely available)
 Max tokens: 400 (keeps context concise)
 Temperature: 0.5 (balanced creativity/consistency)
 
