@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, X, Send, Bot, User, ArrowRight } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, ArrowRight, ArrowDown } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
 import { getUserContext, refreshUserContext } from '@/lib/actions/user-context.actions';
 import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
@@ -340,7 +340,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                   return proposal ? (
                     <div className="mt-2 rounded-lg border border-yellow-600/40 bg-gray-800/70 shadow-md">
                       <div className="px-3 py-2 border-b border-gray-700 text-[11px] uppercase tracking-wide text-gray-300">
-                        Handelsvorschlag zur Autorisierung
+                        Trade proposal for authorization
                       </div>
                       <div className="divide-y divide-gray-700">
                         {proposal.orders.map((o, idx) => {
@@ -359,17 +359,17 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                                 {o.side}
                               </div>
                               <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
-                                <div className="text-[10px] text-gray-400">Von</div>
+                                <div className="text-[10px] text-gray-400">From</div>
                                 <div className="text-sm font-semibold text-gray-100 truncate">{o.from.symbol} <span className="text-[10px] opacity-70">({o.from.type})</span></div>
-                                <div className="text-xs text-gray-300">Menge: {fmtQty(o.from.amount)}</div>
+                                <div className="text-xs text-gray-300">Amount: {fmtQty(o.from.amount)}</div>
                               </div>
                               <div className="flex items-center justify-center text-gray-400 px-1">
-                                <ArrowRight size={18} />
+                                <ArrowDown size={18} />
                               </div>
                               <div className="min-w-0 rounded-md border border-gray-700 bg-gray-900/60 p-2">
-                                <div className="text-[10px] text-gray-400">Nach</div>
+                                <div className="text-[10px] text-gray-400">To</div>
                                 <div className="text-sm font-semibold text-gray-100 truncate">{o.to.symbol} <span className="text-[10px] opacity-70">({o.to.type})</span></div>
-                                <div className="text-xs text-gray-300">Menge: {fmtQty(o.to.amount)}</div>
+                                <div className="text-xs text-gray-300">Amount: {fmtQty(o.to.amount)}</div>
                               </div>
                               <div className="flex items-center justify-end text-sm font-medium text-gray-100 pl-2">
                                 {typeof totalUSD === 'number' ? <span className="whitespace-nowrap">{fmtUSD(totalUSD)}</span> : <span className="text-gray-500 text-xs">—</span>}
@@ -381,7 +381,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                       <div className="p-3 flex justify-end">
                         <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold disabled:opacity-60"
                           onClick={() => authorizeTrade(proposal)} disabled={isLoading}>
-                          Autorisieren
+                          Authorize
                         </button>
                       </div>
                     </div>
