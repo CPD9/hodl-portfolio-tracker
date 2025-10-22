@@ -146,7 +146,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
         if (maybeProposal && maybeProposal.orders?.length) {
           const assistantTrade: ChatMessage = {
             role: 'assistant',
-            content: 'Handelsvorschlag bereit. Bitte prüfen und autorisieren.',
+            content: 'Trade proposal ready. Please review and authorize.',
             timestamp: new Date(),
             tradeProposal: maybeProposal,
           };
@@ -202,7 +202,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       const res = await executeTradeOrders(user.id, proposal.orders);
       const reply: ChatMessage = {
         role: 'assistant',
-        content: res.success ? 'Transaktion(en) erfolgreich ausgeführt.' : `Fehlgeschlagen: ${res.message}`,
+        content: res.success ? 'Transaction(s) executed successfully.' : `Failed: ${res.message}`,
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, reply]);
@@ -222,7 +222,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       }
     } catch (e: any) {
       console.error('authorizeTrade error:', e);
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Autorisierung fehlgeschlagen.', timestamp: new Date() }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Authorization failed.', timestamp: new Date() }]);
     } finally {
       setIsLoading(false);
     }
