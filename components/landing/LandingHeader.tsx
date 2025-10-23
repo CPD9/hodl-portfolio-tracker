@@ -116,7 +116,7 @@ const LandingHeader = () => {
       {/* Mobile Menu */}
       <div 
         id="mobileMenu"
-        className="hidden fixed top-[80px] bottom-0 right-0 left-0 p-6 lg:hidden z-[998] bg-gradient-to-b from-black via-gray-900 to-gray-800 pointer-events-auto border-t border-gray-800"
+        className="hidden fixed top-[80px] bottom-0 right-0 left-0 p-6 pb-24 overflow-y-auto lg:hidden z-[998] bg-black pointer-events-auto border-t border-gray-800"
       >
         <nav className="flex flex-col gap-5 items-center pointer-events-auto">
           <a 
