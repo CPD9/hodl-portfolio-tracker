@@ -68,7 +68,7 @@ const HeroSection = () => {
       </div>
 
       {/* Desktop Robot - Hidden on Mobile */}
-      <div className="hidden lg:block absolute lg:top-0 bottom-0 lg:left-[50%] lg:right-[5%] h-full z-20 pointer-events-none">
+      <div className="hidden lg:block absolute lg:top-0 bottom-0 lg:left-[50%] lg:right-[5%] h-full z-20 pointer-events-none scale-75">
         <Spline
           scene="https://prod.spline.design/pExWJS0pvvlINgYf/scene.splinecode"
           className="w-full h-full"
