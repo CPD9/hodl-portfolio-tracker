@@ -81,6 +81,10 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
               }`}
             >
               <div className="flex items-center flex-1 space-x-3">
+                {/* Correlation badge (0..1) */}
+                <div className="text-[11px] font-mono px-2 py-1 rounded-md bg-gray-900 text-gray-200 border border-gray-600/60 min-w-[42px] text-center">
+                  {typeof crypto.correlation === 'number' ? crypto.correlation.toFixed(2) : '—'}
+                </div>
                 {/* Checkbox */}
                 <input
                   type="checkbox"
