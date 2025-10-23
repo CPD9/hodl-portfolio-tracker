@@ -227,6 +227,13 @@ NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
 COINGECKO_API_KEY=
 ```
 
+**For a complete list of all environment variables with detailed descriptions, see [ENV_VARIABLES.md](./ENV_VARIABLES.md)**
+
+You can also copy `.env.example` as a starting template:
+```bash
+cp .env.example .env
+```
+
 Get your API keys from:
 - [MongoDB](https://www.mongodb.com/products/platform/atlas-database)
 - [Gemini](https://aistudio.google.com/prompts/new_chat)

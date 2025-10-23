@@ -20,7 +20,7 @@ export default async function CallPage({ params }: CallPageProps) {
   const consultation = await getConsultation(id, userId);
 
   if (!consultation) {
-    redirect('/consultation');
+    redirect('/dashboard/consultation');
   }
 
   return (

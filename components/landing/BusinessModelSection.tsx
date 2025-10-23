@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import 'boxicons/css/boxicons.min.css';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface Feature {
   title: string;
@@ -24,9 +25,9 @@ interface Tier {
   gradient: string;
   features: Feature[];
   premiumFeatures?: {
-    performance: Feature[];
-    security: Feature[];
-    support: Feature[];
+    performance: string[];
+    security: string[];
+    support: string[];
   };
 }
 
@@ -382,17 +383,16 @@ const BusinessModelSection = () => {
 
               {/* CTA Button */}
               <div className="p-8 pt-0">
-                <motion.button
-                  className={`w-full py-3 px-8 rounded-full font-medium transition-all duration-500 ${
+                <Link
+                  href="/sign-up"
+                  className={`w-full py-3 px-8 rounded-full font-medium transition-all duration-500 flex items-center justify-center ${
                     index === 1
                       ? 'bg-yellow-500 hover:bg-yellow-600 text-black'
                       : 'border border-gray-600 hover:bg-gray-700 text-gray-100'
                   }`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
                 >
                   {index === 1 ? 'Get Started Pro' : 'Choose Plan'}
-                </motion.button>
+                </Link>
               </div>
             </motion.div>
           ))}

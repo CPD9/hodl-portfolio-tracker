@@ -6,8 +6,8 @@
 	"author": "Team HODL - START HACK 2025",
 	"license": "MIT",
 	"scripts": {
-		"dev": "next dev --turbopack",
-		"build": "next build --turbopack",
+		"dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev --turbopack",
+		"build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build --turbopack",
 		"start": "next start",
 		"lint": "eslint",
 		"test:db": "node scripts/test-db.mjs"
