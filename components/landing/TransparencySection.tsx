@@ -108,13 +108,11 @@ const TransparencySection = () => {
                     <td className="py-4 px-6 text-right text-gray-300">{reserve.amount}</td>
                     <td className="py-4 px-6">
                       <a 
-                        href={`https://basescan.org/address/${reserve.contract}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href="/dashboard/base"
                         className="font-mono text-sm text-purple-400 hover:text-purple-300 transition-colors"
                       >
                         {reserve.contract}
-                        <i className='bx bx-link-external ml-1 text-xs'></i>
+                        <i className='bx bx-right-arrow-alt ml-1 text-xs'></i>
                       </a>
                     </td>
                     <td className="py-4 px-6 text-gray-300">{reserve.backing}</td>
@@ -139,13 +137,11 @@ const TransparencySection = () => {
             All tokenized stock tokens are pegged at 1-to-1 with real stock shares and backed 100% by HODL's smart contracts deployed on Base L2. 
             Each token can be redeemed for the underlying asset at any time. Smart contract addresses are verified on{' '}
             <a 
-              href="https://basescan.org" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="/dashboard/base" 
               className="text-purple-400 hover:text-purple-300 transition-colors"
             >
-              BaseScan
-              <i className='bx bx-link-external ml-1 text-xs'></i>
+              Base Dashboard
+              <i className='bx bx-right-arrow-alt ml-1 text-xs'></i>
             </a>
           </p>
         </div>

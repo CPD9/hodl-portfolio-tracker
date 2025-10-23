@@ -20,14 +20,12 @@ const LandingFooter = () => {
               Unify your portfolio, powered by Base L2.
             </p>
             <div className="flex gap-4">
-              <a 
-                href="https://hodl-portfolio-tracker.vercel.app" 
-                target="_blank" 
-                rel="noopener noreferrer"
+              <Link 
+                href="/dashboard" 
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all"
               >
-                <i className='bx bx-link-external'></i>
-              </a>
+                <i className='bx bx-home'></i>
+              </Link>
               <a 
                 href="#" 
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-yellow-500 hover:text-black transition-all"
@@ -113,23 +111,19 @@ const LandingFooter = () => {
           </p>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span>Powered by</span>
-            <a 
-              href="https://www.base.org" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href="/dashboard/base" 
               className="text-purple-400 hover:text-purple-300 transition-colors font-semibold"
             >
               Base
-            </a>
+            </Link>
             <span>•</span>
-            <a 
-              href="https://www.coinbase.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href="/dashboard/trade" 
               className="text-blue-400 hover:text-blue-300 transition-colors font-semibold"
             >
-              Coinbase
-            </a>
+              Trading
+            </Link>
           </div>
         </div>
       </div>
