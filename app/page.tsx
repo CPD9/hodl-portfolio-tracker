@@ -10,6 +10,9 @@ import HeroSection from '@/components/landing/HeroSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 import LandingHeader from '@/components/landing/LandingHeader'
+import MarketOpportunitySection from '@/components/landing/MarketOpportunitySection'
+import CompetitiveLandscapeSection from '@/components/landing/CompetitiveLandscapeSection'
+import BusinessModelSection from '@/components/landing/BusinessModelSection'
 import StatsSection from '@/components/landing/StatsSection'
 import TransparencySection from '@/components/landing/TransparencySection'
 import WhyHODLSection from '@/components/landing/WhyHODLSection'
@@ -49,6 +52,21 @@ export default function LandingPage() {
         <HowItWorksSection />
       </div>
       
+      {/* Market Opportunity Section */}
+      <div data-aos="fade-up">
+        <MarketOpportunitySection />
+      </div>
+
+      {/* Competitive Landscape Section */}
+      <div data-aos="fade-up">
+        <CompetitiveLandscapeSection />
+      </div>
+
+      {/* Business Model / Pricing Section */}
+      <div data-aos="fade-up">
+        <BusinessModelSection />
+      </div>
+
       {/* Transparency Section */}
       <div data-aos="fade-up">
         <TransparencySection />
