@@ -2,10 +2,32 @@
 
 import 'boxicons/css/boxicons.min.css'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import PixelCharacter from '@/components/PixelCharacter'
 
 const LandingHeader = () => {
+  const [isVisible, setIsVisible] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      // Hide header when scrolling down past 100px, show when scrolling up
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false)
+      } else {
+        setIsVisible(true)
+      }
+      
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
+
   const toggleMobileMenu = () => {
     const menu = document.getElementById('mobileMenu')
     if (menu) {
@@ -18,132 +40,151 @@ const LandingHeader = () => {
   }
 
   return (
-    <header className="flex justify-between items-center py-4 px-4 lg:px-20 fixed top-0 left-0 right-0 z-[999] bg-black/80 backdrop-blur-md pointer-events-auto">
+    <header className={`flex justify-between items-center py-4 px-4 lg:px-8 xl:px-12 fixed top-0 left-0 right-0 z-[999] bg-gradient-to-b from-black via-black/95 to-black/80 backdrop-blur-xl border-b border-yellow-500/10 shadow-lg shadow-yellow-500/5 pointer-events-auto transition-transform duration-300 ${
+      isVisible ? 'translate-y-0' : '-translate-y-full'
+    }`}>
       {/* Logo */}
-      <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity pointer-events-auto">
-        <PixelCharacter size="md" />
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-light m-0 text-yellow-500">
+      <Link href="/" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 pointer-events-auto group flex-shrink-0">
+        <div className="relative">
+          <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
+          <PixelCharacter size="2xl" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent group-hover:from-yellow-300 group-hover:via-yellow-400 group-hover:to-yellow-500 transition-all duration-300 whitespace-nowrap">
           HODL
         </h1>
       </Link>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-8 pointer-events-auto">
-        <a href="#why-hodl" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Why HODL?
+      <nav className="hidden lg:flex items-center gap-4 xl:gap-5 pointer-events-auto flex-1 justify-center max-w-2xl mx-4">
+        <a href="#why-hodl" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Why HODL?</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <a href="#how-it-works" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          How it Works
+        <a href="#how-it-works" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">How it Works</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <a href="#pricing" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Pricing
+        <a href="#market-opportunity" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Opportunity</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <a href="#market-opportunity" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Opportunity
+        <a href="#pricing" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Pricing</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <a href="#competitive-landscape" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Competitive
+        <a href="#competitive-landscape" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Competitive</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <a href="#transparency" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Transparency
+        <a href="#transparency" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Transparency</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </a>
-        <Link href="/docs" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
-          Documentation
+        <Link href="/docs" className="relative text-sm xl:text-base font-semibold tracking-wide transition-all duration-300 hover:text-yellow-400 pointer-events-auto group whitespace-nowrap">
+          <span className="relative z-10">Docs</span>
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full transition-all duration-300"></span>
         </Link>
       </nav>
 
       {/* Desktop Buttons */}
-      <div className="hidden md:flex items-center gap-4 pointer-events-auto">
+      <div className="hidden lg:flex items-center gap-2 xl:gap-3 pointer-events-auto flex-shrink-0">
         <Link 
           href="/sign-in"
-          className="py-3 px-8 rounded-full border border-gray-600 font-medium transition-all duration-500 hover:bg-gray-800 cursor-pointer pointer-events-auto"
+          className="py-2 px-5 xl:px-6 rounded-full border-2 border-gray-700 font-semibold text-sm transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer pointer-events-auto group relative overflow-hidden whitespace-nowrap"
         >
-          Log In
+          <span className="relative z-10">Log In</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-yellow-500/10 to-yellow-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </Link>
         <Link 
           href="/sign-up"
-          className="bg-yellow-500 text-black py-3 px-8 rounded-full border-none font-medium transition-all duration-500 hover:bg-yellow-400 cursor-pointer pointer-events-auto"
+          className="relative py-2 px-5 xl:px-6 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer pointer-events-auto group overflow-hidden whitespace-nowrap"
         >
-          Sign Up
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 transition-all duration-300 group-hover:from-yellow-300 group-hover:via-yellow-400 group-hover:to-yellow-500"></div>
+          <span className="relative z-10 text-black">Sign Up</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-x-full transition-all duration-500 -translate-x-full"></div>
         </Link>
       </div>
 
       {/* Mobile Menu Button */}
       <button 
         onClick={toggleMobileMenu}
-        className="md:hidden text-3xl p-2 relative z-[1000] pointer-events-auto bg-yellow-500/10 rounded-lg hover:bg-yellow-500/20 transition-colors"
+        className="lg:hidden text-3xl p-3 relative z-[1000] pointer-events-auto bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 rounded-xl hover:from-yellow-500/30 hover:to-yellow-600/20 transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 hover:shadow-lg hover:shadow-yellow-500/20"
       >
-        <i className='bx bx-menu'></i>
+        <i className='bx bx-menu text-yellow-400'></i>
       </button>
 
       {/* Mobile Menu */}
       <div 
         id="mobileMenu"
-        className="hidden fixed top-[72px] bottom-0 right-0 left-0 p-5 md:hidden z-[998] bg-black bg-opacity-95 backdrop-blur-md pointer-events-auto"
+        className="hidden fixed top-[80px] bottom-0 right-0 left-0 p-6 lg:hidden z-[998] bg-gradient-to-b from-black via-gray-900 to-black bg-opacity-98 backdrop-blur-2xl pointer-events-auto border-t border-yellow-500/10"
       >
-        <nav className="flex flex-col gap-6 items-center pointer-events-auto">
+        <nav className="flex flex-col gap-5 items-center pointer-events-auto">
           <a 
             href="#why-hodl" 
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Why HODL?
           </a>
           <a 
             href="#how-it-works" 
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             How it Works
           </a>
           <a 
-            href="#pricing" 
-            onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
-          >
-            Pricing
-          </a>
-          <a 
             href="#market-opportunity" 
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Market Opportunity
           </a>
           <a 
+            href="#pricing" 
+            onClick={toggleMobileMenu}
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+          >
+            Pricing
+          </a>
+          <a 
             href="#competitive-landscape" 
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Competitive Landscape
           </a>
           <a 
             href="#transparency" 
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Transparency
           </a>
           <Link 
             href="/docs"
             onClick={toggleMobileMenu}
-            className="text-base tracking-wider transition-colors hover:text-gray-300"
+            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Documentation
           </Link>
+          
+          <div className="w-full max-w-xs border-t border-gray-700 my-4"></div>
+          
           <Link 
             href="/sign-in"
             onClick={toggleMobileMenu}
-            className="py-3 px-8 rounded-full border border-gray-600 font-medium transition-all duration-500 hover:bg-gray-800 cursor-pointer mt-4"
+            className="w-full max-w-xs text-center py-4 px-8 rounded-xl border-2 border-gray-700 font-semibold transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer"
           >
             Log In
           </Link>
           <Link 
             href="/sign-up"
             onClick={toggleMobileMenu}
-            className="bg-yellow-500 text-black py-3 px-8 rounded-full border-none font-medium transition-all duration-500 hover:bg-yellow-400 cursor-pointer"
+            className="w-full max-w-xs text-center relative py-4 px-8 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer overflow-hidden"
           >
-            Sign Up
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"></div>
+            <span className="relative z-10 text-black">Sign Up</span>
           </Link>
         </nav>
       </div>

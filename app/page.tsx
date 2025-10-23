@@ -27,7 +27,7 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="relative bg-black text-white overflow-x-hidden">
+    <div className="relative bg-black text-white overflow-x-hidden pt-20 lg:pt-24">
       {/* Gradient background effects */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-yellow-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl opacity-60 -z-10 pointer-events-none" />
       
