@@ -5,14 +5,17 @@ import 'aos/dist/aos.css'
 // @ts-ignore - AOS types not available
 import AOS from 'aos'
 import ChallengesSection from '@/components/landing/ChallengesSection'
+import CompetitiveLandscapeSection from '@/components/landing/CompetitiveLandscapeSection'
 import FeaturesSection from '@/components/landing/FeaturesSection'
 import HeroSection from '@/components/landing/HeroSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 import LandingHeader from '@/components/landing/LandingHeader'
+import MarketOpportunitySection from '@/components/landing/MarketOpportunitySection'
 import StatsSection from '@/components/landing/StatsSection'
 import TransparencySection from '@/components/landing/TransparencySection'
 import WhyHODLSection from '@/components/landing/WhyHODLSection'
+import BusinessModelSection from '@/components/landing/BusinessModelSection'
 import { useEffect } from 'react'
 
 export default function LandingPage() {
@@ -39,14 +42,29 @@ export default function LandingPage() {
         <HeroSection />
       </div>
       
+      {/* How It Works */}
+      <div data-aos="fade-up">
+        <HowItWorksSection />
+      </div>
+
+      {/* Market Opportunity */}
+      <div data-aos="fade-up">
+        <MarketOpportunitySection />
+      </div>
+      
       {/* Why HODL Section */}
       <div data-aos="fade-up">
         <WhyHODLSection />
       </div>
       
-      {/* How It Works Section */}
+      {/* Business Model Section */}
       <div data-aos="fade-up">
-        <HowItWorksSection />
+        <BusinessModelSection />
+      </div>
+      
+      {/* Competitive Landscape */}
+      <div data-aos="fade-up">
+        <CompetitiveLandscapeSection />
       </div>
       
       {/* Transparency Section */}

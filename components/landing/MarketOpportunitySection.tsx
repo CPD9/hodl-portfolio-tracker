@@ -57,7 +57,7 @@ const MarketOpportunitySection = () => {
   ]
 
   return (
-    <section className="py-20 px-4 lg:px-20">
+    <section id="market-opportunity" className="py-20 px-4 lg:px-20">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
