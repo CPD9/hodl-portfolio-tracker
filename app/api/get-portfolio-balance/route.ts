@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import Portfolio from '@/database/models/portfolio.model';
 import { connectToDatabase } from '@/database/mongoose';
 
