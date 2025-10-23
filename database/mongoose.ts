@@ -35,7 +35,8 @@ export const connectToDatabase = async () => {
 
     const connectWith = async (uri: string) => mongoose.connect(uri, {
         bufferCommands: false,
-        serverSelectionTimeoutMS: 7000,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
     });
 
     if (!cached.promise) {
@@ -44,25 +45,27 @@ export const connectToDatabase = async () => {
 
     try {
         cached.conn = await cached.promise;
+        console.log(`[DB] Connected (${process.env.NODE_ENV}) -> ${cached.conn?.connection?.name || 'ok'}`);
     } catch (err: any) {
-        // Retry with fallback on SRV/DNS failures in dev
+        cached.promise = null;
         const message = String(err?.message || err);
-        const isSrvDnsError = message.includes('querySrv ENOTFOUND') || message.includes('_mongodb._tcp');
-        if (process.env.NODE_ENV !== 'production' && uriToUse !== FALLBACK_URI && isSrvDnsError) {
-            console.warn('[DB] SRV/DNS lookup failed for MONGODB_URI. Retrying with local fallback:', FALLBACK_URI);
-            try {
-                cached.promise = connectWith(FALLBACK_URI);
-                cached.conn = await cached.promise;
-            } catch (fallbackErr) {
-                cached.promise = null;
-                throw fallbackErr;
+        
+        // In development, if local MongoDB is not running, warn but don't crash
+        if (process.env.NODE_ENV !== 'production') {
+            const isConnectionRefused = message.includes('ECONNREFUSED') || message.includes('connect failed');
+            const isSrvDnsError = message.includes('querySrv ENOTFOUND') || message.includes('_mongodb._tcp');
+            
+            if (isConnectionRefused || isSrvDnsError) {
+                console.warn('[DB] MongoDB connection failed in development. Some features may not work.');
+                console.warn('[DB] To fix: Install and start MongoDB locally, or set MONGODB_URI in .env');
+                console.warn('[DB] Error:', message);
+                // Return a mock connection for development when DB is unavailable
+                return null;
             }
-        } else {
-            cached.promise = null;
-            throw err;
         }
+        
+        throw err;
     }
 
-    console.log(`[DB] Connected (${process.env.NODE_ENV}) -> ${cached.conn?.connection?.name || 'ok'}`);
     return cached.conn;
 }

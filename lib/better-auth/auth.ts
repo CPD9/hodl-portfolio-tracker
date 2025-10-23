@@ -9,7 +9,15 @@ export const getAuth = async () => {
     if(authInstance) return authInstance;
 
     const mongoose = await connectToDatabase();
-    const db = mongoose.connection.db;
+    
+    // If DB connection failed in development, return a minimal auth instance
+    if (!mongoose && process.env.NODE_ENV !== 'production') {
+        console.warn('[Auth] Running without database connection in development mode');
+        // Return a minimal auth setup that won't crash
+        return null;
+    }
+    
+    const db = mongoose?.connection?.db;
 
     if(!db) throw new Error('MongoDB connection not found');
 

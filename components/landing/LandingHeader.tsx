@@ -28,17 +28,26 @@ const LandingHeader = () => {
       </Link>
 
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center gap-12 pointer-events-auto">
-        <a href="#why-hodl" className="text-base tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+      <nav className="hidden md:flex items-center gap-8 pointer-events-auto">
+        <a href="#why-hodl" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
           Why HODL?
         </a>
-        <a href="#how-it-works" className="text-base tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+        <a href="#how-it-works" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
           How it Works
         </a>
-        <a href="#transparency" className="text-base tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+        <a href="#pricing" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+          Pricing
+        </a>
+        <a href="#market-opportunity" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+          Opportunity
+        </a>
+        <a href="#competitive-landscape" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+          Competitive
+        </a>
+        <a href="#transparency" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
           Transparency
         </a>
-        <Link href="/docs" className="text-base tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
+        <Link href="/docs" className="text-sm tracking-wider transition-colors hover:text-gray-300 pointer-events-auto">
           Documentation
         </Link>
       </nav>
@@ -86,6 +95,27 @@ const LandingHeader = () => {
             className="text-base tracking-wider transition-colors hover:text-gray-300"
           >
             How it Works
+          </a>
+          <a 
+            href="#pricing" 
+            onClick={toggleMobileMenu}
+            className="text-base tracking-wider transition-colors hover:text-gray-300"
+          >
+            Pricing
+          </a>
+          <a 
+            href="#market-opportunity" 
+            onClick={toggleMobileMenu}
+            className="text-base tracking-wider transition-colors hover:text-gray-300"
+          >
+            Market Opportunity
+          </a>
+          <a 
+            href="#competitive-landscape" 
+            onClick={toggleMobileMenu}
+            className="text-base tracking-wider transition-colors hover:text-gray-300"
+          >
+            Competitive Landscape
           </a>
           <a 
             href="#transparency" 
