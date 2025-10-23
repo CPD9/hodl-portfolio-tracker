@@ -79,8 +79,14 @@ export default function SwapInterface() {
       
       setFromBalance(ethers.utils.formatUnits(fromBal, fromToken.decimals));
       setToBalance(ethers.utils.formatUnits(toBal, toToken.decimals));
-    } catch (error) {
-      console.error('Error fetching balances:', error);
+    } catch (error: any) {
+      // Silently handle CALL_EXCEPTION errors (contract not deployed on current network)
+      if (error.code === 'CALL_EXCEPTION') {
+        setFromBalance('0');
+        setToBalance('0');
+      } else {
+        console.error('Error fetching balances:', error);
+      }
     }
   }, [swapService, userAddress, fromToken, toToken]);
 
@@ -108,8 +114,11 @@ export default function SwapInterface() {
 
         setQuote(quoteResult);
         setToAmount(ethers.utils.formatUnits(quoteResult.outputAmount, toToken.decimals));
-      } catch (error) {
-        console.error('Error getting quote:', error);
+      } catch (error: any) {
+        // Silently handle CALL_EXCEPTION errors (contract not deployed on current network)
+        if (error.code !== 'CALL_EXCEPTION') {
+          console.error('Error getting quote:', error);
+        }
         setToAmount('0');
         setQuote(null);
       } finally {
@@ -138,8 +147,11 @@ export default function SwapInterface() {
       const allowance = await tokenContract.allowance(userAddress, UNISWAP_ROUTER);
       
       setNeedsApproval(allowance.lt(amount));
-    } catch (error) {
-      console.error('Error checking approval:', error);
+    } catch (error: any) {
+      // Silently handle CALL_EXCEPTION errors (contract not deployed on current network)
+      if (error.code !== 'CALL_EXCEPTION') {
+        console.error('Error checking approval:', error);
+      }
       setNeedsApproval(true);
     }
   }, [swapService, fromAmount, fromToken, userAddress]);

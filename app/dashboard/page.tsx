@@ -9,6 +9,7 @@ import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
 import FearGreedIndex from "@/components/FearGreedIndex";
 import TradingViewWidget from "@/components/TradingViewWidget";
+import UnifiedWalletDashboard from "@/components/UnifiedWalletDashboard";
 import {sendDailyNewsSummary} from "@/lib/inngest/functions";
 
 const Home = () => {
@@ -16,6 +17,14 @@ const Home = () => {
 
     return (
         <div className="flex min-h-screen home-wrapper">
+          {/* Unified Wallet & Net Worth Dashboard */}
+          <section className="w-full mb-8">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-6 text-center">
+              Your Unified Portfolio Dashboard
+            </h2>
+            <UnifiedWalletDashboard />
+          </section>
+
           {/* Base Integration Section */}
           <section className="w-full mb-8">
             <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
