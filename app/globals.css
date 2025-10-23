@@ -403,22 +403,21 @@
 /* Mobile header dropdown scrollbar styling */
 .mobile-menu-scroll {
   scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #f59e0b rgba(17, 24, 39, 0.6); /* thumb | track */
+  scrollbar-color: #000000 #000000; /* thumb | track both black */
 }
 .mobile-menu-scroll::-webkit-scrollbar {
   width: 10px;
 }
 .mobile-menu-scroll::-webkit-scrollbar-track {
-  background: rgba(17, 24, 39, 0.6); /* gray-900 with opacity */
-  border-radius: 10px;
+  background: #000000; /* solid black track */
 }
 .mobile-menu-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #facc15, #f59e0b, #d97706); /* yellow-300 -> yellow-500 -> amber-600 */
+  background: #0a0a0a; /* near-black thumb */
   border-radius: 10px;
-  border: 2px solid rgba(0, 0, 0, 0.6); /* dark outline to match black menu */
+  border: 2px solid #000000; /* black border to keep fully black theme */
 }
 .mobile-menu-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #fde047, #fbbf24, #ea580c);
+  background: #111111; /* slightly lighter on hover but still black */
 }
 
 .tradingview-widget-container > div {

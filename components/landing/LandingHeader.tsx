@@ -126,53 +126,54 @@ const LandingHeader = () => {
         >
           <i className='bx bx-x'></i>
         </button>
-        <nav className="mt-8 flex flex-col gap-2.5 items-stretch pointer-events-auto">
+        <div className="mx-auto w-full max-w-sm">
+          <nav className="mt-10 flex flex-col gap-3 items-center text-center pointer-events-auto">
           <a 
             href="#why-hodl" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Why HODL?
           </a>
           <a 
             href="#how-it-works" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             How it Works
           </a>
           <a 
             href="#market-opportunity" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Market Opportunity
           </a>
           <a 
             href="#pricing" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Pricing
           </a>
           <a 
             href="#competitive-landscape" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Competitive Landscape
           </a>
           <a 
             href="#transparency" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Transparency
           </a>
           <Link 
             href="/docs"
             onClick={toggleMobileMenu}
-            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
+            className="w-full text-center text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Documentation
           </Link>
@@ -194,7 +195,8 @@ const LandingHeader = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"></div>
             <span className="relative z-10 text-black">Sign Up</span>
           </Link>
-        </nav>
+          </nav>
+        </div>
       </div>
     </header>
   )
