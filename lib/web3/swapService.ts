@@ -11,10 +11,7 @@ import {
 } from '@/lib/contracts/stockCryptoSwap';
 import {
   UNISWAP_ROUTER_ADDRESS,
-  UNISWAP_ROUTER_ABI,
-  UNISWAP_QUOTER_ADDRESS,
-  UNISWAP_QUOTER_ABI,
-  FEE_TIERS
+  UNISWAP_ROUTER_ABI
 } from '@/lib/contracts/uniswapRouter';
 
 export interface SwapParams {
@@ -226,80 +223,59 @@ export class SwapService {
   }
 
   /**
-   * Get quote for crypto → crypto swap (via Uniswap V3)
+   * Get quote for crypto → crypto swap (via Uniswap V2)
    */
   private async getCryptoToCryptoQuote(
     fromToken: string,
     toToken: string,
     amount: bigint
   ): Promise<QuoteResult> {
-    const quoterContract = new ethers.Contract(
-      UNISWAP_QUOTER_ADDRESS,
-      UNISWAP_QUOTER_ABI,
+    const routerContract = new ethers.Contract(
+      UNISWAP_ROUTER_ADDRESS,
+      UNISWAP_ROUTER_ABI,
       this.provider!
     );
 
-    // Try different fee tiers to find best quote
-    const feeTiers = [FEE_TIERS.LOW, FEE_TIERS.MEDIUM, FEE_TIERS.HIGH];
-    let bestQuote: bigint = BigInt(0);
-    let bestFee = FEE_TIERS.MEDIUM;
+    // Try direct route first
+    try {
+      const amounts = await routerContract.getAmountsOut(amount, [fromToken, toToken]);
+      const outputAmount = amounts[amounts.length - 1];
 
-    for (const fee of feeTiers) {
+      return {
+        outputAmount,
+        route: [fromToken, toToken],
+        priceImpact: 0.3,
+        exchangeRate: (Number(outputAmount) / Number(amount)).toString()
+      };
+    } catch {
+      // Try routing through USDC if direct pool doesn't exist
       try {
-        const quote = await quoterContract.callStatic.quoteExactInputSingle(
-          fromToken,
-          toToken,
-          fee,
-          amount,
-          0 // sqrtPriceLimitX96 = 0 means no price limit
-        );
-        
-        if (quote > bestQuote) {
-          bestQuote = quote;
-          bestFee = fee;
-        }
-      } catch {
-        // Pool doesn't exist for this fee tier, continue
-        continue;
-      }
-    }
-
-    if (bestQuote === BigInt(0)) {
-      // Try routing through USDC
-      try {
-        const quote1 = await quoterContract.callStatic.quoteExactInputSingle(
-          fromToken,
-          USDC_ADDRESS,
-          FEE_TIERS.MEDIUM,
-          amount,
-          0
-        );
-
-        const quote2 = await quoterContract.callStatic.quoteExactInputSingle(
-          USDC_ADDRESS,
-          toToken,
-          FEE_TIERS.MEDIUM,
-          quote1,
-          0
-        );
+        const amounts = await routerContract.getAmountsOut(amount, [fromToken, USDC_ADDRESS, toToken]);
+        const outputAmount = amounts[amounts.length - 1];
 
         return {
-          outputAmount: quote2,
+          outputAmount,
           route: [fromToken, USDC_ADDRESS, toToken],
           priceImpact: 0.5,
-          exchangeRate: (Number(quote2) / Number(amount)).toString()
+          exchangeRate: (Number(outputAmount) / Number(amount)).toString()
         };
       } catch {
-        throw new Error('No liquidity pool found for this pair');
+        // Try routing through WETH
+        try {
+          const amounts = await routerContract.getAmountsOut(amount, [fromToken, WETH_ADDRESS, toToken]);
+          const outputAmount = amounts[amounts.length - 1];
+
+          return {
+            outputAmount,
+            route: [fromToken, WETH_ADDRESS, toToken],
+            priceImpact: 0.5,
+            exchangeRate: (Number(outputAmount) / Number(amount)).toString()
+          };
+        } catch {
+          throw new Error('No liquidity pool found for this pair');
+        }
       }
     }
-
-    return {
-      outputAmount: bestQuote,
-      route: [fromToken, toToken],
-      priceImpact: 0.3,
-      exchangeRate: (Number(bestQuote) / Number(amount)).toString()
-    };
   }
 
   /**
@@ -413,7 +389,7 @@ export class SwapService {
   }
 
   /**
-   * Execute crypto → crypto swap (via Uniswap V3)
+   * Execute crypto → crypto swap (via Uniswap V2)
    */
   private async executeCryptoToCryptoSwap(params: SwapParams): Promise<ethers.ContractTransaction> {
     const routerContract = new ethers.Contract(
@@ -422,19 +398,31 @@ export class SwapService {
       this.signer!
     );
 
-    // Use exactInputSingle for direct swaps
-    const swapParams = {
-      tokenIn: params.fromToken,
-      tokenOut: params.toToken,
-      fee: FEE_TIERS.MEDIUM, // 0.3% fee tier (most common)
-      recipient: params.userAddress,
-      deadline: params.deadline,
-      amountIn: params.amount,
-      amountOutMinimum: params.minOutput,
-      sqrtPriceLimitX96: 0 // No price limit
-    };
+    // Determine the best route (try direct, then through USDC, then through WETH)
+    let path: string[] = [params.fromToken, params.toToken];
+    
+    try {
+      // Check if direct path has liquidity
+      await routerContract.getAmountsOut(params.amount, path);
+    } catch {
+      // Try routing through USDC
+      try {
+        path = [params.fromToken, USDC_ADDRESS, params.toToken];
+        await routerContract.getAmountsOut(params.amount, path);
+      } catch {
+        // Try routing through WETH
+        path = [params.fromToken, WETH_ADDRESS, params.toToken];
+      }
+    }
 
-    return routerContract.exactInputSingle(swapParams);
+    // Execute swap with determined path
+    return routerContract.swapExactTokensForTokens(
+      params.amount,
+      params.minOutput,
+      path,
+      params.userAddress,
+      params.deadline
+    );
   }
 
   /**

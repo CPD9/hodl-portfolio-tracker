@@ -1,14 +1,12 @@
 import { UNISWAP_FACTORY_ABI, UNISWAP_FACTORY_ADDRESS } from '@/lib/contracts/uniswapFactory';
 import { useEffect, useState } from 'react';
 
-import { FEE_TIERS } from '@/lib/contracts/uniswapRouter';
 import { ethers } from 'ethers';
 
 export interface LiquidityPool {
   address: string;
   token0: string;
   token1: string;
-  fee: number;
 }
 
 export interface UseLiquidityPoolsResult {
@@ -16,13 +14,12 @@ export interface UseLiquidityPoolsResult {
   loading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
-  getPool: (token0: string, token1: string, fee?: number) => Promise<string | null>;
+  getPair: (token0: string, token1: string) => Promise<string | null>;
 }
 
 /**
- * Hook to interact with Uniswap V3 Factory and pools
- * Note: V3 doesn't have an enumerable list of pools like V2
- * Pools are queried by token pair + fee tier
+ * Hook to interact with Uniswap V2 Factory and pairs
+ * V2 pairs can be enumerated via allPairs() function
  */
 export function useLiquidityPools(): UseLiquidityPoolsResult {
   const [pools, setPools] = useState<LiquidityPool[]>([]);
@@ -30,9 +27,9 @@ export function useLiquidityPools(): UseLiquidityPoolsResult {
   const [error, setError] = useState<Error | null>(null);
 
   /**
-   * Get pool address for specific token pair and fee tier
+   * Get pair address for specific token pair
    */
-  const getPool = async (token0: string, token1: string, fee: number = FEE_TIERS.MEDIUM): Promise<string | null> => {
+  const getPair = async (token0: string, token1: string): Promise<string | null> => {
     try {
       if (typeof window === 'undefined' || !(window as any).ethereum) {
         throw new Error('MetaMask not installed');
@@ -45,36 +42,57 @@ export function useLiquidityPools(): UseLiquidityPoolsResult {
         provider
       );
 
-      const poolAddress = await factoryContract.getPool(token0, token1, fee);
+      const pairAddress = await factoryContract.getPair(token0, token1);
       
-      // V3 returns zero address if pool doesn't exist
-      if (poolAddress === ethers.constants.AddressZero) {
+      // V2 returns zero address if pair doesn't exist
+      if (pairAddress === ethers.constants.AddressZero) {
         return null;
       }
 
-      return poolAddress;
+      return pairAddress;
     } catch (err) {
-      console.error('Error fetching pool:', err);
+      console.error('Error fetching pair:', err);
       return null;
     }
   };
 
   /**
-   * Fetch common pools (not exhaustive like V2)
-   * V3 pools are queried on-demand by token pair + fee
+   * Fetch pairs from factory (V2 allows enumeration)
    */
   const fetchPools = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // In Uniswap V3, we can't enumerate all pools
-      // Instead, we'll maintain a list of known/common pools
-      // Or query specific pools when needed via getPool()
-      
-      // For now, return empty array
-      // Pools will be discovered dynamically when users try to swap
-      setPools([]);
+      if (typeof window === 'undefined' || !(window as any).ethereum) {
+        setPools([]);
+        return;
+      }
+
+      const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+      const factoryContract = new ethers.Contract(
+        UNISWAP_FACTORY_ADDRESS,
+        UNISWAP_FACTORY_ABI,
+        provider
+      );
+
+      // Get total number of pairs
+      const allPairsLength = await factoryContract.allPairsLength();
+      const pairsToFetch = Math.min(Number(allPairsLength), 50); // Limit to first 50 pairs
+
+      const poolPromises = [];
+      for (let i = 0; i < pairsToFetch; i++) {
+        poolPromises.push(factoryContract.allPairs(i));
+      }
+
+      const pairAddresses = await Promise.all(poolPromises);
+      const poolsData: LiquidityPool[] = pairAddresses.map((address: string) => ({
+        address,
+        token0: '', // Would need pair contract to fetch token addresses
+        token1: '', // Would need pair contract to fetch token addresses
+      }));
+
+      setPools(poolsData);
     } catch (err) {
       setError(err as Error);
       setPools([]);
@@ -92,7 +110,7 @@ export function useLiquidityPools(): UseLiquidityPoolsResult {
     loading,
     error,
     refetch: fetchPools,
-    getPool
+    getPair
   };
 }
 
