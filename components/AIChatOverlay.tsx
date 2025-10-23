@@ -221,30 +221,74 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
   // Extract readable message from unknown errors for user-facing chat output
   const extractErrorMessage = (err: unknown): string => {
+    // Produce a detailed, user-visible error including HTTP details and server-provided context.
+    // Avoid exposing any secrets; API key fingerprints are logged on the server only.
     try {
-      if (typeof err === 'string') return err;
-      if (err instanceof Error) return err.message || err.name || 'Unexpected error';
+      // If already a rich JSON string, try to parse
+      const tryParse = (val: any) => {
+        if (typeof val !== 'string') return null;
+        try { return JSON.parse(val); } catch { return null; }
+      };
+
+      if (typeof err === 'string') {
+        const parsed = tryParse(err);
+        if (parsed && typeof parsed === 'object') {
+          const p: any = parsed;
+          const lines = [
+            p.message ? `Message: ${p.message}` : undefined,
+            Number.isFinite(p.status) ? `Status: ${p.status}${p.statusText ? ` (${p.statusText})` : ''}` : undefined,
+            p.url ? `URL: ${p.url}` : undefined,
+            p.response ? `Response: ${typeof p.response === 'string' ? p.response.slice(0, 1000) : JSON.stringify(p.response).slice(0, 1000)}` : undefined,
+            p.hint ? `Hint: ${p.hint}` : undefined,
+            'Note: API key fingerprint is logged on the server for security (not shown in browser).',
+          ].filter(Boolean);
+          return lines.join('\n');
+        }
+        return err;
+      }
+      if (err instanceof Error) {
+        const parsed = tryParse(err.message);
+        if (parsed && typeof parsed === 'object') {
+          const p: any = parsed;
+          const lines = [
+            p.message ? `Message: ${p.message}` : undefined,
+            Number.isFinite(p.status) ? `Status: ${p.status}${p.statusText ? ` (${p.statusText})` : ''}` : undefined,
+            p.url ? `URL: ${p.url}` : undefined,
+            p.response ? `Response: ${typeof p.response === 'string' ? p.response.slice(0, 1000) : JSON.stringify(p.response).slice(0, 1000)}` : undefined,
+            p.hint ? `Hint: ${p.hint}` : undefined,
+            'Note: API key fingerprint is logged on the server for security (not shown in browser).',
+          ].filter(Boolean);
+          return lines.join('\n');
+        }
+        // Fallback to error name/message and stack
+        const base = err.message || err.name || 'Unexpected error';
+        const stack = err.stack ? `\nStack: ${err.stack.split('\n').slice(0, 3).join('\n')}` : '';
+        return base + stack;
+      }
       if (err && typeof err === 'object') {
         const e: any = err as any;
-        if (typeof e.message === 'string' && e.message) return e.message;
-        // HTTP-like error info
-        if (e.status || e.statusText || e.code) {
-          const parts = [e.code, e.status && `HTTP ${e.status}`, e.statusText]
-            .filter(Boolean)
-            .join(' ');
-          if (parts) return parts;
+        if (e.message && typeof e.message === 'string') {
+          const parsed = tryParse(e.message);
+          if (parsed) return extractErrorMessage(parsed);
+        }
+        const parts: string[] = [];
+        if (e.code || e.status || e.statusText) {
+          parts.push(['Code', e.code].filter(Boolean).join(': '));
+          parts.push(['Status', e.status && `${e.status}${e.statusText ? ` (${e.statusText})` : ''}`].filter(Boolean).join(': '));
         }
         if (e.response) {
           const r = e.response;
           const head = [r.status && `HTTP ${r.status}`, r.statusText].filter(Boolean).join(' ');
+          parts.push(head);
           if (r.data) {
-            if (typeof r.data === 'string') return `${head ? head + ': ' : ''}${r.data}`;
-            if (typeof r.data.message === 'string') return `${head ? head + ': ' : ''}${r.data.message}`;
-            try { return `${head ? head + ': ' : ''}${JSON.stringify(r.data).slice(0, 300)}`; } catch {}
+            try { parts.push(`Response: ${typeof r.data === 'string' ? r.data.slice(0, 1000) : JSON.stringify(r.data).slice(0, 1000)}`); } catch {}
           }
-          if (head) return head;
         }
-        try { return JSON.stringify(e); } catch {}
+        if (parts.length === 0) {
+          try { return JSON.stringify(e); } catch {}
+        }
+        parts.push('Note: API key fingerprint is logged on the server for security (not shown in browser).');
+        return parts.filter(Boolean).join('\n');
       }
       return 'Unknown error';
     } catch {

@@ -35,7 +35,26 @@ export async function sendChatMessage(
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send message');
+      let bodyText: string | undefined;
+      let bodyJson: any = undefined;
+      try {
+        bodyText = await response.text();
+        try {
+          bodyJson = bodyText ? JSON.parse(bodyText) : undefined;
+        } catch {
+          // not JSON, keep as text
+        }
+      } catch {}
+
+      const richError = {
+        message: 'Failed to send message to /api/chat',
+        status: response.status,
+        statusText: response.statusText,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/chat`,
+        response: bodyJson ?? bodyText ?? null,
+        hint: 'Check server logs for OpenAI key fingerprint and detailed error.',
+      };
+      throw new Error(JSON.stringify(richError));
     }
 
     const data = await response.json();
@@ -51,6 +70,7 @@ export async function sendChatMessage(
     return null;
   } catch (error) {
     console.error('Error sending chat message:', error);
-    return null;
+    // Re-throw to allow UI to surface detailed error information
+    throw error;
   }
 }
