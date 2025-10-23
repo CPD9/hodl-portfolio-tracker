@@ -116,72 +116,80 @@ const LandingHeader = () => {
       {/* Mobile Menu */}
       <div 
         id="mobileMenu"
-        className="hidden fixed top-[80px] bottom-0 right-0 left-0 px-3 pt-3 pb-16 overflow-y-auto overscroll-contain lg:hidden z-[998] bg-black pointer-events-auto border-t border-gray-800 mobile-menu-scroll"
+        className="hidden fixed top-0 bottom-0 right-0 left-0 px-3 pt-4 pb-20 overflow-y-auto overscroll-contain lg:hidden z-[1000] bg-black pointer-events-auto border-t border-gray-800 mobile-menu-scroll"
       >
-        <nav className="flex flex-col gap-3 items-stretch pointer-events-auto">
+        {/* Close button inside overlay for full-screen menu */}
+        <button
+          onClick={toggleMobileMenu}
+          aria-label="Close menu"
+          className="absolute top-3 right-3 text-2xl p-2 rounded-lg text-gray-300 hover:text-yellow-400 hover:bg-gray-800/60 border border-gray-700"
+        >
+          <i className='bx bx-x'></i>
+        </button>
+        <nav className="mt-8 flex flex-col gap-2.5 items-stretch pointer-events-auto">
           <a 
             href="#why-hodl" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Why HODL?
           </a>
           <a 
             href="#how-it-works" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             How it Works
           </a>
           <a 
             href="#market-opportunity" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Market Opportunity
           </a>
           <a 
             href="#pricing" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Pricing
           </a>
           <a 
             href="#competitive-landscape" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Competitive Landscape
           </a>
           <a 
             href="#transparency" 
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Transparency
           </a>
           <Link 
             href="/docs"
             onClick={toggleMobileMenu}
-            className="w-full text-left text-base leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-2"
+            className="w-full text-left text-sm leading-tight font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 py-1.5"
           >
             Documentation
           </Link>
           
-          <div className="w-full border-t border-gray-700 my-2"></div>
+          <div className="w-full border-t border-gray-800 my-2"></div>
           
           <Link 
             href="/sign-in"
             onClick={toggleMobileMenu}
-            className="w-full text-center py-3 px-6 rounded-xl border border-gray-700 font-semibold transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer text-base"
+            className="w-full text-center py-2.5 px-5 rounded-lg border border-gray-700 font-semibold transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer text-sm"
           >
             Log In
           </Link>
           <Link 
             href="/sign-up"
             onClick={toggleMobileMenu}
-            className="w-full text-center relative py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer overflow-hidden text-base"
+            className="w-full text-center relative py-2.5 px-5 rounded-lg font-semibold transition-all duration-300 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer overflow-hidden text-sm"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"></div>
             <span className="relative z-10 text-black">Sign Up</span>
