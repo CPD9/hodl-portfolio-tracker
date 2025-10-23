@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import OpenAI from 'openai';
 
+// Log a short fingerprint of the configured OpenAI API key to verify which key is active
+console.log('OPENAI key fingerprint:', process.env.OPENAI_API_KEY);
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
