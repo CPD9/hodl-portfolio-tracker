@@ -124,7 +124,7 @@ console.log(data.usd) // $3,245.67`
       content: [
         {
           subtitle: 'Is HODL free to use?',
-          description: 'Yes! HODL is free to use. We only charge Base L2 transaction fees (~$0.01) for on-chain swaps.',
+          description: 'Yes! HODL is free to use for portfolio tracking and analytics. For on-chain operations like Stock ↔ Crypto swaps, you only pay minimal Base L2 gas fees (99.95% cheaper than Ethereum - approximately $2/year for active trading vs $3,955/year on Ethereum). No subscription fees, no hidden charges.',
         },
         {
           subtitle: 'Is my data secure?',
