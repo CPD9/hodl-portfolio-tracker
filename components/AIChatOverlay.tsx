@@ -6,9 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { MessageCircle, X, Send, Bot, User, ArrowRight, ArrowDown, Maximize2, Minimize2 } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '@/lib/actions/chat.actions';
-import { getUserContext, refreshUserContext } from '@/lib/actions/user-context.actions';
-import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
-import { decideTrades, executeTradeOrders } from '../lib/actions/ai-trade-agent.actions';
 import { cn } from '@/lib/utils';
 
 interface AIChatOverlayProps {
@@ -17,6 +14,105 @@ interface AIChatOverlayProps {
     name: string;
     email: string;
   };
+}
+
+// Lightweight message render boundary to prevent a single bad message crashing the chat UI
+class MessageErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: any) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: any, info: any) {
+    console.error('Chat message render error:', error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <span className="text-red-300 text-xs">[message failed to render]</span>;
+    }
+    return this.props.children as any;
+  }
+}
+
+// Sanitize text for safe display in bubbles
+function sanitizeForDisplay(input: unknown, maxLen = 8000): string {
+  try {
+    let s: string = '';
+    if (typeof input === 'string') s = input;
+    else if (input == null) s = '';
+    else if (input instanceof Error) s = input.message || String(input);
+    else s = typeof input === 'object' ? JSON.stringify(input) : String(input);
+
+    // Strip control characters except common whitespace (tab, newline, carriage return)
+    s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+    // Remove obviously invalid lone surrogates
+    s = s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/g, '').replace(/(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '');
+    // Trim overly long content
+    if (s.length > maxLen) s = s.slice(0, maxLen) + '…';
+    return s;
+  } catch {
+    return '';
+  }
+}
+
+// Client-safe API helpers to avoid importing server actions in client components
+async function apiGetUserContext(userId: string): Promise<string> {
+  const res = await fetch(`/api/user-context?userId=${encodeURIComponent(userId)}`);
+  if (!res.ok) throw new Error(`getUserContext failed (${res.status})`);
+  const data = await res.json();
+  return data.context as string;
+}
+
+async function apiRefreshUserContext(userId: string): Promise<string> {
+  const res = await fetch('/api/user-context', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, action: 'refresh' }),
+  });
+  if (!res.ok) throw new Error(`refreshUserContext failed (${res.status})`);
+  const data = await res.json();
+  return data.context as string;
+}
+
+async function apiRunAIContextAgent(
+  messages: { role: 'user' | 'assistant'; content: string }[],
+  userId: string,
+  userContext: string | null
+): Promise<{ assistantMessage: { role: 'assistant'; content: string } | null; priceContext?: any | null }> {
+  const res = await fetch('/api/ai/context', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages, userId, userContext }),
+  });
+  if (!res.ok) throw new Error(`context agent failed (${res.status})`);
+  return res.json();
+}
+
+async function apiDecideTrades(
+  userInput: string,
+  userContext: string | null,
+  priceContextJSON?: any
+): Promise<any | null> {
+  const res = await fetch('/api/ai/trade', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userInput, userContext, priceContextJSON }),
+  });
+  if (!res.ok) throw new Error(`trade agent failed (${res.status})`);
+  const data = await res.json();
+  return data.proposal ?? null;
+}
+
+async function apiExecuteTradeOrders(userId: string, orders: any[]): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch('/api/ai/trade/execute', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, orders }),
+  });
+  if (!res.ok) throw new Error(`execute trade failed (${res.status})`);
+  return res.json();
 }
 
 const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
@@ -62,7 +158,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     if (isOpen && !isLoadingContext && !contextLoadedRef.current) {
       setIsLoadingContext(true);
       contextLoadedRef.current = true; // Mark as loaded for this session
-    getUserContext(user.id)
+      apiGetUserContext(user.id)
         .then((context) => {
           setUserContext(context);
       const asOf = extractContextAsOf(context) || new Date();
@@ -124,7 +220,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       // Always fetch the latest user context before processing the message
       let freshContext: string | null = userContext;
       try {
-        const latest = await getUserContext(user.id);
+        const latest = await apiGetUserContext(user.id);
         freshContext = latest;
         setUserContext(latest);
         const asOf = extractContextAsOf(latest) || new Date();
@@ -136,7 +232,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       let assistantAdded = false;
       let priceContext: any | null = null;
       try {
-        const result = await runAIContextAgent(
+        const result = await apiRunAIContextAgent(
           sendMessages.map(m => ({ role: m.role, content: m.content })),
           user.id,
           freshContext || null
@@ -152,7 +248,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       // Step 2: With the price context, ask trade agent to decide if buy/sell is requested
       try {
-        const maybeProposal = await decideTrades(userMessage.content, freshContext, priceContext ?? undefined);
+        const maybeProposal = await apiDecideTrades(userMessage.content, freshContext, priceContext ?? undefined);
         if (maybeProposal && maybeProposal.orders?.length) {
           const assistantTrade: ChatMessage = {
             role: 'assistant',
@@ -310,7 +406,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
         return next;
       });
 
-      const res = await executeTradeOrders(user.id, adjustedOrders);
+      const res = await apiExecuteTradeOrders(user.id, adjustedOrders);
       const reply: ChatMessage = {
         role: 'assistant',
         content: res.success ? 'Transaction(s) executed successfully.' : `Failed: ${res.message}`,
@@ -321,7 +417,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       // Refresh server-side and local user context right after successful execution
       if (res.success) {
         try {
-          const refreshed = await refreshUserContext(user.id);
+          const refreshed = await apiRefreshUserContext(user.id);
           setUserContext(refreshed);
           const now = new Date();
           setContextUpdatedAt(now);
@@ -468,19 +564,21 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                       </div>
                     )}
                     
-                    <div
-                      className={cn(
-                        "max-w-[80%] rounded-lg px-3 py-2 text-sm",
-                        message.role === 'user'
-                          ? "bg-yellow-500 text-black"
-                          : "bg-gray-700 text-gray-100"
-                      )}
-                    >
-                      <p className="whitespace-pre-wrap">{message.content}</p>
-                      <p className="text-xs opacity-70 mt-1">
-                        {formatTime(message.timestamp)}
-                      </p>
-                    </div>
+                    <MessageErrorBoundary>
+                      <div
+                        className={cn(
+                          "max-w-[80%] rounded-lg px-3 py-2 text-sm",
+                          message.role === 'user'
+                            ? "bg-yellow-500 text-black"
+                            : "bg-gray-700 text-gray-100"
+                        )}
+                      >
+                        <p className="whitespace-pre-wrap">{sanitizeForDisplay(message.content)}</p>
+                        <p className="text-xs opacity-70 mt-1">
+                          {formatTime(message.timestamp)}
+                        </p>
+                      </div>
+                    </MessageErrorBoundary>
                     
                     {message.role === 'user' && (
                       <div className="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">

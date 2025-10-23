@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import OpenAI from 'openai';
 
+export const runtime = 'nodejs';
+export const maxDuration = 60; // seconds
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -9,7 +12,7 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-  const { messages, userContext } = await request.json();
+    const { messages, userContext } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -60,14 +63,25 @@ export async function POST(request: NextRequest) {
       content: systemContent,
     };
 
+    // Log safe API key fingerprint for diagnostics (first 8 … last 4)
+    try {
+      const k = process.env.OPENAI_API_KEY || '';
+      if (k) {
+        const fp = `${k.slice(0, 8)}…${k.slice(-4)}`;
+        console.log(`[chat] OPENAI key: ${fp}`);
+      } else {
+        console.warn('[chat] OPENAI key: MISSING');
+      }
+    } catch {}
+
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-  messages: [systemMessage, ...cleanedMessages],
+      model: 'gpt-4o-mini',
+      messages: [systemMessage, ...cleanedMessages],
       max_tokens: 500,
       temperature: 0.7,
     });
 
-  const assistantMessage = completion.choices[0]?.message;
+    const assistantMessage = completion.choices[0]?.message;
 
     if (!assistantMessage) {
       return NextResponse.json(
