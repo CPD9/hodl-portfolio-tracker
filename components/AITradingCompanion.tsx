@@ -84,6 +84,17 @@ const AITradingCompanion: React.FC = () => {
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
           <Button
+            onClick={() => {
+              // Open AI chat overlay
+              const event = new CustomEvent('open-ai-chat');
+              window.dispatchEvent(event);
+            }}
+            className="bg-gradient-to-r from-yellow-500 to-purple-500 hover:from-yellow-600 hover:to-purple-600 text-black font-semibold text-sm md:text-base flex-1 sm:flex-none"
+          >
+            <Brain className="w-4 h-4 mr-2" />
+            Consult AI
+          </Button>
+          <Button
             onClick={analyzeMarket}
             disabled={isAnalyzing}
             className="bg-purple-600 hover:bg-purple-700 text-white text-sm md:text-base flex-1 sm:flex-none"
@@ -217,7 +228,7 @@ const AITradingCompanion: React.FC = () => {
                 </div>
                 <div className="bg-gray-800 rounded p-2 text-center">
                   <p className="text-xs text-gray-400 mb-1">MA (50)</p>
-                  <p className="text-sm font-bold text-purple-400">${(parseFloat(signal.currentPrice) * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
+                  <p className="text-sm font-bold text-purple-400">${(signal.currentPrice * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
                 </div>
               </div>
 

@@ -9,6 +9,10 @@ import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
 import FearGreedIndex from "@/components/FearGreedIndex";
 import TradingViewWidget from "@/components/TradingViewWidget";
+import ServiceGrid from "@/components/dashboard/ServiceGrid";
+import TopStocks from "@/components/dashboard/TopStocks";
+import RecentSearch from "@/components/dashboard/RecentSearch";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import {sendDailyNewsSummary} from "@/lib/inngest/functions";
 
 const Home = () => {
@@ -16,28 +20,47 @@ const Home = () => {
 
     return (
         <div className="flex min-h-screen home-wrapper">
+          {/* Service Grid - All 8 Services */}
+          <ServiceGrid />
+
           {/* Base Integration Section */}
           <section className="w-full mb-8">
-            <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
-              Base Chain Integration
-            </h2>
+            <SectionHeader 
+              title="Base Chain Integration" 
+              subtitle="Leverage Base L2 for low-cost, high-speed transactions"
+              gradient="yellow"
+            />
             <BaseIntegration />
           </section>
 
           {/* AI Trading Companion Section */}
           <section className="w-full mb-8">
-            <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center">
-              AI Trading Companion
-            </h2>
+            <SectionHeader 
+              title="AI Trading Companion" 
+              subtitle="Get AI-powered insights and personalized trading signals"
+              gradient="purple"
+            />
             <AITradingCompanion />
           </section>
 
           {/* Market Technical Analysis / Fear & Greed */}
           <section className="w-full mb-8">
-            <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center">
-              Market Sentiment & Technical Analysis
-            </h2>
-            <FearGreedIndex />
+            <SectionHeader 
+              title="Market Sentiment & Technical Analysis" 
+              subtitle="Real-time market indicators and sentiment metrics"
+              gradient="yellow"
+            />
+            <div className="max-h-[400px] overflow-hidden">
+              <FearGreedIndex />
+            </div>
+          </section>
+
+          {/* Top Stocks + Recent Search */}
+          <section className="w-full mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <TopStocks />
+              <RecentSearch />
+            </div>
           </section>
 
           {/* First Row: Market Overview + Stock Heatmap */}
@@ -48,14 +71,14 @@ const Home = () => {
                     scriptUrl={`${scriptUrl}market-overview.js`}
                     config={MARKET_OVERVIEW_WIDGET_CONFIG}
                     className="custom-chart"
-                    height={600}
+                    height={400}
                   />
               </div>
               <div className="md:col-span-1 xl:col-span-2">
                   <TradingViewWidget
                       scriptUrl={`${scriptUrl}stock-heatmap.js`}
                       config={HEATMAP_WIDGET_CONFIG}
-                      height={600}
+                      height={400}
                   />
               </div>
           </section>
@@ -66,14 +89,14 @@ const Home = () => {
                   <TradingViewWidget
                       scriptUrl={`${scriptUrl}timeline.js`}
                       config={TOP_STORIES_WIDGET_CONFIG}
-                      height={600}
+                      height={400}
                   />
               </div>
               <div className="h-full md:col-span-1 xl:col-span-2">
                   <TradingViewWidget
                       scriptUrl={`${scriptUrl}market-quotes.js`}
                       config={MARKET_DATA_WIDGET_CONFIG}
-                      height={600}
+                      height={400}
                   />
               </div>
           </section>
