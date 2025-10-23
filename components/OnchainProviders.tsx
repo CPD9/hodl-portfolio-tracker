@@ -38,11 +38,13 @@ export function OnchainProviders({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const apiKey = process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY;
+
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
-          apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+          apiKey={apiKey}
           chain={base}
         >
           {children}
@@ -51,4 +53,3 @@ export function OnchainProviders({ children }: { children: ReactNode }) {
     </WagmiProvider>
   );
 }
-

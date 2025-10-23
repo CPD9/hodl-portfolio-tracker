@@ -1,5 +1,18 @@
-import { auth } from "@/lib/better-auth/auth";
-import { toNextJsHandler } from "better-auth/next-js";
+import { getAuth } from "@/lib/better-auth/auth";
 
-export const { GET, POST } = toNextJsHandler(auth.handler);
+export async function GET(req: Request) {
+  const authInstance = await getAuth();
+  if (!authInstance) {
+    return new Response('Auth service unavailable', { status: 503 });
+  }
+  return authInstance.handler(req);
+}
+
+export async function POST(req: Request) {
+  const authInstance = await getAuth();
+  if (!authInstance) {
+    return new Response('Auth service unavailable', { status: 503 });
+  }
+  return authInstance.handler(req);
+}
 
