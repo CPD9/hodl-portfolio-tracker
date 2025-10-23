@@ -36,6 +36,8 @@ export default function LandingPage() {
       
       {/* Header - No AOS animation for fixed header */}
       <LandingHeader />
+      {/* Spacer to prevent header from overlapping intro content */}
+      <div aria-hidden className="h-[72px] md:h-[80px]" />
       
       {/* Hero Section */}
       <div data-aos="fade-right">

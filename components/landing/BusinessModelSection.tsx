@@ -171,7 +171,7 @@ const BusinessModelSection = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-gray-900 to-gray-800">
+    <section id="pricing" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-gray-900 to-gray-800 scroll-mt-24 md:scroll-mt-28">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div 

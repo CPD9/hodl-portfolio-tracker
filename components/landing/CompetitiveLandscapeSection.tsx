@@ -61,7 +61,7 @@ const CompetitiveLandscapeSection = () => {
   ]
 
   return (
-    <section id="competitive-landscape" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-gray-900 to-black">
+    <section id="competitive-landscape" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-gray-900 to-black scroll-mt-24 md:scroll-mt-28">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
