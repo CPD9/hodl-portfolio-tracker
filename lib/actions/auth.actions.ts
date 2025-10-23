@@ -50,18 +50,21 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
         
         // Parse error message
         let errorMessage = 'Sign in failed. Please check your credentials.';
+        const rawMessage = e?.body?.message || e?.message || '';
         
         if (e?.body?.message) {
             errorMessage = e.body.message;
-        } else if (e?.message) {
-            if (e.message.includes('credentials') || e.message.includes('password') || e.message.includes('incorrect')) {
+        } else if (rawMessage) {
+            if (rawMessage.includes('Auth not available') || rawMessage.includes('Auth service unavailable')) {
+                errorMessage = 'Authentication is temporarily unavailable. In development, start MongoDB locally or set MONGODB_URI in your .env. Then retry.';
+            } else if (rawMessage.includes('credentials') || rawMessage.includes('password') || rawMessage.includes('incorrect')) {
                 errorMessage = 'Incorrect email or password';
-            } else if (e.message.includes('not found') || e.message.includes('user')) {
+            } else if (rawMessage.includes('not found') || rawMessage.includes('user')) {
                 errorMessage = 'No account found with this email';
-            } else if (e.message.includes('email')) {
+            } else if (rawMessage.includes('email')) {
                 errorMessage = 'Please enter a valid email address';
             } else {
-                errorMessage = e.message;
+                errorMessage = rawMessage;
             }
         }
         

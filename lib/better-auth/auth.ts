@@ -58,14 +58,11 @@ export const getAuth = async () => {
     return initPromise;
 }
 
-// Initialize auth immediately
-const authPromise = getAuth();
-
 // Export auth with proper typing and method forwarding
 export const auth = {
     get handler() {
         return async (req: Request) => {
-            const instance = await authPromise;
+            const instance = await getAuth();
             if (!instance) {
                 return new Response('Auth not available', { status: 503 });
             }
@@ -74,22 +71,22 @@ export const auth = {
     },
     api: {
         getSession: async (options?: any) => {
-            const instance = await authPromise;
+            const instance = await getAuth();
             if (!instance) return null;
             return instance.api.getSession(options);
         },
         signUpEmail: async (options: any) => {
-            const instance = await authPromise;
+            const instance = await getAuth();
             if (!instance) throw new Error('Auth not available');
             return instance.api.signUpEmail(options);
         },
         signInEmail: async (options: any) => {
-            const instance = await authPromise;
+            const instance = await getAuth();
             if (!instance) throw new Error('Auth not available');
             return instance.api.signInEmail(options);
         },
         signOut: async (options?: any) => {
-            const instance = await authPromise;
+            const instance = await getAuth();
             if (!instance) throw new Error('Auth not available');
             return instance.api.signOut(options);
         }

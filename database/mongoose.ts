@@ -56,11 +56,32 @@ export const connectToDatabase = async () => {
             const isSrvDnsError = message.includes('querySrv ENOTFOUND') || message.includes('_mongodb._tcp');
             
             if (isConnectionRefused || isSrvDnsError) {
-                console.warn('[DB] MongoDB connection failed in development. Some features may not work.');
-                console.warn('[DB] To fix: Install and start MongoDB locally, or set MONGODB_URI in .env');
+                console.warn('[DB] MongoDB connection failed in development. Attempting in-memory fallback...');
+                console.warn('[DB] To fix permanently: Install and start MongoDB locally, or set MONGODB_URI in .env');
                 console.warn('[DB] Error:', message);
-                // Return a mock connection for development when DB is unavailable
-                return null;
+
+                // Try in-memory MongoDB fallback for development
+                try {
+                    const memPkg: any = await import('mongodb-memory-server');
+                    const MongoMemoryServer = memPkg.MongoMemoryServer || memPkg.default?.MongoMemoryServer;
+                    if (!MongoMemoryServer) throw new Error('mongodb-memory-server not available');
+
+                    const memServer = await MongoMemoryServer.create();
+                    const memUri = memServer.getUri();
+                    console.warn('[DB] Started in-memory MongoDB instance');
+
+                    cached.promise = mongoose.connect(memUri, {
+                        bufferCommands: false,
+                        serverSelectionTimeoutMS: 5000,
+                        connectTimeoutMS: 5000,
+                    });
+                    cached.conn = await cached.promise;
+                    console.warn('[DB] Connected to in-memory MongoDB for development');
+                    return cached.conn;
+                } catch (memErr: any) {
+                    console.warn('[DB] Failed to start in-memory MongoDB fallback:', String(memErr?.message || memErr));
+                    return null;
+                }
             }
         }
         
