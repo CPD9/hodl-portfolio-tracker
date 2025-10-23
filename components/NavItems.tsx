@@ -14,19 +14,9 @@ const NavItems = ({initialStocks, vertical = false, onNavigate}: { initialStocks
         return pathname.startsWith(path);
     }
 
-    const items = pathname === '/'
-        ? [
-            ...NAV_ITEMS,
-            { href: '/#how-it-works', label: 'How it works' },
-            { href: '/#competitive-landscape', label: 'Competitive' },
-            { href: '/#pricing', label: 'Pricing' },
-            { href: '/#market-opportunity', label: 'Opportunity' },
-          ]
-        : NAV_ITEMS;
-
     return (
         <ul className={`flex ${vertical ? 'flex-col' : 'flex-col sm:flex-row'} p-2 gap-3 ${vertical ? 'gap-3' : 'sm:gap-10'} font-medium`}>
-            {items.map(({ href, label }) => {
+            {NAV_ITEMS.map(({ href, label }) => {
                 if(href === '/search') return (
                     <li key="search-trigger">
                         <SearchCommand

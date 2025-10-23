@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import FooterLink from '@/components/forms/FooterLink';
 import InputField from '@/components/forms/InputField';
 import PixelCharacter from '@/components/PixelCharacter';
+import {signInEmail} from "better-auth/api";
 import {toast} from "sonner";
 import { useForm } from 'react-hook-form';
 import {useRouter} from "next/navigation";

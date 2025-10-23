@@ -5,17 +5,14 @@ import 'aos/dist/aos.css'
 // @ts-ignore - AOS types not available
 import AOS from 'aos'
 import ChallengesSection from '@/components/landing/ChallengesSection'
-import CompetitiveLandscapeSection from '@/components/landing/CompetitiveLandscapeSection'
 import FeaturesSection from '@/components/landing/FeaturesSection'
 import HeroSection from '@/components/landing/HeroSection'
 import HowItWorksSection from '@/components/landing/HowItWorksSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 import LandingHeader from '@/components/landing/LandingHeader'
-import MarketOpportunitySection from '@/components/landing/MarketOpportunitySection'
 import StatsSection from '@/components/landing/StatsSection'
 import TransparencySection from '@/components/landing/TransparencySection'
 import WhyHODLSection from '@/components/landing/WhyHODLSection'
-import BusinessModelSection from '@/components/landing/BusinessModelSection'
 import { useEffect } from 'react'
 
 export default function LandingPage() {
@@ -27,7 +24,7 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="relative bg-black text-white overflow-x-hidden pt-20 lg:pt-24">
+    <div className="relative bg-black text-white overflow-x-hidden">
       {/* Gradient background effects */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-yellow-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl opacity-60 -z-10 pointer-events-none" />
       
@@ -42,29 +39,14 @@ export default function LandingPage() {
         <HeroSection />
       </div>
       
-      {/* How It Works */}
-      <div data-aos="fade-up">
-        <HowItWorksSection />
-      </div>
-
-      {/* Market Opportunity */}
-      <div data-aos="fade-up">
-        <MarketOpportunitySection />
-      </div>
-      
       {/* Why HODL Section */}
       <div data-aos="fade-up">
         <WhyHODLSection />
       </div>
       
-      {/* Business Model Section */}
+      {/* How It Works Section */}
       <div data-aos="fade-up">
-        <BusinessModelSection />
-      </div>
-      
-      {/* Competitive Landscape */}
-      <div data-aos="fade-up">
-        <CompetitiveLandscapeSection />
+        <HowItWorksSection />
       </div>
       
       {/* Transparency Section */}
