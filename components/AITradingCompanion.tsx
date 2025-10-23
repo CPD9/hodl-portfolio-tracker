@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, BarChart3, Brain, Clock, DollarSign, Settings, Shield, Target, TrendingDown, TrendingUp } from 'lucide-react';
+import { AlertTriangle, ArrowDownUp, BarChart3, Brain, Clock, DollarSign, Settings, Shield, Target, TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
 import { RiskProfile, TradingSignal, generateTradingSignals, getRecommendedSymbols } from '@/lib/actions/ai-trading.actions';
@@ -83,17 +83,6 @@ const AITradingCompanion: React.FC = () => {
           <div className="w-2 h-2 md:w-3 md:h-3 bg-purple-500 rounded-full flex-shrink-0"></div>
         </div>
         <div className="flex space-x-2 w-full sm:w-auto">
-          <Button
-            onClick={() => {
-              // Open AI chat overlay
-              const event = new CustomEvent('open-ai-chat');
-              window.dispatchEvent(event);
-            }}
-            className="bg-gradient-to-r from-yellow-500 to-purple-500 hover:from-yellow-600 hover:to-purple-600 text-black font-semibold text-sm md:text-base flex-1 sm:flex-none"
-          >
-            <Brain className="w-4 h-4 mr-2" />
-            Consult AI
-          </Button>
           <Button
             onClick={analyzeMarket}
             disabled={isAnalyzing}
@@ -301,20 +290,114 @@ const AITradingCompanion: React.FC = () => {
         </div>
       )}
 
-      {/* Empty State */}
+      {/* Unified Portfolio Overview */}
       {signals.length === 0 && !isAnalyzing && (
-        <div className="text-center py-6 md:py-8 px-4">
-          <Brain className="w-12 h-12 md:w-16 md:h-16 text-gray-600 mx-auto mb-4" />
-          <h4 className="text-base md:text-lg font-medium text-gray-100 mb-2">Ready to Analyze</h4>
-          <p className="text-sm md:text-base text-gray-400 mb-6 max-w-md mx-auto">
-            Click "Analyze Market" to let AI generate personalized trading signals based on your risk profile
-          </p>
-          <Button
-            onClick={analyzeMarket}
-            className="bg-purple-600 hover:bg-purple-700 text-white text-sm md:text-base"
-          >
-            Start AI Analysis
-          </Button>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-base md:text-lg font-semibold text-gray-100 flex items-center">
+              <BarChart3 className="w-4 h-4 mr-2 text-purple-400" />
+              Unified Portfolio Overview
+            </h4>
+            <span className="text-xs text-gray-400">Stock + Crypto Holdings</span>
+          </div>
+
+          {/* Portfolio Summary Cards */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-gradient-to-br from-yellow-900/20 to-yellow-800/20 border border-yellow-500/30 rounded-lg p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-400">Stock Portfolio</span>
+                <DollarSign className="w-4 h-4 text-yellow-400" />
+              </div>
+              <p className="text-2xl font-bold text-yellow-400">$12,450</p>
+              <p className="text-xs text-green-400 flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +5.2% this month
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-500/30 rounded-lg p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-400">Crypto Portfolio</span>
+                <Target className="w-4 h-4 text-purple-400" />
+              </div>
+              <p className="text-2xl font-bold text-purple-400">$8,230</p>
+              <p className="text-xs text-green-400 flex items-center mt-1">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                +12.8% this month
+              </p>
+            </div>
+          </div>
+
+          {/* Asset Allocation Chart */}
+          <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+            <h5 className="text-sm font-medium text-gray-200 mb-3">Asset Allocation</h5>
+            <div className="space-y-3">
+              {/* Stock Holdings */}
+              <div>
+                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>AAPL</span>
+                  <span>35%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500" style={{ width: '35%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>TSLA</span>
+                  <span>25%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-yellow-400 to-yellow-500" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>ETH</span>
+                  <span>20%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-purple-400 to-purple-500" style={{ width: '20%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>BTC</span>
+                  <span>15%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-purple-400 to-purple-500" style={{ width: '15%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-gray-400 mb-1">
+                  <span>Others</span>
+                  <span>5%</span>
+                </div>
+                <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-gray-400 to-gray-500" style={{ width: '5%' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex gap-2">
+            <Button
+              onClick={() => window.location.href = '/dashboard/trade'}
+              className="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white text-sm"
+            >
+              <ArrowDownUp className="w-4 h-4 mr-2" />
+              Swap Assets
+            </Button>
+            <Button
+              onClick={analyzeMarket}
+              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-sm"
+            >
+              <Brain className="w-4 h-4 mr-2" />
+              AI Analysis
+            </Button>
+          </div>
         </div>
       )}
 
