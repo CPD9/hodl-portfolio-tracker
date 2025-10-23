@@ -1,12 +1,12 @@
 'use client';
 
 import { AlertCircle, ArrowDownUp, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
-import React, { useState } from 'react';
+import { ERC20_ABI, STOCK_TOKENS, USDC_ADDRESS, WETH_ADDRESS } from '@/lib/contracts/stockCryptoSwap';
+import React, { useEffect, useState } from 'react';
 
 import AmountInput from './AmountInput';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ERC20_ABI, STOCK_TOKENS, USDC_ADDRESS, WETH_ADDRESS } from '@/lib/contracts/stockCryptoSwap';
 import Link from 'next/link';
 import TokenSelector from './TokenSelector';
 import { auth } from '@/lib/better-auth/auth-client';
@@ -54,6 +54,39 @@ export default function SwapInterfaceV2() {
     toType: toToken.type,
     enabled: !!fromAmount && parseFloat(fromAmount) > 0,
   });
+
+  // Fetch user's portfolio balances from database
+  const fetchBalances = async () => {
+    if (!session?.user?.id) {
+      setFromBalance('0');
+      setToBalance('0');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/get-portfolio-balance?userId=${session.user.id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        // Find balance for fromToken
+        const fromPosition = data.holdings.find((h: any) => h.symbol === fromToken.symbol);
+        setFromBalance(fromPosition ? fromPosition.quantity.toString() : '0');
+
+        // Find balance for toToken
+        const toPosition = data.holdings.find((h: any) => h.symbol === toToken.symbol);
+        setToBalance(toPosition ? toPosition.quantity.toString() : '0');
+      }
+    } catch (error) {
+      console.error('Error fetching balances:', error);
+      setFromBalance('0');
+      setToBalance('0');
+    }
+  };
+
+  // Fetch balances when component mounts or tokens change
+  useEffect(() => {
+    fetchBalances();
+  }, [session?.user?.id, fromToken.symbol, toToken.symbol]);
 
   // Handle token swap
   const handleSwap = () => {
@@ -108,6 +141,9 @@ export default function SwapInterfaceV2() {
         );
         toast.success('Swap executed successfully!');
         setFromAmount('');
+        
+        // Refresh balances after successful swap
+        fetchBalances();
         
         // Clear success message after 5 seconds
         setTimeout(() => setSuccessMessage(''), 5000);
