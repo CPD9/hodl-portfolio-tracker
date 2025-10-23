@@ -2,12 +2,12 @@
 
 import { Activity, ArrowDownUp, BarChart3, DollarSign, Target, TrendingDown, TrendingUp, Wallet } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { getPortfolioSummary } from '@/lib/actions/portfolio.actions';
-import { useSession } from '@/lib/better-auth/auth-client';
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import PixelCharacter from '@/components/PixelCharacter';
+import { auth } from '@/lib/better-auth/auth-client';
+import { getPortfolioSummary } from '@/lib/actions/portfolio.actions';
 import { toast } from 'sonner';
 
 interface WalletConnection {
@@ -34,7 +34,7 @@ interface PortfolioData {
 }
 
 const UnifiedWalletDashboard: React.FC = () => {
-  const { data: session } = useSession();
+  const { data: session } = auth.useSession();
   const [wallet, setWallet] = useState<WalletConnection | null>(null);
   const [portfolio, setPortfolio] = useState<PortfolioData | null>(null);
   const [loading, setLoading] = useState(false);
