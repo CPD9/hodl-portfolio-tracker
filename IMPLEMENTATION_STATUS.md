@@ -155,23 +155,55 @@ NEXT_PUBLIC_TOKEN_MSFT=0x...
 
 ### Step 2: Contract Deployment
 
-#### 2.1 Deploy Uniswap V2 via CRANQ
-Follow tutorial timestamps **00:20:03 - 00:44:55**
+#### 2.1 ~~Deploy Uniswap V2 via CRANQ~~ Use Uniswap V3 on Base
+**UPDATE:** No Uniswap deployment needed! We're using official Uniswap V3 on Base mainnet.
 
-After deployment, update `.env.local`:
+Add to `.env.local` (optional - already set to mainnet addresses by default):
 ```env
-NEXT_PUBLIC_UNISWAP_FACTORY=0x...
-NEXT_PUBLIC_UNISWAP_ROUTER=0x...
+NEXT_PUBLIC_UNISWAP_FACTORY=0x33128a8fC17869897dcE68Ed026d694621f6FDfD
+NEXT_PUBLIC_UNISWAP_ROUTER=0x2626664c2603336E57B271c5C0b26F421741e481
 ```
 
+**Testing Strategy:**
+- Use Base mainnet Uniswap V3 with small amounts for testing
+- Transaction fees on Base are ~$0.01, making mainnet testing affordable
+- For production, consider deploying to Base Sepolia if needed
+
 #### 2.2 Deploy StockCryptoSwap via Foundry
+
+First, update the deployment script with your token addresses:
+
+```solidity
+// contracts/script/DeployStockCryptoSwap.s.sol
+contract DeployStockCryptoSwap is Script {
+    function run() external returns (StockCryptoSwap) {
+        address usdc = 0x036CbD53842c5426634e7929541eC2318f3dCF7e; // Base Sepolia USDC
+        address priceOracle = msg.sender; // You as oracle
+        
+        vm.startBroadcast();
+        StockCryptoSwap swap = new StockCryptoSwap(usdc, priceOracle);
+        
+        // List stock tokens with initial prices
+        swap.listStock("AAPL", vm.envAddress("NEXT_PUBLIC_TOKEN_AAPL"), 180_000000);
+        swap.listStock("TSLA", vm.envAddress("NEXT_PUBLIC_TOKEN_TSLA"), 242_000000);
+        swap.listStock("NVDA", vm.envAddress("NEXT_PUBLIC_TOKEN_NVDA"), 495_000000);
+        swap.listStock("MSFT", vm.envAddress("NEXT_PUBLIC_TOKEN_MSFT"), 378_000000);
+        
+        vm.stopBroadcast();
+        return swap;
+    }
+}
+```
+
+Then deploy:
 ```bash
 # In /contracts directory
 forge script script/DeployStockCryptoSwap.s.sol \
-  --rpc-url $NEXT_PUBLIC_RPC_URL \
+  --rpc-url https://sepolia.base.org \
   --private-key $PRIVATE_KEY \
   --broadcast \
-  --verify
+  --verify \
+  --etherscan-api-key $BASESCAN_API_KEY
 ```
 
 Update `.env.local`:

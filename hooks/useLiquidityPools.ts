@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { UNISWAP_FACTORY_ABI, UNISWAP_FACTORY_ADDRESS } from '@/lib/contracts/uniswapFactory';
+import { useEffect, useState } from 'react';
+
+import { FEE_TIERS } from '@/lib/contracts/uniswapRouter';
 import { ethers } from 'ethers';
-import { UNISWAP_FACTORY_ADDRESS, UNISWAP_FACTORY_ABI } from '@/lib/contracts/uniswapFactory';
 
 export interface LiquidityPool {
   address: string;
   token0: string;
   token1: string;
+  fee: number;
 }
 
 export interface UseLiquidityPoolsResult {
@@ -13,29 +16,24 @@ export interface UseLiquidityPoolsResult {
   loading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
+  getPool: (token0: string, token1: string, fee?: number) => Promise<string | null>;
 }
 
 /**
- * Hook to fetch all liquidity pools from Uniswap V2 Factory
+ * Hook to interact with Uniswap V3 Factory and pools
+ * Note: V3 doesn't have an enumerable list of pools like V2
+ * Pools are queried by token pair + fee tier
  */
 export function useLiquidityPools(): UseLiquidityPoolsResult {
   const [pools, setPools] = useState<LiquidityPool[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchPools = async () => {
-    setLoading(true);
-    setError(null);
-
+  /**
+   * Get pool address for specific token pair and fee tier
+   */
+  const getPool = async (token0: string, token1: string, fee: number = FEE_TIERS.MEDIUM): Promise<string | null> => {
     try {
-      // Check if factory address is deployed
-      if (UNISWAP_FACTORY_ADDRESS === '0x0000000000000000000000000000000000000000') {
-        // Not deployed yet, return empty array
-        setPools([]);
-        setLoading(false);
-        return;
-      }
-
       if (typeof window === 'undefined' || !(window as any).ethereum) {
         throw new Error('MetaMask not installed');
       }
@@ -47,29 +45,36 @@ export function useLiquidityPools(): UseLiquidityPoolsResult {
         provider
       );
 
-      // Get all pairs count
-      const pairsCount = await factoryContract.allPairsLength();
+      const poolAddress = await factoryContract.getPool(token0, token1, fee);
       
-      // Fetch all pair addresses
-      const poolPromises: Promise<LiquidityPool>[] = [];
-      
-      for (let i = 0; i < pairsCount.toNumber(); i++) {
-        poolPromises.push(
-          (async () => {
-            const pairAddress = await factoryContract.allPairs(i);
-            // In a real implementation, we would fetch token0 and token1 from the pair contract
-            // For now, we'll return minimal info
-            return {
-              address: pairAddress,
-              token0: '', // TODO: Fetch from pair contract
-              token1: '', // TODO: Fetch from pair contract
-            };
-          })()
-        );
+      // V3 returns zero address if pool doesn't exist
+      if (poolAddress === ethers.constants.AddressZero) {
+        return null;
       }
 
-      const fetchedPools = await Promise.all(poolPromises);
-      setPools(fetchedPools);
+      return poolAddress;
+    } catch (err) {
+      console.error('Error fetching pool:', err);
+      return null;
+    }
+  };
+
+  /**
+   * Fetch common pools (not exhaustive like V2)
+   * V3 pools are queried on-demand by token pair + fee
+   */
+  const fetchPools = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // In Uniswap V3, we can't enumerate all pools
+      // Instead, we'll maintain a list of known/common pools
+      // Or query specific pools when needed via getPool()
+      
+      // For now, return empty array
+      // Pools will be discovered dynamically when users try to swap
+      setPools([]);
     } catch (err) {
       setError(err as Error);
       setPools([]);
@@ -86,7 +91,8 @@ export function useLiquidityPools(): UseLiquidityPoolsResult {
     pools,
     loading,
     error,
-    refetch: fetchPools
+    refetch: fetchPools,
+    getPool
   };
 }
 

@@ -1,52 +1,40 @@
 /**
- * Uniswap V2 Factory Contract Integration
+ * Uniswap V3 Factory Contract Integration
  * 
- * This file exports the deployed Uniswap V2 Factory address and ABI.
+ * Uniswap V3 is officially deployed on Base mainnet and testnet.
+ * Using official deployment addresses from Uniswap documentation.
  * 
- * DEPLOYMENT INSTRUCTIONS (via CRANQ):
- * 1. Follow tutorial timestamp 00:20:03 - 00:30:58
- * 2. Set up CRANQ project with Uniswap V2 Factory compilation
- * 3. Deploy to Base Sepolia testnet
- * 4. Copy the deployed factory address below
+ * Official Deployments:
+ * - Base Mainnet Factory: 0x33128a8fC17869897dcE68Ed026d694621f6FDfD
+ * 
+ * Documentation: https://docs.uniswap.org/contracts/v3/reference/deployments
  */
 
-// TODO: Replace with actual deployed Uniswap V2 Factory address from CRANQ
-export const UNISWAP_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_UNISWAP_FACTORY || '0x0000000000000000000000000000000000000000';
+// Uniswap V3 Factory on Base (mainnet - can use for testing with small amounts)
+export const UNISWAP_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_UNISWAP_FACTORY || '0x33128a8fC17869897dcE68Ed026d694621f6FDfD';
 
-// Minimal Uniswap V2 Factory ABI
+// Uniswap V3 Factory ABI (essential functions)
 export const UNISWAP_FACTORY_ABI = [
   {
     inputs: [
       { name: 'tokenA', type: 'address' },
-      { name: 'tokenB', type: 'address' }
+      { name: 'tokenB', type: 'address' },
+      { name: 'fee', type: 'uint24' }
     ],
-    name: 'getPair',
-    outputs: [{ name: 'pair', type: 'address' }],
+    name: 'getPool',
+    outputs: [{ name: 'pool', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
       { name: 'tokenA', type: 'address' },
-      { name: 'tokenB', type: 'address' }
+      { name: 'tokenB', type: 'address' },
+      { name: 'fee', type: 'uint24' }
     ],
-    name: 'createPair',
-    outputs: [{ name: 'pair', type: 'address' }],
+    name: 'createPool',
+    outputs: [{ name: 'pool', type: 'address' }],
     stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [{ name: '', type: 'uint256' }],
-    name: 'allPairs',
-    outputs: [{ name: 'pair', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'allPairsLength',
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -54,10 +42,11 @@ export const UNISWAP_FACTORY_ABI = [
     inputs: [
       { indexed: true, name: 'token0', type: 'address' },
       { indexed: true, name: 'token1', type: 'address' },
-      { indexed: false, name: 'pair', type: 'address' },
-      { indexed: false, name: '', type: 'uint256' }
+      { indexed: true, name: 'fee', type: 'uint24' },
+      { indexed: false, name: 'tickSpacing', type: 'int24' },
+      { indexed: false, name: 'pool', type: 'address' }
     ],
-    name: 'PairCreated',
+    name: 'PoolCreated',
     type: 'event'
   }
 ] as const;
