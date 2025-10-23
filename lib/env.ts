@@ -29,6 +29,7 @@ export const serverEnv = {
   BASESCAN_API_KEY: process.env.BASESCAN_API_KEY,
   
   // Stream Video & Chat (Secret Keys - Server only)
+  STREAM_CHAT_API_KEY: process.env.STREAM_CHAT_API_KEY,
   STREAM_VIDEO_SECRET_KEY: process.env.STREAM_VIDEO_SECRET_KEY,
   STREAM_CHAT_SECRET_KEY: process.env.STREAM_CHAT_SECRET_KEY,
   
@@ -58,7 +59,6 @@ export const clientEnv = {
   
   // Stream Video & Chat (Public Keys)
   NEXT_PUBLIC_STREAM_VIDEO_API_KEY: process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY,
-  STREAM_CHAT_API_KEY: process.env.STREAM_CHAT_API_KEY,
 } as const;
 
 // Additional RPC URLs
@@ -127,8 +127,12 @@ export const features = {
 export const apiUrls = {
   FINNHUB: process.env.FINNHUB_BASE_URL || 'https://finnhub.io/api/v1',
   COINGECKO: 'https://api.coingecko.com/api/v3',
-  ALCHEMY: `https://base-mainnet.g.alchemy.com/v2/${clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
-  BASE_SEPOLIA: `https://base-sepolia.g.alchemy.com/v2/${clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY}`,
+  ALCHEMY: clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY
+    ? `https://base-mainnet.g.alchemy.com/v2/${clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+    : '',
+  BASE_SEPOLIA: clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY
+    ? `https://base-sepolia.g.alchemy.com/v2/${clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY}`
+    : '',
 } as const;
 
 // Export all as a single config object

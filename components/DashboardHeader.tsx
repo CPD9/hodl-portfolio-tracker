@@ -19,18 +19,29 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
   const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
+    // Throttle scroll handler to avoid frequent state updates on every scroll event
+    let timeoutId: number | null = null
+
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsVisible(false)
-      } else {
-        setIsVisible(true)
-      }
-      setLastScrollY(currentScrollY)
+      if (timeoutId) return
+
+      timeoutId = window.setTimeout(() => {
+        const currentScrollY = window.scrollY
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsVisible(false)
+        } else {
+          setIsVisible(true)
+        }
+        setLastScrollY(currentScrollY)
+        timeoutId = null
+      }, 50)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (timeoutId) window.clearTimeout(timeoutId)
+    }
   }, [lastScrollY])
 
   const toggleMobileMenu = () => {

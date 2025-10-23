@@ -22,14 +22,7 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     // Optimize package imports for faster compilation
-    optimizePackageImports: ['@/components', 'lucide-react', 'framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-  },
-  // Turbopack configuration (replaces experimental.turbo)
-  turbopack: {
-    resolveAlias: {
-      // Reduce module resolution time
-      '@': './src',
-    },
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
   },
 };
 
