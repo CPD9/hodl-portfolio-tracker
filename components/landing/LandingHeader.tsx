@@ -116,72 +116,72 @@ const LandingHeader = () => {
       {/* Mobile Menu */}
       <div 
         id="mobileMenu"
-        className="hidden fixed top-[80px] bottom-0 right-0 left-0 p-6 pb-24 overflow-y-auto lg:hidden z-[998] bg-black pointer-events-auto border-t border-gray-800"
+        className="hidden fixed top-[80px] bottom-0 right-0 left-0 px-4 pt-4 pb-28 overflow-y-auto overscroll-contain lg:hidden z-[998] bg-black pointer-events-auto border-t border-gray-800 mobile-menu-scroll"
       >
-        <nav className="flex flex-col gap-5 items-center pointer-events-auto">
+        <nav className="flex flex-col gap-4 items-stretch pointer-events-auto">
           <a 
             href="#why-hodl" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Why HODL?
           </a>
           <a 
             href="#how-it-works" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             How it Works
           </a>
           <a 
             href="#market-opportunity" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Market Opportunity
           </a>
           <a 
             href="#pricing" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Pricing
           </a>
           <a 
             href="#competitive-landscape" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Competitive Landscape
           </a>
           <a 
             href="#transparency" 
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Transparency
           </a>
           <Link 
             href="/docs"
             onClick={toggleMobileMenu}
-            className="text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
+            className="w-full text-left text-lg font-medium tracking-wide transition-all duration-300 hover:text-yellow-400 hover:scale-105 py-2"
           >
             Documentation
           </Link>
           
-          <div className="w-full max-w-xs border-t border-gray-700 my-4"></div>
+          <div className="w-full border-t border-gray-700 my-3"></div>
           
           <Link 
             href="/sign-in"
             onClick={toggleMobileMenu}
-            className="w-full max-w-xs text-center py-4 px-8 rounded-xl border-2 border-gray-700 font-semibold transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer"
+            className="w-full text-center py-4 px-8 rounded-xl border-2 border-gray-700 font-semibold transition-all duration-300 hover:border-yellow-500 hover:bg-yellow-500/10 hover:shadow-lg hover:shadow-yellow-500/20 cursor-pointer"
           >
             Log In
           </Link>
           <Link 
             href="/sign-up"
             onClick={toggleMobileMenu}
-            className="w-full max-w-xs text-center relative py-4 px-8 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer overflow-hidden"
+            className="w-full text-center relative py-4 px-8 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/40 cursor-pointer overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"></div>
             <span className="relative z-10 text-black">Sign Up</span>
