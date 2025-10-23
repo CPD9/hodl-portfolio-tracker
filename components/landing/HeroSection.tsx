@@ -9,7 +9,7 @@ const HeroSection = () => {
   return (
     <main className="flex flex-col lg:flex-row items-center justify-between mt-24 lg:mt-32 min-h-screen px-4 lg:px-20 relative">
       {/* Mobile Robot - Positioned at Top */}
-      <div className="lg:hidden w-full h-[300px] sm:h-[400px] flex items-center justify-center mb-8 relative z-0">
+      <div className="lg:hidden w-full h-[300px] sm:h-[400px] flex items-center justify-center mb-8 relative z-0 scale-75">
         <Spline
           scene="https://prod.spline.design/pExWJS0pvvlINgYf/scene.splinecode"
           className="w-full h-full"
