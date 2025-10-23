@@ -131,8 +131,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                   </div>
                   {displayCryptos?.map((crypto) => (
                       <li key={`crypto-${crypto.id}`} className="search-item">
-                        <Link
-                            href={`/crypto/${crypto.symbol.toUpperCase()}`}
+            <Link
+              href={`/dashboard/crypto/${crypto.symbol.toUpperCase()}`}
                             onClick={handleSelect}
                             className="search-item-link"
                         >
