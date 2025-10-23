@@ -4,7 +4,7 @@ export interface ITransaction extends Document {
   userId: string;
   symbol: string;
   type: 'STOCK' | 'CRYPTO';
-  action: 'BUY' | 'SELL';
+  action: 'BUY' | 'SELL' | 'SWAP';
   quantity: number;
   price: number;
   total: number;
@@ -12,6 +12,7 @@ export interface ITransaction extends Document {
   timestamp: Date;
   txHash?: string; // For crypto trades on blockchain
   status: 'PENDING' | 'COMPLETED' | 'FAILED';
+  metadata?: any; // Additional data for swaps (fromSymbol, exchangeRate, etc.)
 }
 
 const TransactionSchema = new Schema<ITransaction>({
@@ -32,7 +33,7 @@ const TransactionSchema = new Schema<ITransaction>({
   },
   action: {
     type: String,
-    enum: ['BUY', 'SELL'],
+    enum: ['BUY', 'SELL', 'SWAP'],
     required: true,
   },
   quantity: {
@@ -66,6 +67,10 @@ const TransactionSchema = new Schema<ITransaction>({
     type: String,
     enum: ['PENDING', 'COMPLETED', 'FAILED'],
     default: 'COMPLETED',
+  },
+  metadata: {
+    type: Schema.Types.Mixed,
+    default: {},
   },
 }, {
   timestamps: true,

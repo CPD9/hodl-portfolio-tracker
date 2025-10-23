@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import Portfolio from '@/database/models/portfolio.model';
 import Transaction from '@/database/models/transaction.model';
 import UserBalance from '@/database/models/user-balance.model';

@@ -1,41 +1,47 @@
 'use client';
 
 import { AlertCircle, ArrowDownUp, CheckCircle2, Loader2, RefreshCw } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
+import AmountInput from './AmountInput';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ERC20_ABI, STOCK_TOKENS, USDC_ADDRESS, WETH_ADDRESS } from '@/lib/contracts/stockCryptoSwap';
 import Link from 'next/link';
+import TokenSelector from './TokenSelector';
 import { auth } from '@/lib/better-auth/auth-client';
 import { toast } from 'sonner';
 import { useRealtimeQuote } from '@/hooks/useRealtimeQuote';
 
 interface Token {
+  address: string;
   symbol: string;
   name: string;
+  decimals: number;
   type: 'stock' | 'crypto';
-  icon?: string;
 }
 
 const AVAILABLE_TOKENS: Token[] = [
-  // Stocks
-  { symbol: 'AAPL', name: 'Apple Inc.', type: 'stock', icon: '🍎' },
-  { symbol: 'TSLA', name: 'Tesla Inc.', type: 'stock', icon: '🚗' },
-  { symbol: 'NVDA', name: 'NVIDIA Corp.', type: 'stock', icon: '🎮' },
-  { symbol: 'MSFT', name: 'Microsoft Corp.', type: 'stock', icon: '💻' },
-  { symbol: 'AMZN', name: 'Amazon.com Inc.', type: 'stock', icon: '📦' },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', type: 'stock', icon: '🔍' },
-  // Crypto
-  { symbol: 'ETH', name: 'Ethereum', type: 'crypto', icon: '⟠' },
-  { symbol: 'BTC', name: 'Bitcoin', type: 'crypto', icon: '₿' },
-  { symbol: 'USDC', name: 'USD Coin', type: 'crypto', icon: '💵' },
+  // Stock Tokens
+  { address: STOCK_TOKENS.AAPL, symbol: 'AAPL', name: 'Apple Inc.', decimals: 18, type: 'stock' },
+  { address: STOCK_TOKENS.TSLA, symbol: 'TSLA', name: 'Tesla Inc.', decimals: 18, type: 'stock' },
+  { address: STOCK_TOKENS.NVDA, symbol: 'NVDA', name: 'NVIDIA Corp.', decimals: 18, type: 'stock' },
+  { address: STOCK_TOKENS.MSFT, symbol: 'MSFT', name: 'Microsoft Corp.', decimals: 18, type: 'stock' },
+  { address: STOCK_TOKENS.AMZN, symbol: 'AMZN', name: 'Amazon.com Inc.', decimals: 18, type: 'stock' },
+  { address: STOCK_TOKENS.GOOGL, symbol: 'GOOGL', name: 'Alphabet Inc.', decimals: 18, type: 'stock' },
+  // Crypto Tokens
+  { address: WETH_ADDRESS, symbol: 'ETH', name: 'Ethereum', decimals: 18, type: 'crypto' },
+  { address: USDC_ADDRESS, symbol: 'USDC', name: 'USD Coin', decimals: 6, type: 'crypto' },
+  { address: '0x0000000000000000000000000000000000000001', symbol: 'BTC', name: 'Bitcoin', decimals: 8, type: 'crypto' },
 ];
 
 export default function SwapInterfaceV2() {
   const { data: session } = auth.useSession();
-  const [fromToken, setFromToken] = useState<Token>(AVAILABLE_TOKENS[7]); // USDC
+  const [fromToken, setFromToken] = useState<Token>(AVAILABLE_TOKENS[8]); // BTC
   const [toToken, setToToken] = useState<Token>(AVAILABLE_TOKENS[0]); // AAPL
   const [fromAmount, setFromAmount] = useState('');
+  const [fromBalance, setFromBalance] = useState('0');
+  const [toBalance, setToBalance] = useState('0');
   const [isExecuting, setIsExecuting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -52,11 +58,14 @@ export default function SwapInterfaceV2() {
   // Handle token swap
   const handleSwap = () => {
     const tempToken = fromToken;
-    const tempAmount = fromAmount;
-    
     setFromToken(toToken);
     setToToken(tempToken);
     setFromAmount(quote?.toAmount.toFixed(6) || '');
+  };
+
+  // Handle MAX button click
+  const handleMaxClick = () => {
+    setFromAmount(fromBalance);
   };
 
   // Execute swap (paper trading - updates database)
@@ -114,138 +123,110 @@ export default function SwapInterfaceV2() {
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto p-6 bg-gray-800 border-gray-700 shadow-xl">
+    <Card className="w-full max-w-2xl mx-auto p-6 md:p-8 bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 border-gray-700 shadow-2xl">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-100">Swap Assets</h2>
-          <p className="text-sm text-gray-400 mt-1">Trade tokenized stocks for crypto and vice versa</p>
+          <h2 className="text-3xl font-bold text-gray-100">Swap Assets</h2>
+          <p className="text-sm text-gray-400 mt-2">Trade tokenized stocks for crypto and vice versa</p>
         </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={refetch}
           disabled={quoteLoading}
-          className="text-gray-400 hover:text-gray-200"
+          className="text-gray-400 hover:text-gray-200 hover:bg-gray-700"
+          title="Refresh prices"
         >
           <RefreshCw className={`w-5 h-5 ${quoteLoading ? 'animate-spin' : ''}`} />
         </Button>
       </div>
 
       {/* From Token */}
-      <div className="space-y-2 mb-4">
-        <label className="text-sm text-gray-400">From</label>
-        <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-          <div className="flex items-center justify-between mb-3">
-            <select
-              value={fromToken.symbol}
-              onChange={(e) => {
-                const token = AVAILABLE_TOKENS.find(t => t.symbol === e.target.value);
-                if (token) setFromToken(token);
-              }}
-              className="bg-gray-800 text-gray-100 text-lg font-bold border-none outline-none cursor-pointer"
-            >
-              {AVAILABLE_TOKENS.map((token) => (
-                <option key={token.symbol} value={token.symbol}>
-                  {token.icon} {token.symbol} - {token.name}
-                </option>
-              ))}
-            </select>
-            <span className="text-xs text-gray-400 px-2 py-1 bg-gray-800 rounded">
-              {fromToken.type.toUpperCase()}
-            </span>
-          </div>
-          <input
-            type="number"
-            placeholder="0.00"
-            value={fromAmount}
-            onChange={(e) => setFromAmount(e.target.value)}
-            className="w-full bg-transparent text-3xl font-bold text-gray-100 outline-none"
-            min="0"
-            step="0.01"
-          />
-          {quote && (
-            <p className="text-xs text-gray-400 mt-2">
-              ≈ ${(parseFloat(fromAmount) * quote.fromPrice).toFixed(2)} USD
-            </p>
-          )}
-        </div>
+      <div className="space-y-1 mb-1">
+        <label className="text-sm font-medium text-gray-400">From</label>
+        <TokenSelector
+          tokens={AVAILABLE_TOKENS}
+          selectedToken={fromToken}
+          onSelectToken={setFromToken}
+          otherToken={toToken}
+        />
+        <AmountInput
+          value={fromAmount}
+          onChange={setFromAmount}
+          balance={fromBalance}
+          token={fromToken}
+          onMaxClick={handleMaxClick}
+        />
+        {quote && fromAmount && parseFloat(fromAmount) > 0 && (
+          <p className="text-sm text-gray-400 mt-2 px-1">
+            ≈ ${(parseFloat(fromAmount) * quote.fromPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+          </p>
+        )}
       </div>
 
       {/* Swap Button */}
-      <div className="flex justify-center -my-2 relative z-10">
+      <div className="flex justify-center my-4 relative z-10">
         <Button
           onClick={handleSwap}
           variant="ghost"
           size="icon"
-          className="bg-gray-700 hover:bg-gray-600 rounded-full border-2 border-gray-800"
+          className="bg-gray-700 hover:bg-gray-600 rounded-full border-4 border-gray-800 shadow-lg"
         >
           <ArrowDownUp className="w-5 h-5 text-gray-300" />
         </Button>
       </div>
 
       {/* To Token */}
-      <div className="space-y-2 mb-6">
-        <label className="text-sm text-gray-400">To</label>
-        <div className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
-          <div className="flex items-center justify-between mb-3">
-            <select
-              value={toToken.symbol}
-              onChange={(e) => {
-                const token = AVAILABLE_TOKENS.find(t => t.symbol === e.target.value);
-                if (token) setToToken(token);
-              }}
-              className="bg-gray-800 text-gray-100 text-lg font-bold border-none outline-none cursor-pointer"
-            >
-              {AVAILABLE_TOKENS.map((token) => (
-                <option key={token.symbol} value={token.symbol}>
-                  {token.icon} {token.symbol} - {token.name}
-                </option>
-              ))}
-            </select>
-            <span className="text-xs text-gray-400 px-2 py-1 bg-gray-800 rounded">
-              {toToken.type.toUpperCase()}
-            </span>
-          </div>
-          <div className="flex items-center">
-            <p className="text-3xl font-bold text-gray-100">
-              {quoteLoading ? (
-                <Loader2 className="w-8 h-8 animate-spin inline" />
-              ) : quote?.toAmount ? (
-                quote.toAmount.toFixed(6)
-              ) : (
-                '0.00'
-              )}
-            </p>
-          </div>
-          {quote && (
-            <p className="text-xs text-gray-400 mt-2">
-              ≈ ${(quote.toAmount * quote.toPrice).toFixed(2)} USD
-            </p>
-          )}
-        </div>
+      <div className="space-y-1 mb-6">
+        <label className="text-sm font-medium text-gray-400">To (Estimated)</label>
+        <TokenSelector
+          tokens={AVAILABLE_TOKENS}
+          selectedToken={toToken}
+          onSelectToken={setToToken}
+          otherToken={fromToken}
+        />
+        <AmountInput
+          value={quoteLoading ? '' : (quote?.toAmount.toFixed(6) || '0')}
+          onChange={() => {}}
+          balance={toBalance}
+          token={toToken}
+          readOnly
+          isLoading={quoteLoading}
+        />
+        {quote && (
+          <p className="text-sm text-gray-400 mt-2 px-1">
+            ≈ ${(quote.toAmount * quote.toPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+          </p>
+        )}
       </div>
 
       {/* Quote Info */}
-      {quote && !quoteLoading && (
-        <div className="bg-gray-700/30 rounded-lg p-4 mb-6 space-y-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Exchange Rate</span>
-            <span className="text-gray-200 font-medium">
-              1 {fromToken.symbol} = {quote.exchangeRate.toFixed(6)} {toToken.symbol}
+      {quote && !quoteLoading && fromAmount && parseFloat(fromAmount) > 0 && (
+        <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-4 mb-6 space-y-3">
+          <div className="flex items-center justify-between py-2 border-b border-gray-700">
+            <span className="text-sm text-gray-400 flex items-center">
+              <i className='bx bx-transfer mr-2 text-gray-500'></i>
+              Exchange Rate
+            </span>
+            <span className="text-sm text-gray-100 font-semibold">
+              1 {fromToken.symbol} = {quote.exchangeRate.toLocaleString(undefined, { maximumFractionDigits: 6 })} {toToken.symbol}
             </span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Price Impact</span>
-            <span className="text-green-400">&lt; {quote.priceImpact}%</span>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm text-gray-400 flex items-center">
+              <i className='bx bx-trending-down mr-2 text-gray-500'></i>
+              Price Impact
+            </span>
+            <span className="text-sm text-green-400 font-medium">&lt; {quote.priceImpact}%</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">{fromToken.symbol} Price</span>
-            <span className="text-gray-200">${quote.fromPrice.toFixed(2)}</span>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm text-gray-400">{fromToken.symbol} Price</span>
+            <span className="text-sm text-gray-100 font-medium">${quote.fromPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-400">{toToken.symbol} Price</span>
-            <span className="text-gray-200">${quote.toPrice.toFixed(2)}</span>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm text-gray-400">{toToken.symbol} Price</span>
+            <span className="text-sm text-gray-100 font-medium">${quote.toPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
       )}
@@ -269,8 +250,8 @@ export default function SwapInterfaceV2() {
       {/* Execute Button */}
       <Button
         onClick={executeSwap}
-        disabled={isExecuting || quoteLoading || !quote || !fromAmount || parseFloat(fromAmount) <= 0}
-        className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-6 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isExecuting || quoteLoading || !quote || !fromAmount || parseFloat(fromAmount) <= 0 || !session?.user}
+        className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-6 text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all duration-200"
       >
         {isExecuting ? (
           <div className="flex items-center justify-center">
@@ -278,15 +259,18 @@ export default function SwapInterfaceV2() {
             Executing Swap...
           </div>
         ) : session?.user ? (
-          'Execute Swap'
+          <div className="flex items-center justify-center">
+            <ArrowDownUp className="w-5 h-5 mr-2" />
+            Execute Swap
+          </div>
         ) : (
           'Sign In to Trade'
         )}
       </Button>
 
       {!session?.user && (
-        <p className="text-xs text-center text-gray-400 mt-3">
-          <Link href="/sign-in" className="text-yellow-400 hover:underline">
+        <p className="text-sm text-center text-gray-400 mt-4">
+          <Link href="/sign-in" className="text-yellow-400 hover:text-yellow-300 font-semibold transition-colors">
             Sign in
           </Link>{' '}
           to start trading
@@ -294,10 +278,13 @@ export default function SwapInterfaceV2() {
       )}
 
       {/* Paper Trading Notice */}
-      <div className="mt-6 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
-        <p className="text-xs text-yellow-400 text-center">
-          📊 Paper Trading Mode - All trades are simulated with virtual funds
-        </p>
+      <div className="mt-6 p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 rounded-lg">
+        <div className="flex items-center justify-center">
+          <i className='bx bx-line-chart text-yellow-400 text-xl mr-2'></i>
+          <p className="text-sm text-yellow-400 font-medium">
+            Paper Trading Mode - All trades use virtual funds
+          </p>
+        </div>
       </div>
     </Card>
   );
