@@ -219,6 +219,44 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  // Sanitize any content we render to avoid rendering errors from invalid Unicode/control chars
+  const sanitizeForDisplay = (input: unknown, maxLen = 8000): string => {
+    try {
+      let s = typeof input === 'string' ? input : (input == null ? '' : JSON.stringify(input));
+      // Remove disallowed control characters except tab/newline/carriage-return
+      s = s.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+      // Replace unpaired surrogates with replacement char
+      s = s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '\uFFFD');
+      // Trim overly long strings to keep rendering cheap
+      if (s.length > maxLen) s = s.slice(0, maxLen) + '…';
+      return s;
+    } catch {
+      return '<<unrenderable content>>';
+    }
+  };
+
+  // Simple error boundary to prevent a single bad message from crashing the whole chat UI in production
+  class MessageErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }>{
+    constructor(props: { children: React.ReactNode }) {
+      super(props);
+      this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+    componentDidCatch(err: any) {
+      console.error('Message render error:', err);
+    }
+    render() {
+      if (this.state.hasError) {
+        return (
+          <div className="text-xs text-red-300">Failed to render message. See console for details.</div>
+        );
+      }
+      return this.props.children as any;
+    }
+  }
+
   // Extract readable message from unknown errors for user-facing chat output
   const extractErrorMessage = (err: unknown): string => {
     // Produce a detailed, user-visible error including HTTP details and server-provided context.
@@ -512,6 +550,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                       </div>
                     )}
                     
+                    <MessageErrorBoundary>
                     <div
                       className={cn(
                         "max-w-[80%] rounded-lg px-3 py-2 text-sm",
@@ -520,11 +559,12 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
                           : "bg-gray-700 text-gray-100"
                       )}
                     >
-                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      <p className="whitespace-pre-wrap">{sanitizeForDisplay(message.content)}</p>
                       <p className="text-xs opacity-70 mt-1">
                         {formatTime(message.timestamp)}
                       </p>
                     </div>
+                    </MessageErrorBoundary>
                     
                     {message.role === 'user' && (
                       <div className="flex-shrink-0 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
