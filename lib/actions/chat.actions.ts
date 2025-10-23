@@ -20,7 +20,13 @@ export async function sendChatMessage(
   userContext?: string | null
 ): Promise<ChatMessage | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/chat`, {
+    // Determine a robust base URL that works in both dev and production (Vercel)
+    // Precedence: NEXT_PUBLIC_BASE_URL > VERCEL_URL > localhost
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
+    const response = await fetch(`${baseUrl}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

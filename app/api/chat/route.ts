@@ -2,8 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import OpenAI from 'openai';
 
-// Log a short fingerprint of the configured OpenAI API key to verify which key is active
-console.log('OPENAI key fingerprint:', process.env.OPENAI_API_KEY);
+// Log a short fingerprint of the configured OpenAI API key to verify which key is active (server-side only)
+(() => {
+  const key = process.env.OPENAI_API_KEY || '';
+  const fp = key ? `${key.slice(0, 8)}…${key.slice(-4)}` : 'MISSING';
+  console.log('OPENAI key fingerprint:', fp);
+})();
+
+// Ensure Node.js runtime and allow longer processing time in production
+export const runtime = 'nodejs';
+export const maxDuration = 60; // seconds
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -98,25 +106,25 @@ export async function POST(request: NextRequest) {
 
     const sanitized = { ...assistantMessage, content: toPlainText(assistantMessage.content || '') };
     return NextResponse.json({ message: sanitized });
-  } catch (error) {
+  } catch (error: any) {
     console.error('OpenAI API error:', error);
-    
-    // Log more detailed error information
-    if (error instanceof Error) {
-      console.error('Error message:', error.message);
-      console.error('Error stack:', error.stack);
+
+    // Normalize OpenAI/Fetch error
+    const status = error?.status || error?.response?.status || 500;
+    const statusText = error?.statusText || error?.response?.statusText || 'Internal Server Error';
+    const data = error?.response?.data || error?.data || error?.message || 'Unknown error';
+
+    const payload: any = {
+      error: 'Failed to process chat message',
+      apiKeyConfigured: !!process.env.OPENAI_API_KEY,
+    };
+    if (process.env.NODE_ENV === 'development') {
+      payload.details = typeof data === 'string' ? data : JSON.stringify(data);
+    } else {
+      // Sanitized details in production
+      payload.message = typeof data === 'string' ? data.slice(0, 500) : JSON.stringify(data).slice(0, 500);
     }
-    
-    // Return more specific error for debugging
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    
-    return NextResponse.json(
-      { 
-        error: 'Failed to process chat message',
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined,
-        apiKeyConfigured: !!process.env.OPENAI_API_KEY 
-      },
-      { status: 500 }
-    );
+
+    return NextResponse.json(payload, { status, statusText });
   }
 }
