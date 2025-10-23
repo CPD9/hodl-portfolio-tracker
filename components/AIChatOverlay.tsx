@@ -172,13 +172,23 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
       // Step 3: Fallback to plain chat if no assistant response was added yet
       if (!assistantAdded) {
-  const assistantMessage = await sendChatMessage(sendMessages, freshContext);
-        if (assistantMessage) {
-          setMessages(prev => [...prev, assistantMessage]);
-        } else {
+        try {
+          const assistantMessage = await sendChatMessage(sendMessages, freshContext);
+          if (assistantMessage) {
+            setMessages(prev => [...prev, assistantMessage]);
+          } else {
+            const errorMessage: ChatMessage = {
+              role: 'assistant',
+              content: 'No response generated. Please try rephrasing your request.',
+              timestamp: new Date(),
+            };
+            setMessages(prev => [...prev, errorMessage]);
+          }
+        } catch (err) {
+          const msg = extractErrorMessage(err);
           const errorMessage: ChatMessage = {
             role: 'assistant',
-            content: 'Sorry, I encountered an error. Please try again later.',
+            content: `Error: ${msg}`,
             timestamp: new Date(),
           };
           setMessages(prev => [...prev, errorMessage]);
@@ -186,9 +196,10 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       }
     } catch (error) {
       console.error('Failed to send message:', error);
+      const msg = extractErrorMessage(error);
       const errorMessage: ChatMessage = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again later.',
+        content: `Error: ${msg}`,
         timestamp: new Date(),
       };
       setMessages([...updatedMessages, errorMessage]);
@@ -206,6 +217,39 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  // Extract readable message from unknown errors for user-facing chat output
+  const extractErrorMessage = (err: unknown): string => {
+    try {
+      if (typeof err === 'string') return err;
+      if (err instanceof Error) return err.message || err.name || 'Unexpected error';
+      if (err && typeof err === 'object') {
+        const e: any = err as any;
+        if (typeof e.message === 'string' && e.message) return e.message;
+        // HTTP-like error info
+        if (e.status || e.statusText || e.code) {
+          const parts = [e.code, e.status && `HTTP ${e.status}`, e.statusText]
+            .filter(Boolean)
+            .join(' ');
+          if (parts) return parts;
+        }
+        if (e.response) {
+          const r = e.response;
+          const head = [r.status && `HTTP ${r.status}`, r.statusText].filter(Boolean).join(' ');
+          if (r.data) {
+            if (typeof r.data === 'string') return `${head ? head + ': ' : ''}${r.data}`;
+            if (typeof r.data.message === 'string') return `${head ? head + ': ' : ''}${r.data.message}`;
+            try { return `${head ? head + ': ' : ''}${JSON.stringify(r.data).slice(0, 300)}`; } catch {}
+          }
+          if (head) return head;
+        }
+        try { return JSON.stringify(e); } catch {}
+      }
+      return 'Unknown error';
+    } catch {
+      return 'Unknown error';
+    }
   };
 
   const authorizeTrade = async (proposal: NonNullable<ChatMessage['tradeProposal']>) => {
