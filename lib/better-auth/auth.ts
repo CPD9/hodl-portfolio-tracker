@@ -77,6 +77,21 @@ export const auth = {
             const instance = await authPromise;
             if (!instance) return null;
             return instance.api.getSession(options);
+        },
+        signUpEmail: async (options: any) => {
+            const instance = await authPromise;
+            if (!instance) throw new Error('Auth not available');
+            return instance.api.signUpEmail(options);
+        },
+        signInEmail: async (options: any) => {
+            const instance = await authPromise;
+            if (!instance) throw new Error('Auth not available');
+            return instance.api.signInEmail(options);
+        },
+        signOut: async (options?: any) => {
+            const instance = await authPromise;
+            if (!instance) throw new Error('Auth not available');
+            return instance.api.signOut(options);
         }
     }
 };
