@@ -180,9 +180,9 @@ const CompetitiveLandscapeSection = () => {
           </motion.div>
         </div>
 
-        {/* Mobile cards with vertical scroll */}
+        {/* Mobile cards */}
         <div className="md:hidden">
-          <div className="max-h-[75vh] overflow-y-auto space-y-4 -mx-4 px-1">
+          <div className="space-y-4">
             {competitors.map((competitor, compIndex) => (
               <div
                 key={compIndex}
