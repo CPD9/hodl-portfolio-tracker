@@ -1,18 +1,20 @@
 import React from 'react';
-import { SectionHeader } from '@/components/ui/SectionHeader';
-import SwapInterface from '@/components/swap/SwapInterface';
+import SwapInterfaceV2 from '@/components/swap/SwapInterfaceV2';
 
 export default function TradePage() {
   return (
     <div className="min-h-screen p-4 md:p-8">
-      <SectionHeader
-        title="Stock ↔ Crypto Swap"
-        subtitle="Trade tokenized stocks for crypto and vice versa with revolutionary cross-asset swaps"
-        gradient="green"
-      />
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-100 mb-3">
+          Stock ↔ Crypto Swap
+        </h1>
+        <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          Trade tokenized stocks for crypto and vice versa with revolutionary cross-asset swaps
+        </p>
+      </div>
       
       <div className="max-w-2xl mx-auto mt-8">
-        <SwapInterface />
+        <SwapInterfaceV2 />
       </div>
 
       {/* Info Section */}
