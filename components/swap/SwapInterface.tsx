@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import TokenSelector from './TokenSelector';
+import { AlertCircle, ArrowDownUp, CheckCircle2, Loader2, XCircle } from 'lucide-react';
+import { ERC20_ABI, STOCK_TOKENS, USDC_ADDRESS, WETH_ADDRESS } from '@/lib/contracts/stockCryptoSwap';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import AmountInput from './AmountInput';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { SwapService } from '@/lib/web3/swapService';
-import { STOCK_TOKENS, WETH_ADDRESS, USDC_ADDRESS, ERC20_ABI } from '@/lib/contracts/stockCryptoSwap';
-import { ArrowDownUp, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import TokenSelector from './TokenSelector';
+import { ethers } from 'ethers';
 
 interface Token {
   address: string;

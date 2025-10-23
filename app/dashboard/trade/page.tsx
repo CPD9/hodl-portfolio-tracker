@@ -1,6 +1,6 @@
 import React from 'react';
-import SwapInterface from '@/components/swap/SwapInterface';
 import { SectionHeader } from '@/components/ui/SectionHeader';
+import SwapInterface from '@/components/swap/SwapInterface';
 
 export default function TradePage() {
   return (
