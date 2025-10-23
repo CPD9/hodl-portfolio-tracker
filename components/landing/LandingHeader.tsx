@@ -116,7 +116,7 @@ const LandingHeader = () => {
       {/* Mobile Menu */}
       <div 
         id="mobileMenu"
-        className="hidden fixed top-0 bottom-0 right-0 left-0 px-3 pt-4 pb-20 overflow-y-auto overscroll-contain lg:hidden z-[1000] bg-black pointer-events-auto border-t border-gray-800 mobile-menu-scroll"
+        className="hidden fixed inset-0 px-3 py-4 lg:hidden z-[1000] bg-black pointer-events-auto border-t border-gray-800 flex items-center justify-center"
       >
         {/* Close button inside overlay for full-screen menu */}
         <button
@@ -126,8 +126,8 @@ const LandingHeader = () => {
         >
           <i className='bx bx-x'></i>
         </button>
-        <div className="mx-auto w-full max-w-sm">
-          <nav className="mt-10 flex flex-col gap-3 items-center text-center pointer-events-auto">
+        <div className="mx-auto w-full max-w-sm max-h-[80vh] max-h-[80svh] overflow-y-auto mobile-menu-scroll rounded-xl bg-gray-900/90 border border-gray-800 p-4 shadow-xl shadow-black/40">
+          <nav className="mt-0 flex flex-col gap-3 items-center text-center pointer-events-auto">
           <a 
             href="#why-hodl" 
             onClick={toggleMobileMenu}
