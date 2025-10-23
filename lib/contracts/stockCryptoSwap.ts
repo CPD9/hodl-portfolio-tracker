@@ -12,19 +12,21 @@
 // TODO: Replace with actual deployed contract address after running deployment script
 export const STOCK_CRYPTO_SWAP_ADDRESS = process.env.NEXT_PUBLIC_STOCK_CRYPTO_SWAP_ADDRESS || '0x0000000000000000000000000000000000000000';
 
-// Stock token addresses (created via https://www.smartcontracts.tools/token-generator/base-sepolia/)
+// Stock token addresses (deployed on Ethereum Sepolia via Remix)
 export const STOCK_TOKENS = {
   AAPL: process.env.NEXT_PUBLIC_TOKEN_AAPL || '',
   TSLA: process.env.NEXT_PUBLIC_TOKEN_TSLA || '',
   NVDA: process.env.NEXT_PUBLIC_TOKEN_NVDA || '',
   MSFT: process.env.NEXT_PUBLIC_TOKEN_MSFT || '',
+  AMZN: process.env.NEXT_PUBLIC_TOKEN_AMZN || '',
+  GOOGL: process.env.NEXT_PUBLIC_TOKEN_GOOGL || '',
 } as const;
 
-// Base Sepolia USDC address
-export const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+// Ethereum Sepolia USDC address
+export const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238';
 
-// Base Sepolia WETH address (Wrapped ETH)
-export const WETH_ADDRESS = '0x4200000000000000000000000000000000000006';
+// Ethereum Sepolia WETH address (Wrapped ETH)
+export const WETH_ADDRESS = '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14';
 
 // Minimal ABI for StockCryptoSwap contract
 // TODO: Replace with full ABI from artifacts after compilation

@@ -1,53 +1,52 @@
 /**
- * Uniswap V3 Factory Contract Integration
+ * Uniswap V2 Factory Contract Integration
  * 
- * Uniswap V3 is officially deployed on Base mainnet and testnet.
- * Using official deployment addresses from Uniswap documentation.
+ * Using Uniswap V2 on Ethereum Sepolia (already deployed)
  * 
- * Official Deployments:
- * - Base Mainnet Factory: 0x33128a8fC17869897dcE68Ed026d694621f6FDfD
+ * Official Deployment on Ethereum Sepolia:
+ * - Factory: 0xF62c03E08ada871A0bEb309762E260a7a6a880E6
  * 
- * Documentation: https://docs.uniswap.org/contracts/v3/reference/deployments
+ * Documentation: https://docs.uniswap.org/contracts/v2/reference/smart-contracts/factory
  */
 
-// Uniswap V3 Factory on Base (mainnet - can use for testing with small amounts)
-export const UNISWAP_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_UNISWAP_FACTORY || '0x33128a8fC17869897dcE68Ed026d694621f6FDfD';
+// Uniswap V2 Factory on Ethereum Sepolia (already deployed!)
+export const UNISWAP_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_UNISWAP_FACTORY || '0xF62c03E08ada871A0bEb309762E260a7a6a880E6';
 
-// Uniswap V3 Factory ABI (essential functions)
+// Uniswap V2 Factory ABI (essential functions)
 export const UNISWAP_FACTORY_ABI = [
   {
     inputs: [
       { name: 'tokenA', type: 'address' },
-      { name: 'tokenB', type: 'address' },
-      { name: 'fee', type: 'uint24' }
+      { name: 'tokenB', type: 'address' }
     ],
-    name: 'getPool',
-    outputs: [{ name: 'pool', type: 'address' }],
+    name: 'getPair',
+    outputs: [{ name: 'pair', type: 'address' }],
     stateMutability: 'view',
     type: 'function'
   },
   {
     inputs: [
       { name: 'tokenA', type: 'address' },
-      { name: 'tokenB', type: 'address' },
-      { name: 'fee', type: 'uint24' }
+      { name: 'tokenB', type: 'address' }
     ],
-    name: 'createPool',
-    outputs: [{ name: 'pool', type: 'address' }],
+    name: 'createPair',
+    outputs: [{ name: 'pair', type: 'address' }],
     stateMutability: 'nonpayable',
     type: 'function'
   },
   {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'token0', type: 'address' },
-      { indexed: true, name: 'token1', type: 'address' },
-      { indexed: true, name: 'fee', type: 'uint24' },
-      { indexed: false, name: 'tickSpacing', type: 'int24' },
-      { indexed: false, name: 'pool', type: 'address' }
-    ],
-    name: 'PoolCreated',
-    type: 'event'
+    inputs: [{ name: '', type: 'uint256' }],
+    name: 'allPairs',
+    outputs: [{ name: 'pair', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'allPairsLength',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
   }
 ] as const;
 
