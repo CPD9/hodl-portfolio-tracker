@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Loader2,  TrendingUp, Coins} from "lucide-react";
 import Link from "next/link";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
-import {searchCrypto, getCryptoMarketData} from "@/lib/actions/coingecko.actions";
+import {searchCrypto, getMultipleCryptoData} from "@/lib/actions/coingecko.actions";
 import {useDebounce} from "@/hooks/useDebounce";
 import {POPULAR_CRYPTO_SYMBOLS} from "@/lib/constants";
 
@@ -40,7 +40,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
   useEffect(() => {
     const loadPopularCryptos = async () => {
       try {
-        const cryptoData = await getCryptoMarketData(POPULAR_CRYPTO_SYMBOLS);
+        const cryptoData = await getMultipleCryptoData(POPULAR_CRYPTO_SYMBOLS);
         setPopularCryptos(cryptoData);
       } catch (error) {
         console.error('Failed to load popular cryptos:', error);
@@ -183,10 +183,10 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                       {isSearchMode ? 'Cryptocurrencies' : 'Popular cryptocurrencies'}
                       {` `}({displayCryptos?.length || 0})
                     </div>
-                    {displayCryptos?.map((crypto) => (
-                        <li key={`crypto-${crypto.id}`} className="search-item">
+                    {displayCryptos?.map((crypto, index) => (
+                        <li key={`crypto-${crypto.id || crypto.symbol || index}`} className="search-item">
               <Link
-                href={`/dashboard/crypto/${crypto.symbol.toUpperCase()}`}
+                href={`/dashboard/crypto/${(crypto.symbol || crypto.api_symbol || '').toUpperCase()}`}
                               onClick={handleSelect}
                               className="search-item-link"
                           >
@@ -196,7 +196,9 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                                 {crypto.name}
                               </div>
                               <div className="text-sm text-gray-500">
-                                {crypto.symbol.toUpperCase()} | Rank #{crypto.market_cap_rank || 'N/A'}
+                                {(crypto.symbol || crypto.api_symbol || '').toUpperCase()}
+                                {crypto.market_cap_rank && ` | Rank #${crypto.market_cap_rank}`}
+                                {!isSearchMode && crypto.price && ` | $${crypto.price.toLocaleString()}`}
                               </div>
                             </div>
                           </Link>
