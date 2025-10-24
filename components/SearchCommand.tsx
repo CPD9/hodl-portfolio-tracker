@@ -103,8 +103,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                   </div>
                   {displayStocks?.map((stock) => (
                       <li key={`stock-${stock.symbol}`} className="search-item">
-            <Link
-              href={`/dashboard/stocks/${stock.symbol}`}
+                        <Link
+                            href={`/dashboard/stocks/${stock.symbol}`}
                             onClick={handleSelect}
                             className="search-item-link"
                         >
@@ -131,8 +131,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                   </div>
                   {displayCryptos?.map((crypto) => (
                       <li key={`crypto-${crypto.id}`} className="search-item">
-            <Link
-              href={`/dashboard/crypto/${crypto.symbol.toUpperCase()}`}
+                        <Link
+                            href={`/crypto/${crypto.symbol.toUpperCase()}`}
                             onClick={handleSelect}
                             className="search-item-link"
                         >
