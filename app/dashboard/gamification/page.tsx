@@ -71,70 +71,85 @@ const GamificationPage = async () => {
 
                     {/* User Stats Dashboard */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div className="bg-gray-800 rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-3">
-                                    <PixelCharacter variant="hero" size="md" />
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-100">Trading Level</h3>
-                                        <p className="text-sm text-gray-400">Expert Trader</p>
+                        <div className="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 rounded-lg p-6 border border-yellow-500/20">
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-24 h-24 flex-shrink-0">
+                                        <img 
+                                            src="/assets/characters/superboy_solo_1(1).gif" 
+                                            alt="Trading Level" 
+                                            className="w-full h-full object-contain pixelated"
+                                        />
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-3xl font-bold text-yellow-400 mb-1">47</p>
+                                        <p className="text-xs font-medium text-yellow-400/70 uppercase tracking-wider">Level</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-2xl font-bold text-yellow-400">47</p>
-                                    <p className="text-xs text-gray-400">Level</p>
+                                <div className="mt-auto">
+                                    <h3 className="text-base font-semibold text-gray-100 mb-1">Trading Level</h3>
+                                    <p className="text-sm text-gray-400 mb-3">Expert Trader</p>
+                                    <div className="w-full bg-gray-700/50 rounded-full h-2 mb-2">
+                                        <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '73%' }}></div>
+                                    </div>
+                                    <p className="text-xs text-gray-500">2,340 XP to next level</p>
                                 </div>
                             </div>
-                            <div className="w-full bg-gray-700 rounded-full h-2">
-                                <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '73%' }}></div>
-                            </div>
-                            <p className="text-xs text-gray-400 mt-2">2,340 XP to next level</p>
                         </div>
 
-                        <div className="bg-gray-800 rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-3">
+                        <div className="bg-gradient-to-br from-green-900/20 to-green-800/10 rounded-lg p-6 border border-green-500/20">
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-4">
                                     <PixelCharacter variant="walk" size="md" />
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-100">Portfolio Value</h3>
-                                        <p className="text-sm text-gray-400">Total Assets</p>
+                                    <div className="text-right">
+                                        <p className="text-3xl font-bold text-green-400 mb-1">$127K</p>
+                                        <p className="text-xs font-medium text-green-400/70 uppercase tracking-wider">Total</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-2xl font-bold text-green-400">$127,450</p>
-                                    <p className="text-xs text-green-400">+12.5% this month</p>
+                                <div className="mt-auto">
+                                    <h3 className="text-base font-semibold text-gray-100 mb-1">Portfolio Value</h3>
+                                    <p className="text-sm text-gray-400 mb-1">Total Assets</p>
+                                    <p className="text-sm font-semibold text-green-400">+12.5% this month</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-gray-800 rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-3">
+                        <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-lg p-6 border border-blue-500/20">
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-4">
                                     <PixelCharacter variant="jump" size="md" />
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-100">Win Rate</h3>
-                                        <p className="text-sm text-gray-400">Last 30 Days</p>
+                                    <div className="text-right">
+                                        <p className="text-3xl font-bold text-blue-400 mb-1">73.2%</p>
+                                        <p className="text-xs font-medium text-blue-400/70 uppercase tracking-wider">Rate</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-2xl font-bold text-blue-400">73.2%</p>
-                                    <p className="text-xs text-gray-400">47/64 trades</p>
+                                <div className="mt-auto">
+                                    <h3 className="text-base font-semibold text-gray-100 mb-1">Win Rate</h3>
+                                    <p className="text-sm text-gray-400 mb-1">Last 30 Days</p>
+                                    <p className="text-sm text-gray-500">47/64 trades</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-gray-800 rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-3">
-                                    <PixelCharacter variant="draft" size="md" />
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-gray-100">Achievements</h3>
-                                        <p className="text-sm text-gray-400">Unlocked</p>
+                        <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-lg p-6 border border-purple-500/20">
+                            <div className="flex flex-col h-full">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="w-24 h-24 flex-shrink-0">
+                                        <img 
+                                            src="/assets/characters/superboy_draft(1).gif" 
+                                            alt="Achievements" 
+                                            className="w-full h-full object-contain pixelated"
+                                        />
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-3xl font-bold text-purple-400 mb-1">23</p>
+                                        <p className="text-xs font-medium text-purple-400/70 uppercase tracking-wider">Unlocked</p>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-2xl font-bold text-purple-400">23</p>
-                                    <p className="text-xs text-gray-400">of 50 total</p>
+                                <div className="mt-auto">
+                                    <h3 className="text-base font-semibold text-gray-100 mb-1">Achievements</h3>
+                                    <p className="text-sm text-gray-400 mb-1">Total Progress</p>
+                                    <p className="text-sm text-gray-500">23 of 50 total</p>
                                 </div>
                             </div>
                         </div>
@@ -254,32 +269,26 @@ const GamificationPage = async () => {
                                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Recent Achievements</h3>
                                 
                                 <div className="space-y-3">
-                                    <div className="flex items-center space-x-3 p-3 bg-green-900/20 border border-green-500/30 rounded-lg">
-                                        <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                                            <Trophy className="w-5 h-5 text-green-400" />
-                                        </div>
+                                    <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-green-900/20 to-green-800/10 border border-green-500/30 rounded-lg">
+                                        <PixelCharacter variant="hero" size="md" />
                                         <div>
-                                            <p className="font-semibold text-gray-100">First Profit</p>
+                                            <p className="font-semibold text-gray-100 mb-1">First Profit</p>
                                             <p className="text-xs text-gray-400">Earned your first $100</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center space-x-3 p-3 bg-blue-900/20 border border-blue-500/30 rounded-lg">
-                                        <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                                            <Zap className="w-5 h-5 text-blue-400" />
-                                        </div>
+                                    <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-blue-900/20 to-blue-800/10 border border-blue-500/30 rounded-lg">
+                                        <PixelCharacter variant="jump" size="md" />
                                         <div>
-                                            <p className="font-semibold text-gray-100">Streak Master</p>
+                                            <p className="font-semibold text-gray-100 mb-1">Streak Master</p>
                                             <p className="text-xs text-gray-400">5 consecutive wins</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center space-x-3 p-3 bg-purple-900/20 border border-purple-500/30 rounded-lg">
-                                        <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
-                                            <Star className="w-5 h-5 text-purple-400" />
-                                        </div>
+                                    <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-purple-900/20 to-purple-800/10 border border-purple-500/30 rounded-lg">
+                                        <PixelCharacter variant="walk" size="md" />
                                         <div>
-                                            <p className="font-semibold text-gray-100">Crypto Explorer</p>
+                                            <p className="font-semibold text-gray-100 mb-1">Crypto Explorer</p>
                                             <p className="text-xs text-gray-400">Traded 10+ crypto assets</p>
                                         </div>
                                     </div>
