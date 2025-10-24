@@ -14,7 +14,7 @@ export async function GET() {
     
     // Base Builder - Your wallet address used when importing
     baseBuilder: {
-      ownerAddress: "0x55345C0B87F6Cd307Cd3B2E7A0941C002B3B2F52"
+      ownerAddress: "0xbE26e3a1f50E39E828Ab089FA6f7E4a372b2CB9b"
     },
     
     // Identity & Launch (REQUIRED)
