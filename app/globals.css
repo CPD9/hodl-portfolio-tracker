@@ -606,21 +606,3 @@
 section[id] {
   scroll-margin-top: 80px;
 }
-
-/* Custom black scrollbar for dropdowns and mobile menus */
-.scrollbar-black {
-  scrollbar-width: thin;            /* Firefox */
-  scrollbar-color: #111 #000;       /* thumb track */
-}
-.scrollbar-black::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.scrollbar-black::-webkit-scrollbar-track {
-  background: #000;
-}
-.scrollbar-black::-webkit-scrollbar-thumb {
-  background-color: #111;
-  border-radius: 8px;
-  border: 2px solid #000; /* creates padding around thumb */
-}

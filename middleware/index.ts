@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     }
 
     // PROTECTED ROUTES - Require authentication
-    const protectedRoutes = ['/dashboard', '/dashboard/consultation', '/dashboard/portfolio', '/search'];
+    const protectedRoutes = ['/dashboard', '/consultation', '/portfolio', '/search'];
     const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
     
     if (isProtectedRoute && !sessionCookie) {

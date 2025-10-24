@@ -4,14 +4,11 @@ import AIAdvisor from '@/database/models/ai-advisor.model';
 import Consultation from '@/database/models/consultation.model';
 import { connectToDatabase } from '@/database/mongoose';
 import { serializeMongoObject } from '@/lib/utils';
-import { streamChat, isStreamChatConfigured } from '@/lib/stream/chat';
-import { streamVideo, isStreamVideoConfigured } from '@/lib/stream/video';
+import { streamChat } from '@/lib/stream/chat';
+import { streamVideo } from '@/lib/stream/video';
 
 export async function generateStreamVideoToken(userId: string): Promise<string> {
   try {
-    if (!isStreamVideoConfigured || !streamVideo) {
-      throw new Error('Video calling is not configured');
-    }
     const expirationTime = Math.floor(Date.now() / 1000) + 3600; // 1 hour
     const issuedAt = Math.floor(Date.now() / 1000) - 60;
 
@@ -30,9 +27,6 @@ export async function generateStreamVideoToken(userId: string): Promise<string> 
 
 export async function generateStreamChatToken(userId: string): Promise<string> {
   try {
-    if (!isStreamChatConfigured || !streamChat) {
-      throw new Error('Chat is not configured');
-    }
     const token = streamChat.createToken(userId);
     await streamChat.upsertUser({
       id: userId,
@@ -70,42 +64,38 @@ export async function createConsultation(
       status: 'upcoming',
     });
 
-    // Create Stream video call (optional)
-    if (isStreamVideoConfigured && streamVideo) {
-      const call = streamVideo.video.call('default', consultation._id);
-      await call.create({
-        data: {
-          created_by_id: userId,
-          custom: {
-            consultationId: consultation._id,
-            consultationName: consultation.name,
+    // Create Stream video call
+    const call = streamVideo.video.call('default', consultation._id);
+    await call.create({
+      data: {
+        created_by_id: userId,
+        custom: {
+          consultationId: consultation._id,
+          consultationName: consultation.name,
+        },
+        settings_override: {
+          transcription: {
+            language: 'en',
+            mode: 'auto-on',
+            closed_caption_mode: 'auto-on',
           },
-          settings_override: {
-            transcription: {
-              language: 'en',
-              mode: 'auto-on',
-              closed_caption_mode: 'auto-on',
-            },
-            recording: {
-              mode: 'auto-on',
-              quality: '1080p',
-            },
+          recording: {
+            mode: 'auto-on',
+            quality: '1080p',
           },
         },
-      });
+      },
+    });
 
-      // Upsert AI advisor as Stream user
-      await streamVideo.upsertUsers([
-        {
-          id: advisor._id.toString(),
-          name: advisor.name,
-          role: 'user',
-          image: `https://api.dicebear.com/9/bottts-neutral/svg?seed=${advisor.name}`,
-        },
-      ]);
-    } else {
-      console.warn('[consultation] Stream Video disabled; created consultation without video call.');
-    }
+    // Upsert AI advisor as Stream user
+    await streamVideo.upsertUsers([
+      {
+        id: advisor._id.toString(),
+        name: advisor.name,
+        role: 'user',
+        image: `https://api.dicebear.com/9/bottts-neutral/svg?seed=${advisor.name}`,
+      },
+    ]);
 
     return serializeMongoObject(consultation);
   } catch (error) {
@@ -151,7 +141,7 @@ export async function getConsultations(
 
     // Populate advisor data
     const consultationsWithAdvisors = await Promise.all(
-      consultations.map(async (consultation: any) => {
+      consultations.map(async (consultation) => {
         const advisor = await AIAdvisor.findById(consultation.advisorId).lean();
         return {
           ...consultation,
@@ -180,7 +170,7 @@ export async function getConsultation(
   try {
     await connectToDatabase();
 
-    const consultation: any = await Consultation.findOne({
+    const consultation = await Consultation.findOne({
       _id: consultationId,
       userId,
     }).lean();
@@ -291,7 +281,7 @@ export async function getTranscript(
   try {
     await connectToDatabase();
 
-    const consultation: any = await Consultation.findOne({
+    const consultation = await Consultation.findOne({
       _id: consultationId,
       userId,
     }).lean();
@@ -310,7 +300,7 @@ export async function getTranscript(
     const speakerIds = [...new Set(transcript.map((item: any) => item.speaker_id))];
 
     // Fetch user data (could be AI advisors or human users)
-    const advisor: any = await AIAdvisor.findById(consultation.advisorId).lean();
+    const advisor = await AIAdvisor.findById(consultation.advisorId).lean();
 
     const transcriptWithSpeakers = transcript.map((item: any) => {
       let user;

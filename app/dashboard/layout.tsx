@@ -1,9 +1,8 @@
 import AIChatOverlay from "@/components/AIChatOverlay";
-import DashboardHeader from "@/components/DashboardHeader";
+import Header from "@/components/Header";
 import {auth} from "@/lib/better-auth/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
-import { searchStocks } from "@/lib/actions/finnhub.actions";
 
 const Layout = async ({ children }: { children : React.ReactNode }) => {
     const session = await auth.api.getSession({ headers: await headers() });
@@ -16,19 +15,11 @@ const Layout = async ({ children }: { children : React.ReactNode }) => {
         email: session.user.email,
     }
 
-    const initialStocks = await searchStocks();
-
     return (
-        <main className="relative min-h-screen bg-black text-white overflow-hidden">
-            {/* Shared Gradient Background Effects */}
-            <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-yellow-500/20 via-purple-500/10 to-transparent rounded-full blur-3xl opacity-60 -z-10 pointer-events-none" />
-            <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-purple-500/20 via-cyan-500/10 to-transparent rounded-full blur-3xl opacity-60 -z-10 pointer-events-none" />
-            <div className="fixed h-0 w-[40rem] top-[30%] -left-[5%] shadow-[0_0_900px_20px_#e99b63] rotate-[-30deg] -z-10 pointer-events-none" />
+        <main className="min-h-screen text-gray-400">
+            <Header user={user} />
 
-            <DashboardHeader user={user} initialStocks={initialStocks} />
-
-            {/* Add top spacer to avoid content under fixed header */}
-            <div className="pt-20 max-w-[1800px] mx-auto px-4 md:px-6 lg:px-8 py-8">
+            <div className="container py-10">
                 {children}
             </div>
             

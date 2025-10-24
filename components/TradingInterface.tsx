@@ -57,9 +57,6 @@ const TradingInterface: React.FC<TradingInterfaceProps> = ({
           // Refresh position
           const updatedPosition = await getUserPosition(userId, symbol);
           setUserPosition(updatedPosition);
-          
-          // Trigger a custom event to notify other components (like dashboard)
-          window.dispatchEvent(new CustomEvent('portfolioUpdated'));
         } else {
           toast.error(result.message);
         }

@@ -3,7 +3,6 @@
 import { AlertTriangle, BarChart3, Brain, Clock, DollarSign, Settings, Shield, Target, TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { RiskProfile, TradingSignal, generateTradingSignals, getRecommendedSymbols } from '@/lib/actions/ai-trading.actions';
 
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,6 @@ import { toast } from 'sonner';
 // Types are now imported from ai-trading.actions
 
 const AITradingCompanion: React.FC = () => {
-  const router = useRouter();
   const [signals, setSignals] = useState<TradingSignal[]>([]);
   const [riskProfile, setRiskProfile] = useState<RiskProfile>({
     maxRiskPerTrade: 2,
@@ -219,7 +217,7 @@ const AITradingCompanion: React.FC = () => {
                 </div>
                 <div className="bg-gray-800 rounded p-2 text-center">
                   <p className="text-xs text-gray-400 mb-1">MA (50)</p>
-                  <p className="text-sm font-bold text-purple-400">${(Number(signal.currentPrice) * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
+                  <p className="text-sm font-bold text-purple-400">${(parseFloat(signal.currentPrice) * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
                 </div>
               </div>
 
@@ -279,7 +277,7 @@ const AITradingCompanion: React.FC = () => {
                   Execute {signal.action}
                 </Button>
                 <Button
-                  onClick={() => router.push(`/dashboard/stocks/${encodeURIComponent(signal.symbol)}`)}
+                  onClick={() => setSelectedSignal(signal)}
                   variant="outline"
                   size="sm"
                   className="sm:w-auto text-sm"

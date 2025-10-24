@@ -2,7 +2,6 @@ import { getPortfolioSummary, getTransactionHistory } from '@/lib/actions/portfo
 
 import PortfolioDashboard from '@/components/PortfolioDashboard';
 import TransactionHistory from '@/components/TransactionHistory';
-import VerifyReservesWidget from '@/components/VerifyReservesWidget';
 import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -50,9 +49,6 @@ export default async function PortfolioPage() {
             cashBalance={portfolioData.cashBalance}
             stats={portfolioData.stats}
           />
-
-          {/* Proof of Reserves / On-chain verification (Demo) */}
-          <VerifyReservesWidget />
 
           {/* Transaction History */}
           <TransactionHistory transactions={transactions} />
