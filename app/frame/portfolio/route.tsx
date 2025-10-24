@@ -20,10 +20,8 @@ export async function GET(req: NextRequest) {
     <meta property="fc:frame:button:1:target" content="${FRAME_URL}/miniapp" />
     <meta property="fc:frame:button:2" content="Swap Assets" />
     <meta property="fc:frame:button:2:action" content="post" />
-    <meta property="fc:frame:button:2:target" content="${FRAME_URL}/api/frame/swap" />
     <meta property="fc:frame:button:3" content="Refresh" />
     <meta property="fc:frame:button:3:action" content="post" />
-    <meta property="fc:frame:button:3:target" content="${FRAME_URL}/api/frame/portfolio" />
     <meta property="fc:frame:post_url" content="${FRAME_URL}/api/frame/portfolio" />
     
     <!-- Open Graph -->
@@ -84,13 +82,35 @@ export async function POST(req: NextRequest) {
     // Handle button clicks
     if (buttonIndex === 2) {
       // Redirect to swap frame
-      return NextResponse.json({
-        type: 'frame',
-        frameUrl: `${FRAME_URL}/frame/swap`,
+      const swapHtml = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="${FRAME_URL}/api/frame/swap/image" />
+    <meta property="fc:frame:image:aspect_ratio" content="1.91:1" />
+    <meta property="fc:frame:button:1" content="Stock → Crypto" />
+    <meta property="fc:frame:button:1:action" content="post" />
+    <meta property="fc:frame:button:2" content="Crypto → Stock" />
+    <meta property="fc:frame:button:2:action" content="post" />
+    <meta property="fc:frame:button:3" content="Open Full App" />
+    <meta property="fc:frame:button:3:action" content="link" />
+    <meta property="fc:frame:button:3:target" content="${FRAME_URL}/dashboard/trade" />
+    <meta property="fc:frame:post_url" content="${FRAME_URL}/api/frame/swap" />
+  </head>
+  <body>
+    <p>Ready to swap assets</p>
+  </body>
+</html>
+      `;
+      
+      return new NextResponse(swapHtml, {
+        headers: { 'Content-Type': 'text/html' },
       });
     }
 
-    // Default: Refresh portfolio view
+    // Button 3 or default: Refresh portfolio view
     const html = `
 <!DOCTYPE html>
 <html>

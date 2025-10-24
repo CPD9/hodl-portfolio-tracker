@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-**HODL** is the first unified stock and crypto portfolio tracker with cross-asset swap functionality, built on Base blockchain. Users can track their traditional stock investments alongside their crypto holdings in one place, and execute seamless swaps between tokenized stocks and cryptocurrencies.
+**HODL** is a unified stock and crypto portfolio tracker with cross-asset swap functionality, built on Base blockchain. Users can track their traditional stock investments alongside their crypto holdings in one place, and execute seamless swaps between tokenized stocks and cryptocurrencies.
+
+**Disclaimer**: This is a testnet demonstration built for START HACK 2025. Not investment advice. Tokenized stocks are for demonstration purposes only. Subject to regulatory requirements and jurisdictional restrictions for real-world deployment.
 
 ## Problem Statement
 
@@ -23,10 +25,10 @@ Modern investors face three critical problems:
 
 ### Market Size
 
-- 145M+ Robinhood users hold stocks
-- 100M+ crypto holders globally  
-- 0% overlap in unified tracking tools
-- $15B+ in daily stock-crypto conversion volume
+- ~26M Robinhood funded customers (Q2 2024 data)
+- 580M+ crypto users globally (Crypto.com, 2024)
+- Minimal overlap in unified portfolio tracking solutions
+- Growing demand for cross-asset management tools
 
 ## Our Solution
 
@@ -129,12 +131,12 @@ connect({
 
 ### What Makes HODL Different?
 
-1. **First Unified Tracker**: Only app combining stocks + crypto in single portfolio
-2. **Cross-Asset Swaps**: Revolutionary feature unavailable elsewhere
-3. **Built on Base**: Leveraging fastest, cheapest Ethereum L2
-4. **Proof of Reserves**: Transparent on-chain verification of tokenized stocks
-5. **No Friction Onboarding**: Base Account = no seed phrases
-6. **Social Integration**: Native Farcaster frames for viral growth
+1. **Unified Portfolio Tracking**: Combines stocks + crypto in a single dashboard
+2. **Cross-Asset Swaps**: Enables swaps between tokenized stocks and cryptocurrencies
+3. **Built on Base**: Leveraging Base L2 for low-cost transactions
+4. **Proof of Reserves**: On-chain verification of tokenized stock backing (testnet demo)
+5. **Simplified Onboarding**: Base Account authentication with passkey support
+6. **Social Integration**: Farcaster frames for portfolio sharing
 
 ### Competitive Advantages
 
@@ -274,12 +276,12 @@ Our buildathon submission focuses on testing these hypotheses with:
 
 ### Remarkable Impact in 48 Hours
 
-1. **Revolutionary Feature**: First-ever stock-to-crypto swaps on Base
+1. **Innovative Feature**: Stock-to-crypto swap demonstration on Base Sepolia testnet
 2. **Full Stack**: Complete frontend + backend + smart contracts + frames
-3. **Production Ready**: Live deployment with real transactions on testnet
+3. **Testnet Deployment**: Live demonstration with testnet transactions
 4. **Multiple Channels**: Web + Mini App + Farcaster integration
-5. **Beautiful UX**: Professional design rivaling top fintech apps
-6. **Real Integration**: Actual Base Account, Basenames, and OnchainKit usage
+5. **Professional UX**: Modern design following fintech best practices
+6. **Deep Integration**: Base Account, Basenames, and OnchainKit implementation
 
 ### Innovation Highlights
 

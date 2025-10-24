@@ -38,9 +38,32 @@ export async function POST(req: NextRequest) {
         newState = { ...state, step: 'amount', fromToken: 'BTC', toToken: 'NVDA' };
       }
     } else if (state.step === 'amount') {
-      // User entered amount, move to confirm
+      // User entered amount, validate and move to confirm
       if (inputText) {
-        newState = { ...state, step: 'confirm', amount: inputText };
+        const trimmedInput = inputText.trim();
+        
+        // Validate: not empty, is a valid number, greater than zero
+        if (trimmedInput === '') {
+          // Return error frame for empty input
+          return generateErrorFrame('Please enter an amount');
+        }
+        
+        const parsedAmount = parseFloat(trimmedInput);
+        
+        if (isNaN(parsedAmount) || !isFinite(parsedAmount)) {
+          return generateErrorFrame('Please enter a valid number');
+        }
+        
+        if (parsedAmount <= 0) {
+          return generateErrorFrame('Amount must be greater than zero');
+        }
+        
+        if (parsedAmount > 1000000) {
+          return generateErrorFrame('Amount too large (max: 1,000,000)');
+        }
+        
+        // Valid input - proceed to confirm
+        newState = { ...state, step: 'confirm', amount: trimmedInput };
       }
     } else if (state.step === 'confirm') {
       // Execute swap
@@ -143,7 +166,31 @@ function generateSuccessFrame(state: SwapState, fid: string | undefined): NextRe
     <meta property="fc:frame:button:2:target" content="${FRAME_URL}/frame/swap" />
   </head>
   <body>
-    <p>Swap successful! {amount} ${fromToken} → ${toToken}</p>
+    <p>Swap successful! ${amount} ${fromToken} → ${toToken}</p>
+  </body>
+</html>
+  `;
+
+  return new NextResponse(html, {
+    headers: { 'Content-Type': 'text/html' },
+  });
+}
+
+function generateErrorFrame(errorMessage: string): NextResponse {
+  const html = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta property="fc:frame" content="vNext" />
+    <meta property="fc:frame:image" content="${FRAME_URL}/api/frame/swap/image?error=${encodeURIComponent(errorMessage)}" />
+    <meta property="fc:frame:image:aspect_ratio" content="1.91:1" />
+    <meta property="fc:frame:button:1" content="Try Again" />
+    <meta property="fc:frame:button:1:action" content="post" />
+    <meta property="fc:frame:button:1:target" content="${FRAME_URL}/frame/swap" />
+  </head>
+  <body>
+    <p>Error: ${errorMessage}</p>
   </body>
 </html>
   `;

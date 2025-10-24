@@ -30,6 +30,8 @@ export async function GET() {
       version: "1.0.0",
       categories: ["finance", "defi", "portfolio", "trading"],
       chain: "base-sepolia",
+      // Note: Contract addresses are for Base Sepolia testnet (chainId: 84532)
+      // Verify at: https://base-sepolia.blockscout.com/address/[ADDRESS]
       contracts: [
         {
           address: "0x334dFeb48aEC27fCb75249e77F546B687cC6aB94",
@@ -49,7 +51,7 @@ export async function GET() {
       ]
     },
     baseBuilder: {
-      ownerAddress: "0x55345C0B87F6Cd307Cd3B2E7A0941C002B3B2F52",
+      ownerAddress: "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52",
       networkId: 84532,
       networkName: "base-sepolia"
     }

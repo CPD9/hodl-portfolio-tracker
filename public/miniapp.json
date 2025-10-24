@@ -1,6 +1,8 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOjEyMzQ1LCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4NTUzNDVDMEI4N0Y2Q2QzMDdDZDNCMkU3QTA5NDFDMDA2QjNCMkY1MiJ9"
+    "header": "",
+    "payload": "",
+    "signature": ""
   },
   "frame": {
     "version": "next",
@@ -11,30 +13,21 @@
         "type": "launch_frame",
         "name": "HODL Portfolio",
         "url": "https://hodl-portfolio-tracker.vercel.app/miniapp",
-        "splashImageUrl": "https://hodl-portfolio-tracker.vercel.app/assets/hodl-splash.png",
+        "splashImageUrl": "https://hodl-portfolio-tracker.vercel.app/favicon.ico",
         "splashBackgroundColor": "#0F0F0F"
       }
     }
   },
   "miniapp": {
     "name": "HODL Portfolio Tracker",
-    "description": "Unified stock and crypto portfolio tracker with cross-asset swaps on Base",
+    "description": "Unified stock and crypto portfolio tracker with cross-asset swaps on Base Sepolia testnet",
     "icon": "https://hodl-portfolio-tracker.vercel.app/favicon.ico",
     "url": "https://hodl-portfolio-tracker.vercel.app/miniapp",
     "version": "1.0.0",
-    "screenshots": [
-      {
-        "url": "https://hodl-portfolio-tracker.vercel.app/assets/screenshot-1.png",
-        "alt": "Portfolio Dashboard"
-      },
-      {
-        "url": "https://hodl-portfolio-tracker.vercel.app/assets/screenshot-2.png",
-        "alt": "Cross-Asset Swap"
-      }
-    ]
+    "screenshots": []
   },
   "baseBuilder": {
-    "ownerAddress": "0x55345C0B87F6Cd307Cd3B2E7A0941C002B3B2F52"
+    "ownerAddress": "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52"
   }
 }
 

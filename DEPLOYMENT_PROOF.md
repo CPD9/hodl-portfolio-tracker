@@ -6,7 +6,7 @@
 **Chain ID**: 84532  
 **RPC URL**: https://sepolia.base.org  
 **Block Explorer**: https://base-sepolia.blockscout.com  
-**Deployment Date**: January 2025  
+**Deployment Date**: October 24, 2025  
 **Deployer**: Team HODL - START HACK 2025  
 
 ---
@@ -353,7 +353,7 @@ Deployment scripts used:
 
 ---
 
-**Last Updated**: January 2025  
+**Last Updated**: October 24, 2025  
 **Status**: Active on Base Sepolia Testnet  
-**Next Milestone**: Mainnet Deployment (Q2 2025)
+**Next Milestone**: Mainnet Deployment (Q1 2026)
 
