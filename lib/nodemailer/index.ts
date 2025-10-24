@@ -56,3 +56,15 @@ export const sendNewsSummaryEmail = async (
 
     await transporter.sendMail(mailOptions);
 };
+
+// Generic email sender
+export const sendEmail = async ({ to, subject, html }: { to: string; subject: string; html: string }) => {
+    const mailOptions = {
+        from: `"HODL" <${process.env.NODEMAILER_EMAIL}>`,
+        to,
+        subject,
+        html,
+    };
+
+    await transporter.sendMail(mailOptions);
+};
