@@ -4,13 +4,18 @@ export const metadata: Metadata = {
   title: "HODL Mini App - Portfolio Tracker on Base",
   description: "Track stocks and crypto, execute cross-asset swaps, all on Base blockchain. Built for START HACK 2025.",
   manifest: '/miniapp-manifest.json',
+  other: {
+    'base:miniapp:config': '/miniapp.json',
+    'base:miniapp:version': '1.0.0',
+    'base:chain': 'base-sepolia',
+  },
   openGraph: {
     title: "HODL Portfolio Tracker",
     description: "Unified stock and crypto portfolio tracker with cross-asset swaps on Base",
     type: "website",
     images: [
       {
-        url: "/assets/hodl-og-image.png",
+        url: "/api/frame/portfolio/image",
         width: 1200,
         height: 630,
         alt: "HODL Portfolio Tracker",
@@ -21,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "HODL Portfolio Tracker",
     description: "Track stocks and crypto, swap assets seamlessly on Base",
-    images: ["/assets/hodl-og-image.png"],
+    images: ["/api/frame/portfolio/image"],
   },
   appleWebApp: {
     capable: true,
