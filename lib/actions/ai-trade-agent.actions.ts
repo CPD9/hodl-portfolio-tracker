@@ -5,7 +5,7 @@ import { buyCrypto, sellCrypto } from '@/lib/actions/crypto-trading.actions';
 import { buyStock, sellStock } from '@/lib/actions/stock-trading.actions';
 import { refreshUserContext } from '@/lib/actions/user-context.actions';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 export type TradeSide = 'BUY' | 'SELL';
 export type AssetType = 'STOCK' | 'CRYPTO' | 'CASH';
@@ -42,7 +42,7 @@ If nothing actionable or constraints would be violated, return {"orders": []} an
 
 export async function decideTrades(userInput: string, userContext?: string | null, priceContextJSON?: any): Promise<TradeProposal | null> {
   try {
-    if (!process.env.OPENAI_API_KEY) return null;
+    if (!process.env.OPENAI_API_KEY || !openai) return null;
     const priceCtxStr = priceContextJSON ? JSON.stringify(priceContextJSON).slice(0, 8000) : 'N/A';
     // Extract structured context JSON block if present in userContext
     let userSummary = userContext || 'N/A';

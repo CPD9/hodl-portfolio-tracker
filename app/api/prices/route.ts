@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getStockQuote } from '@/lib/actions/finnhub.actions';
 import { getCryptoPrice } from '@/lib/actions/coingecko.actions';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 type ReqSymbol = { symbol: string; type: 'STOCK' | 'CRYPTO' };
 
 export async function POST(req: NextRequest) {

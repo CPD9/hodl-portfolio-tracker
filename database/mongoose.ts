@@ -19,6 +19,17 @@ if (!cached) {
 }
 
 export const connectToDatabase = async () => {
+  // Skip actual connection during Next.js build (when NEXT_PHASE is 'phase-production-build')
+  // This allows the build to complete without a running database
+  const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build' || 
+                      process.env.SKIP_DB_CONNECTION === 'true';
+  
+  if (isBuildTime) {
+    console.log('Skipping database connection during build phase');
+    // Return a mock connection that won't be used
+    return mongoose as typeof mongoose;
+  }
+
   // In production, require an explicit MONGODB_URI.
   // In development, fall back to a local Mongo instance if available.
   const uri = MONGODB_URI || (process.env.NODE_ENV !== 'production' ? DEFAULT_LOCAL_URI : undefined);

@@ -3,6 +3,10 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { inngest } from '@/lib/inngest/client';
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST() {
   try {
     // Get authenticated user

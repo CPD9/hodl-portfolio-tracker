@@ -5,7 +5,7 @@ import { getStockQuote, getStockKeyMetrics } from '@/lib/actions/finnhub.actions
 import { getMultipleCryptoData, getCryptoMarketData } from '@/lib/actions/coingecko.actions';
 import { sendChatMessage } from '@/lib/actions/chat.actions';
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 type PriceEntry = {
   symbol: string;
@@ -29,6 +29,10 @@ type PriceContext = {
  * Returns a JSON array specification like: [{ symbol: 'AAPL', type: 'STOCK' }, ...]
  */
 export async function decideIfPricesNeeded(userInput: string, userContext?: string | null): Promise<{ includePrices: boolean; symbols: { symbol: string; type: 'STOCK' | 'CRYPTO' }[] }> {
+  if (!openai) {
+    return { includePrices: false, symbols: [] };
+  }
+  
   const prompt = `You are a decision agent.
 Given the user's request and profile, decide whether fresh realtime market prices are required and which symbols to fetch.
 
