@@ -5,6 +5,9 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import { searchStocks } from "@/lib/actions/finnhub.actions";
 
+// Prevent static generation for dashboard pages
+export const dynamic = 'force-dynamic';
+
 const Layout = async ({ children }: { children : React.ReactNode }) => {
     const session = await auth.api.getSession({ headers: await headers() });
 
