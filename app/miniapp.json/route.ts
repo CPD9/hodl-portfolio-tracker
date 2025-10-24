@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
-// Extract base URL to avoid duplication
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_FRAME_URL || 'https://hodl-portfolio-tracker.vercel.app';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  // Get the request URL to determine the base URL
+  const headersList = await headers();
+  const host = headersList.get('host') || 'hodl-portfolio-tracker.vercel.app';
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = `${protocol}://${host}`;
+  
   // NOTE: This is a simplified version. The canonical manifest is at /.well-known/farcaster.json
   // which follows the complete Base Build specification
   const config = {
@@ -14,14 +20,14 @@ export async function GET() {
     },
     frame: {
       version: "next",
-      imageUrl: `${BASE_URL}/api/frame/portfolio/image`,
+      imageUrl: `${baseUrl}/api/frame/portfolio/image`,
       button: {
         title: "Launch HODL",
         action: {
           type: "launch_frame",
           name: "HODL Portfolio",
-          url: `${BASE_URL}/miniapp`,
-          splashImageUrl: `${BASE_URL}/favicon.ico`,
+          url: `${baseUrl}/miniapp`,
+          splashImageUrl: `${baseUrl}/favicon.ico`,
           splashBackgroundColor: "#0F0F0F"
         }
       }
@@ -29,9 +35,9 @@ export async function GET() {
     miniapp: {
       name: "HODL Portfolio Tracker",
       description: "Unified stock and crypto portfolio tracker with cross-asset swaps on Base Sepolia testnet",
-      icon: `${BASE_URL}/favicon.ico`,
-      url: `${BASE_URL}/miniapp`,
-      homeUrl: `${BASE_URL}/`,
+      icon: `${baseUrl}/favicon.ico`,
+      url: `${baseUrl}/miniapp`,
+      homeUrl: `${baseUrl}/`,
       version: "1.0.0",
       categories: ["finance", "defi", "portfolio"],
       chain: "base-sepolia",
