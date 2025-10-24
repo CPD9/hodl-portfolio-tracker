@@ -116,7 +116,7 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
                 />
                 
                 <Link 
-                  href={`/crypto/${crypto.symbol}`}
+                  href={`/dashboard/crypto/${crypto.symbol}`}
                   className="flex-1 hover:opacity-80 transition-opacity"
                 >
                   <div className="flex items-center space-x-2">
