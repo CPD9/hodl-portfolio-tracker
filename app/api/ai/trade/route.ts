@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decideTrades } from '@/lib/actions/ai-trade-agent.actions';
 
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {

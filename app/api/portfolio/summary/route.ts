@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { auth } from '@/lib/better-auth/auth';
 import { getPortfolioSummary } from '@/lib/actions/portfolio.actions';
+import { headers } from 'next/headers';
 
 // Prevent static analysis during build
 export const dynamic = 'force-dynamic';

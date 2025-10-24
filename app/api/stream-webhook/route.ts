@@ -6,12 +6,12 @@ import {
   CallTranscriptionReadyEvent,
 } from '@stream-io/node-sdk';
 import { NextRequest, NextResponse } from 'next/server';
+import { isStreamVideoConfigured, streamVideo } from '@/lib/stream/video';
 
 import AIAdvisor from '@/database/models/ai-advisor.model';
 import Consultation from '@/database/models/consultation.model';
 import { connectToDatabase } from '@/database/mongoose';
 import { inngest } from '@/lib/inngest/client';
-import { streamVideo, isStreamVideoConfigured } from '@/lib/stream/video';
 
 // Prevent static analysis during build
 export const dynamic = 'force-dynamic';
