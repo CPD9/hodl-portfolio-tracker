@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
-import { mongodbAdapter} from "better-auth/adapters/mongodb";
-import { connectToDatabase} from "@/database/mongoose";
-import { nextCookies} from "better-auth/next-js";
+import { connectToDatabase } from "@/database/mongoose";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { nextCookies } from "better-auth/next-js";
 import { sendEmail } from "@/lib/nodemailer";
 
 let authInstance: ReturnType<typeof betterAuth> | null = null;

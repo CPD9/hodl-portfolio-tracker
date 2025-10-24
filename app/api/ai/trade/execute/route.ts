@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { executeTradeOrders } from '@/lib/actions/ai-trade-agent.actions';
 
 export const dynamic = 'force-dynamic';
