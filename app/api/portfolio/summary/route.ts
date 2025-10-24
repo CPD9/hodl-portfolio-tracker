@@ -3,6 +3,10 @@ import { headers } from 'next/headers';
 import { auth } from '@/lib/better-auth/auth';
 import { getPortfolioSummary } from '@/lib/actions/portfolio.actions';
 
+// Force dynamic rendering (don't try to statically analyze during build)
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET() {
   try {
     const session = await auth.api.getSession({ headers: await headers() });

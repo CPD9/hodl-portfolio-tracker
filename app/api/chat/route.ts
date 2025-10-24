@@ -2,13 +2,28 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import OpenAI from 'openai';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+// Initialize OpenAI client conditionally
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if OpenAI is configured
+    if (!openai) {
+      return NextResponse.json(
+        { 
+          error: 'AI chat is not configured. Please set OPENAI_API_KEY environment variable.',
+          apiKeyConfigured: false 
+        },
+        { status: 503 }
+      );
+    }
+
   const { messages, userContext } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {

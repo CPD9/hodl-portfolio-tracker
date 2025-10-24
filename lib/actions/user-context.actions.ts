@@ -9,9 +9,9 @@ import { Watchlist } from '@/database/models/watchlist.model';
 import { connectToDatabase } from '@/database/mongoose';
 import crypto from 'crypto';
 
-const openai = new OpenAI({
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+}) : null;
 
 interface UserData {
   portfolio: any[];
@@ -166,6 +166,11 @@ async function generateContextSummary(userId: string | undefined, userData: User
   const balanceInfo = userData.balance 
     ? `Paper balance: $${userData.balance.paperBalance.toFixed(2)}, Total P&L: $${userData.balance.totalPnL.toFixed(2)}, Win rate: ${userData.balance.winRate.toFixed(1)}%`
     : 'No balance data';
+
+  // If OpenAI is not available, return a simple summary
+  if (!openai) {
+    return `Investment Profile: ${portfolioSummary}. Recent activity: ${recentTrades}. Watching: ${watchlistSymbols}. ${balanceInfo}`;
+  }
 
   const prompt = `Analyze the following user's investment data and create a concise context summary (max 250 words) that captures their investment profile, preferences, risk tolerance, and trading behavior. This will be used as context for an AI trading assistant.
 
