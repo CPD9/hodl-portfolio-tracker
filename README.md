@@ -129,12 +129,14 @@ For transparency during the hackathon, tokenized stock contracts are deployed on
 
 Sepolia demo addresses:
 
-- AAPL: https://sepolia.etherscan.io/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94
-- TSLA: https://sepolia.etherscan.io/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487
-- NVDA: https://sepolia.etherscan.io/address/0x532995D5C698a725B590550F67F9f90A00b352d8
-- MSFT: https://sepolia.etherscan.io/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4
-- AMZN: https://sepolia.etherscan.io/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2
-- GOOGL: https://sepolia.etherscan.io/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547
+Sepolia demo addresses:
+
+- [AAPL](https://sepolia.etherscan.io/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94)
+- [TSLA](https://sepolia.etherscan.io/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487)
+- [NVDA](https://sepolia.etherscan.io/address/0x532995D5C698a725B590550F67F9f90A00b352d8)
+- [MSFT](https://sepolia.etherscan.io/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4)
+- [AMZN](https://sepolia.etherscan.io/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2)
+- [GOOGL](https://sepolia.etherscan.io/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547)
 
 Coverage example: If totalSupply is 1,000 AAPL and spot price is $180, then backing should be 1,000 × $180 = $180,000 USDC. In production, reserves will be custodian-attested and oracle-verified on-chain.
 
