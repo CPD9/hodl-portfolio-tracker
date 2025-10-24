@@ -55,14 +55,26 @@ export const getAuth = async () => {
 // Create a lazy proxy that initializes on first access (prevents build-time DB connection)
 export const auth = new Proxy({} as ReturnType<typeof betterAuth>, {
     get(target, prop) {
-        // Return a function that will initialize auth when called
-        return async function(...args: any[]) {
-            const authInstance = await getAuth();
-            const value = (authInstance as any)[prop];
-            if (typeof value === 'function') {
-                return value.apply(authInstance, args);
+        // Return another proxy for nested properties like 'api'
+        return new Proxy({} as any, {
+            get(nestedTarget, nestedProp) {
+                return async function(...args: any[]) {
+                    const authInstance = await getAuth();
+                    const parentValue = (authInstance as any)[prop];
+                    if (parentValue && typeof parentValue === 'object') {
+                        const value = parentValue[nestedProp];
+                        if (typeof value === 'function') {
+                            return value.apply(parentValue, args);
+                        }
+                        return value;
+                    }
+                    // Direct property access
+                    if (typeof parentValue === 'function') {
+                        return parentValue.apply(authInstance, args);
+                    }
+                    return parentValue;
+                };
             }
-            return value;
-        };
+        });
     }
 });
