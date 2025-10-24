@@ -41,7 +41,6 @@
 4. [Quick Start](#quick-start)
 5. [Base Integration](#base-integration)
 6. [Hackathon Details](#hackathon-details)
-7. [Proof of Reserves (Demo)](#proof-of-reserves-demo)
 
 ## START HACK 2025
 
@@ -119,24 +118,6 @@ Seamlessly interact with Base blockchain for fast, low-cost transactions and DeF
 
 **Stock ↔ Crypto Swaps (Revolutionary!)**  
 Trade Apple stock for Ethereum. Trade Bitcoin for Tesla stock. Revolutionary cross-asset swaps between stocks and crypto using Base as the intermediary. Tokenized stocks (RWAs) enable unified trading.
-
-## Proof of Reserves (Demo)
-
-For transparency during the hackathon, tokenized stock contracts are deployed on Sepolia testnet. Anyone can independently verify supply and transactions.
-
-- How it works and production roadmap: see the Documentation → Proof of Reserves & Custody at `/docs#proof-of-reserves`.
-- Quick verification: Open each contract on Etherscan and check Contract → Read (e.g., totalSupply) and token transfers.
-
-Sepolia demo addresses:
-
-- AAPL: https://sepolia.etherscan.io/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94
-- TSLA: https://sepolia.etherscan.io/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487
-- NVDA: https://sepolia.etherscan.io/address/0x532995D5C698a725B590550F67F9f90A00b352d8
-- MSFT: https://sepolia.etherscan.io/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4
-- AMZN: https://sepolia.etherscan.io/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2
-- GOOGL: https://sepolia.etherscan.io/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547
-
-Coverage example: If totalSupply is 1,000 AAPL and spot price is $180, then backing should be 1,000 × $180 = $180,000 USDC. In production, reserves will be custodian-attested and oracle-verified on-chain.
 
 **On-Chain Token Trading**  
 Trade cryptocurrencies directly on Base using Uniswap V3 with ~$0.01 transaction fees. Swap ETH, USDC, DAI, WETH, and cbBTC instantly.
@@ -244,13 +225,6 @@ NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
 
 # COINGECKO API
 COINGECKO_API_KEY=
-```
-
-**For a complete list of all environment variables with detailed descriptions, see [ENV_VARIABLES.md](./ENV_VARIABLES.md)**
-
-You can also copy `.env.example` as a starting template:
-```bash
-cp .env.example .env
 ```
 
 Get your API keys from:

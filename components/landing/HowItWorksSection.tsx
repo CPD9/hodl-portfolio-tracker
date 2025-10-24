@@ -32,7 +32,7 @@ const HowItWorksSection = () => {
   ]
 
   return (
-    <section id="how-it-works" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-black to-gray-900 scroll-mt-24 md:scroll-mt-28">
+    <section id="how-it-works" className="py-20 px-4 lg:px-20 bg-gradient-to-b from-black to-gray-900">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
           How It <span className="text-purple-500">Works</span>

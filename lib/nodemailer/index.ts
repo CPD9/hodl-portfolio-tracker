@@ -10,19 +10,6 @@ export const transporter = nodemailer.createTransport({
     }
 })
 
-// Generic email sending function
-export const sendEmail = async ({ to, subject, html, text }: { to: string; subject: string; html: string; text?: string }) => {
-    const mailOptions = {
-        from: `"HODL Portfolio Tracker" <${process.env.NODEMAILER_EMAIL}>`,
-        to,
-        subject,
-        text: text || subject,
-        html,
-    }
-
-    await transporter.sendMail(mailOptions);
-}
-
 export const sendWelcomeEmail = async ({ email, name, intro }: WelcomeEmailData) => {
     const htmlTemplate = WELCOME_EMAIL_TEMPLATE
         .replace('{{name}}', name)

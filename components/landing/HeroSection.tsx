@@ -9,7 +9,7 @@ const HeroSection = () => {
   return (
     <main className="flex flex-col lg:flex-row items-center justify-between mt-24 lg:mt-32 min-h-screen px-4 lg:px-20 relative">
       {/* Mobile Robot - Positioned at Top */}
-      <div className="lg:hidden w-full h-[300px] sm:h-[400px] flex items-center justify-center mb-8 relative z-0 scale-75">
+      <div className="lg:hidden w-full h-[300px] sm:h-[400px] flex items-center justify-center mb-8 relative z-0">
         <Spline
           scene="https://prod.spline.design/pExWJS0pvvlINgYf/scene.splinecode"
           className="w-full h-full"
@@ -17,7 +17,7 @@ const HeroSection = () => {
       </div>
 
       {/* Left Side Content */}
-      <div className="max-w-xl lg:ml-4 z-0 lg:mt-0 relative">
+      <div className="max-w-xl lg:ml-4 z-10 lg:mt-0">
         {/* Tag Box */}
         <div className="relative w-[95%] sm:w-48 h-10 bg-gradient-to-r from-gray-800 to-yellow-900 rounded-full shadow-[0_0_50px_rgba(255,255,255,0.4)] mb-8">
           <div className="absolute inset-[3px] bg-black rounded-full flex items-center justify-center gap-1">
@@ -68,7 +68,7 @@ const HeroSection = () => {
       </div>
 
       {/* Desktop Robot - Hidden on Mobile */}
-      <div className="hidden lg:block absolute lg:top-0 bottom-0 lg:left-[50%] lg:right-[5%] h-full z-30 pointer-events-none scale-75">
+      <div className="hidden lg:block absolute lg:top-0 bottom-0 lg:left-[50%] lg:right-[5%] h-full">
         <Spline
           scene="https://prod.spline.design/pExWJS0pvvlINgYf/scene.splinecode"
           className="w-full h-full"

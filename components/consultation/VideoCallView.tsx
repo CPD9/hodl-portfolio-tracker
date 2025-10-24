@@ -23,7 +23,7 @@ export default function VideoCallView({
           <h2 className="text-2xl font-bold text-gray-100 mb-4">Consultation Has Ended</h2>
           <p className="text-gray-400 mb-6">This consultation is no longer active.</p>
           <a
-            href={`/dashboard/consultation`}
+            href={`/consultation/${consultationId}`}
             className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-medium rounded-lg transition"
           >
             View Details

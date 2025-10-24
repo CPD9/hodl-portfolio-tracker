@@ -4,10 +4,10 @@
 export const BASE_CONFIG = {
   // Base Mainnet
   MAINNET: {
-    chainId: parseInt(process.env.NEXT_PUBLIC_BASE_CHAIN_ID || '8453'),
+    chainId: 8453,
     chainName: 'Base',
-    rpcUrls: [process.env.NEXT_PUBLIC_BASE_RPC_URL || process.env.BASE_RPC_URL || 'https://mainnet.base.org'],
-    blockExplorerUrls: [process.env.NEXT_PUBLIC_BASE_EXPLORER_URL || 'https://basescan.org'],
+    rpcUrls: ['https://mainnet.base.org'],
+    blockExplorerUrls: ['https://basescan.org'],
     nativeCurrency: {
       name: 'Ethereum',
       symbol: 'ETH',
@@ -19,7 +19,7 @@ export const BASE_CONFIG = {
   TESTNET: {
     chainId: 84532,
     chainName: 'Base Sepolia',
-    rpcUrls: [process.env.BASE_SEPOLIA_RPC_URL || 'https://sepolia.base.org'],
+    rpcUrls: ['https://sepolia.base.org'],
     blockExplorerUrls: ['https://sepolia.basescan.org'],
     nativeCurrency: {
       name: 'Ethereum',

@@ -27,7 +27,7 @@ async function ConsultationsContent() {
   const serializedConsultations = JSON.parse(JSON.stringify(consultationsData.consultations));
 
   return (
-    <div className="min-h-screen p-4 md:p-6 lg:p-8 home-wrapper">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8">
       <div className="container mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -46,7 +46,7 @@ async function ConsultationsContent() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Total Consultations</p>
@@ -58,7 +58,7 @@ async function ConsultationsContent() {
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Completed</p>
@@ -76,7 +76,7 @@ async function ConsultationsContent() {
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Upcoming</p>
@@ -94,7 +94,7 @@ async function ConsultationsContent() {
             </div>
           </div>
 
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">AI Advisors</p>
