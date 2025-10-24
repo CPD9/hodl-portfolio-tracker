@@ -2,8 +2,8 @@ export const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/search', label: 'Search' },
   { href: '/dashboard/watchlist', label: 'Watchlist' },
-    { href: '/dashboard/portfolio', label: 'Portfolio' },
-    { href: '/dashboard/consultation', label: 'AI Advisor' },
+  { href: '/dashboard/portfolio', label: 'Portfolio' },
+  { href: '/dashboard/consultation', label: 'AI Advisor' },
   { href: '/dashboard/base', label: 'Base Chain' },
   { href: '/dashboard/gamification', label: 'Gamification' },
 ];

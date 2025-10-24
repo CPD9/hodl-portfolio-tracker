@@ -138,7 +138,7 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
                 {holdings.map((holding) => (
                   <tr key={`${holding.symbol}-${holding.type}`} className="hover:bg-gray-700 transition-colors">
                     <td className="py-4 px-4">
-                      <Link href={`/stocks/${holding.symbol}`} className="font-semibold text-blue-400 hover:text-blue-300">
+                      <Link href={`/dashboard/stocks/${holding.symbol}`} className="font-semibold text-blue-400 hover:text-blue-300">
                         {holding.symbol}
                       </Link>
                     </td>
