@@ -1,0 +1,27 @@
+{
+  "name": "HODL Portfolio Tracker",
+  "short_name": "HODL",
+  "description": "Unified stock and crypto portfolio tracker with cross-asset swaps on Base",
+  "start_url": "/miniapp",
+  "display": "standalone",
+  "background_color": "#0F0F0F",
+  "theme_color": "#FFB800",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["finance", "utilities"],
+  "screenshots": [],
+  "features": [
+    "Real-time stock and crypto tracking",
+    "Cross-asset swaps (stocks to crypto)",
+    "Base Account authentication",
+    "Basenames integration",
+    "Proof of Reserves verification"
+  ]
+}
+
