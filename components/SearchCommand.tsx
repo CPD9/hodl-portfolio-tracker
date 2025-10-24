@@ -36,8 +36,11 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [])
 
-  // Load popular cryptos on mount
+  // Load popular cryptos when crypto tab is first accessed
   useEffect(() => {
+    // Only load if crypto tab is active and popularCryptos is empty
+    if (activeTab !== 'crypto' || popularCryptos.length > 0) return;
+    
     const loadPopularCryptos = async () => {
       try {
         const cryptoData = await getMultipleCryptoData(POPULAR_CRYPTO_SYMBOLS);
@@ -48,7 +51,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
       }
     };
     loadPopularCryptos();
-  }, []);
+  }, [activeTab, popularCryptos.length]);
 
   const handleSearch = async () => {
     if(!isSearchMode) {
@@ -106,8 +109,11 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
         </div>
         
         {/* Tabs for Stocks and Crypto */}
-        <div className="flex border-b border-gray-700 px-4">
+        <div className="flex border-b border-gray-700 px-4" role="tablist" aria-label="Search tabs">
           <button
+            role="tab"
+            aria-selected={activeTab === 'stocks'}
+            aria-controls="stocks-panel"
             onClick={() => setActiveTab('stocks')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'stocks'
@@ -119,6 +125,9 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
             Stocks
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === 'crypto'}
+            aria-controls="crypto-panel"
             onClick={() => setActiveTab('crypto')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'crypto'
@@ -138,12 +147,13 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
             <>
               {/* Stocks Tab Content */}
               {activeTab === 'stocks' && (
-                displayStocks?.length === 0 ? (
-                  <div className="search-list-indicator">
-                    {isSearchMode ? 'No stocks found' : 'No stocks available'}
-                  </div>
-                ) : (
-                  <ul className="mb-4">
+                <div id="stocks-panel" role="tabpanel" aria-labelledby="stocks-tab">
+                  {displayStocks?.length === 0 ? (
+                    <div className="search-list-indicator">
+                      {isSearchMode ? 'No stocks found' : 'No stocks available'}
+                    </div>
+                  ) : (
+                    <ul className="mb-4">
                     <div className="search-count">
                       {isSearchMode ? 'Stocks' : 'Popular stocks'}
                       {` `}({displayStocks?.length || 0})
@@ -168,17 +178,19 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                         </li>
                     ))}
                   </ul>
-                )
+                  )}
+                </div>
               )}
 
               {/* Crypto Tab Content */}
               {activeTab === 'crypto' && (
-                displayCryptos?.length === 0 ? (
-                  <div className="search-list-indicator">
-                    {isSearchMode ? 'No cryptocurrencies found' : 'Loading popular cryptocurrencies...'}
-                  </div>
-                ) : (
-                  <ul>
+                <div id="crypto-panel" role="tabpanel" aria-labelledby="crypto-tab">
+                  {displayCryptos?.length === 0 ? (
+                    <div className="search-list-indicator">
+                      {isSearchMode ? 'No cryptocurrencies found' : 'Loading popular cryptocurrencies...'}
+                    </div>
+                  ) : (
+                    <ul>
                     <div className="search-count">
                       {isSearchMode ? 'Cryptocurrencies' : 'Popular cryptocurrencies'}
                       {` `}({displayCryptos?.length || 0})
@@ -205,7 +217,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                         </li>
                     ))}
                   </ul>
-                )
+                  )}
+                </div>
               )}
             </>
           )
