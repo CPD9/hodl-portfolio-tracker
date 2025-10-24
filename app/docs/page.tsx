@@ -8,8 +8,20 @@ import 'aos/dist/aos.css'
 import 'boxicons/css/boxicons.min.css'
 import PixelCharacter from '@/components/PixelCharacter'
 
-type ContentItem = { subtitle: string; description: string; steps?: string[]; code?: string }
-type DocSection = { id: string; title: string; icon: string; content: ContentItem[] }
+type SectionLink = { label: string; href: string }
+type SectionItem = {
+  subtitle: string
+  description?: string
+  steps?: string[]
+  code?: string
+  links?: SectionLink[]
+}
+type Section = {
+  id: string
+  title: string
+  icon: string
+  content: SectionItem[]
+}
 
 export default function Documentation() {
   useEffect(() => {
@@ -19,7 +31,7 @@ export default function Documentation() {
     })
   }, [])
 
-  const sections: DocSection[] = [
+  const sections: Section[] = [
     {
       id: 'getting-started',
       title: 'Getting Started',
@@ -34,6 +46,71 @@ export default function Documentation() {
             'Link traditional brokerage (optional) - secure read-only API access',
             'Start tracking unified portfolio with real-time AI insights across stocks and crypto'
           ]
+        }
+      ]
+    },
+    {
+      id: 'proof-of-reserves',
+      title: 'Proof of Reserves & Custody',
+      icon: 'bx-shield-alt',
+      content: [
+        {
+          subtitle: 'How It Works (Hackathon Demo)',
+          description:
+            'For the hackathon, we demonstrate the smart contract layer: tokenized stock supply is managed on-chain and designed to be backed 1:1 by USDC reserves. Anyone can independently verify the token contracts and their behavior on-chain on Sepolia testnet using the links below.',
+        },
+        {
+          subtitle: 'Hackathon / Demo: On-Chain Verification',
+          description:
+            'What you can verify today on testnet:',
+          steps: [
+            'Smart contract holds all stock tokens alongside USDC backing for those tokens',
+            'Use Etherscan → Contract → Read Contract to query totalSupply for stock tokens and balanceOf() for USDC holdings',
+            'Example: If the contract holds 1,000 AAPL tokens and spot price is $180, then backing should be 1,000 × $180 = $180,000 USDC',
+          ]
+        },
+        {
+          subtitle: 'Custodian + Oracle (Production)',
+          description:
+            'In production, reserves would be held by a licensed custodian (e.g., Interactive Brokers or Bakkt). The custodian would publish signed attestations of reserves that are auditor-verified (similar to USDC monthly attestations). Chainlink oracles would bring these proofs on-chain for programmatic verification. Ondo Finance uses a similar design for tokenized assets.',
+        },
+        {
+          subtitle: 'Production Roadmap: Proofs & Attestations',
+          description: 'Key guarantees we would implement for mainnet launch:',
+          steps: [
+            'Real-time, signed custodian attestations of total reserves published on-chain',
+            'Merkle tree proofs of individual user balances enabling self-verification against total reserves',
+            'Third-party audits (similar cadence to USDC/Tether monthly attestations)',
+            'Chainlink oracle(s) fetch and verify custodian attestations on-chain every 24 hours',
+          ]
+        },
+        {
+          subtitle: 'Custodian Flow (Production)',
+          steps: [
+            'User deposits $180 to the platform',
+            'Platform purchases 1 AAPL share via a licensed broker (e.g., Interactive Brokers, Apex Clearing)',
+            'Custodian holds the underlying share and publishes a cryptographic proof of holdings',
+            'Platform mints 1 AAPL token to the user’s wallet, reflecting 1:1 backing',
+            'Chainlink oracle verifies custodian attestations at a set cadence (e.g., every 24 hours) and updates on-chain state',
+          ]
+        },
+        {
+          subtitle: 'Verify Contracts (Sepolia Demo Addresses)',
+          description:
+            'Open each contract on Etherscan to inspect source verification, read totalSupply, and review transactions. These addresses are provided for transparent verification during the hackathon demo.',
+          links: [
+            { label: 'AAPL (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94' },
+            { label: 'TSLA (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487' },
+            { label: 'NVDA (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x532995D5C698a725B590550F67F9f90A00b352d8' },
+            { label: 'MSFT (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4' },
+            { label: 'AMZN (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2' },
+            { label: 'GOOGL (Sepolia)', href: 'https://sepolia.etherscan.io/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547' }
+          ]
+        },
+        {
+          subtitle: 'On-Chain Verification Tips',
+          description:
+            'To self-verify: (1) View Contract on Etherscan and inspect Read/Write tabs for supply-related functions. (2) Review recent mint/burn/transfer events in the Transactions and ERC-20 Token Txns tabs. (3) Confirm source code verification and compiler settings. In production, you would also cross-check custodian attestations and Chainlink oracle feeds for reserves.',
         }
       ]
     },
@@ -257,9 +334,26 @@ console.log(data.usd) // $3,245.67`
                         {item.description}
                       </p>
 
+                      {item.links && (
+                        <ul className="space-y-2">
+                          {item.links.map((link: { label: string; href: string }, linkIdx: number) => (
+                            <li key={linkIdx}>
+                              <a
+                                href={link.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-yellow-400 hover:text-yellow-300 underline underline-offset-4"
+                              >
+                                {link.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
                       {item.steps && (
                         <ol className="space-y-2 ml-4">
-                          {item.steps.map((step, stepIdx) => (
+                          {item.steps.map((step: string, stepIdx: number) => (
                             <li key={stepIdx} className="flex items-start gap-3 text-gray-300">
                               <span className="flex-shrink-0 w-6 h-6 bg-yellow-500/20 text-yellow-400 rounded-full flex items-center justify-center text-sm font-bold">
                                 {stepIdx + 1}
