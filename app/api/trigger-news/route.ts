@@ -3,8 +3,19 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { inngest } from '@/lib/inngest/client';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST() {
   try {
+    // Skip database connection during build
+    if (process.env.NODE_ENV === 'production' && !process.env.MONGODB_URI) {
+      return NextResponse.json(
+        { success: false, message: 'Service not available during build' },
+        { status: 503 }
+      );
+    }
+
     // Get authenticated user
     const session = await auth.api.getSession({ headers: await headers() });
     
