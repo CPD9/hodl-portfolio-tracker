@@ -243,7 +243,7 @@ const Home = () => {
                             <div className="flex items-center justify-between mb-2">
                                 <i className="bx bx-wallet text-3xl text-green-500"></i>
                                 <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-500/10 text-green-400">
-                                    Available
+                                    Paper
                                 </span>
                             </div>
                             <p className="text-gray-400 text-sm mb-1">Cash Balance</p>
