@@ -13,6 +13,10 @@ import { connectToDatabase } from '@/database/mongoose';
 import { inngest } from '@/lib/inngest/client';
 import { streamVideo, isStreamVideoConfigured } from '@/lib/stream/video';
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 function verifySignature(body: string, signature: string): boolean {
   if (!isStreamVideoConfigured || !streamVideo) return false;
   return streamVideo.verifyWebhook(body, signature);

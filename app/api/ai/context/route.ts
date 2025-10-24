@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runAIContextAgent } from '@/lib/actions/ai-agent.actions';
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {

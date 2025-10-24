@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserContext, refreshUserContext } from '@/lib/actions/user-context.actions';
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
