@@ -15,7 +15,9 @@ export async function GET() {
     // Base Builder - Your wallet address used when importing
     // Basename: cpd99.base.eth
     baseBuilder: {
-      ownerAddress: "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52"
+      ownerAddress: "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52",
+      networkId: 84532,
+      networkName: "base-sepolia"
     },
     
     // Identity & Launch (REQUIRED)

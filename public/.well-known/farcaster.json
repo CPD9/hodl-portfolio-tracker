@@ -5,7 +5,9 @@
     "signature": ""
   },
   "baseBuilder": {
-    "ownerAddress": "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52"
+    "ownerAddress": "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52",
+    "networkId": 84532,
+    "networkName": "base-sepolia"
   },
   "version": "1",
   "name": "HODL Portfolio Tracker",
