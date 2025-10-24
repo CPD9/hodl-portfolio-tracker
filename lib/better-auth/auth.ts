@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
-import { connectToDatabase } from "@/database/mongoose";
-import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { nextCookies } from "better-auth/next-js";
+import { mongodbAdapter} from "better-auth/adapters/mongodb";
+import { connectToDatabase} from "@/database/mongoose";
+import { nextCookies} from "better-auth/next-js";
 import { sendEmail } from "@/lib/nodemailer";
 
 let authInstance: ReturnType<typeof betterAuth> | null = null;
@@ -58,16 +58,29 @@ export const getAuth = async () => {
     return authInstance;
 }
 
-// Lazy proxy to avoid top-level await during build
-export const auth = new Proxy({} as Awaited<ReturnType<typeof getAuth>>, {
+// Create a lazy proxy that initializes on first access (prevents build-time DB connection)
+export const auth = new Proxy({} as ReturnType<typeof betterAuth>, {
     get(target, prop) {
-        return async function(...args: any[]) {
-            const authInstance = await getAuth();
-            const value = (authInstance as any)[prop];
-            if (typeof value === 'function') {
-                return value.apply(authInstance, args);
+        // Return another proxy for nested properties like 'api'
+        return new Proxy({} as any, {
+            get(nestedTarget, nestedProp) {
+                return async function(...args: any[]) {
+                    const authInstance = await getAuth();
+                    const parentValue = (authInstance as any)[prop];
+                    if (parentValue && typeof parentValue === 'object') {
+                        const value = parentValue[nestedProp];
+                        if (typeof value === 'function') {
+                            return value.apply(parentValue, args);
+                        }
+                        return value;
+                    }
+                    // Direct property access
+                    if (typeof parentValue === 'function') {
+                        return parentValue.apply(authInstance, args);
+                    }
+                    return parentValue;
+                };
             }
-            return value;
-        };
+        });
     }
 });

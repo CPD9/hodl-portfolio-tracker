@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { executeTradeOrders } from '@/lib/actions/ai-trade-agent.actions';
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {

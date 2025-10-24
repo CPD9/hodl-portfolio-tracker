@@ -490,7 +490,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       <Button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg transition-all duration-300",
+          "fixed bottom-6 right-6 z-[100] h-14 w-14 rounded-full bg-yellow-500 hover:bg-yellow-600 text-black shadow-lg transition-all duration-300",
           isOpen && "bg-gray-600 hover:bg-gray-700 text-white"
         )}
         size="icon"
@@ -502,7 +502,7 @@ const AIChatOverlay: React.FC<AIChatOverlayProps> = ({ user }) => {
       {isOpen && (
         <div
           className={cn(
-            "fixed z-50 transition-all duration-300",
+            "fixed z-[100] transition-all duration-300",
             isExpanded
               ? "inset-6"
               : "bottom-24 right-6 w-96 h-[640px] max-w-[calc(100vw-3rem)] max-h-[calc(100vh-6rem)]"
