@@ -11,13 +11,20 @@ import AIAdvisor from '@/database/models/ai-advisor.model';
 import Consultation from '@/database/models/consultation.model';
 import { connectToDatabase } from '@/database/mongoose';
 import { inngest } from '@/lib/inngest/client';
-import { streamVideo } from '@/lib/stream/video';
+import { streamVideo, isStreamVideoConfigured } from '@/lib/stream/video';
 
 function verifySignature(body: string, signature: string): boolean {
+  if (!isStreamVideoConfigured || !streamVideo) return false;
   return streamVideo.verifyWebhook(body, signature);
 }
 
 export async function POST(req: NextRequest) {
+  if (!isStreamVideoConfigured || !streamVideo) {
+    return NextResponse.json(
+      { error: 'Stream Video is not configured' },
+      { status: 503 }
+    );
+  }
   const signature = req.headers.get('x-signature');
   const apiKey = req.headers.get('x-api-key');
 

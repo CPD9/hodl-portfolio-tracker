@@ -318,3 +318,6 @@ declare global {
 }
 
 export {};
+
+// Module declarations for libraries without TypeScript types
+declare module 'aos';
