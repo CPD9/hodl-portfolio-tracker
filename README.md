@@ -41,6 +41,7 @@
 4. [Quick Start](#quick-start)
 5. [Base Integration](#base-integration)
 6. [Hackathon Details](#hackathon-details)
+7. [Proof of Reserves](#proof-of-reserves)
 
 ## START HACK 2025
 
@@ -406,6 +407,39 @@ BASE_CONFIG = {
   }
 }
 ```
+
+## Proof of Reserves
+
+This project demonstrates a transparent Proof of Reserves (PoR) model for tokenized stocks on Base.
+
+### Hackathon / Demo (Base Sepolia)
+
+- Smart contract holds all tokenized stock balances and corresponding USDC backing.
+- Anyone can query balanceOf() on-chain to verify reserves.
+- Example: If the contract holds 1,000 AAPL tokens and reference price is $180, required USDC ≥ $180,000.
+
+Token contracts (Base Sepolia):
+
+- AAPL: https://base-sepolia.blockscout.com/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94
+- TSLA: https://base-sepolia.blockscout.com/address/0x3FF7a28970832F0B31ba496545a000971becFCC2
+- NVDA: https://base-sepolia.blockscout.com/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487
+- MSFT: https://base-sepolia.blockscout.com/address/0x532995D5C698a725B590550F67F9f90A00b352d8
+- AMZN: https://base-sepolia.blockscout.com/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4
+- GOOGL: https://base-sepolia.blockscout.com/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2
+
+Related contract:
+
+- StockCryptoSwap (PoR-related operations): https://base-sepolia.blockscout.com/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547
+
+Note: These are testnet contracts for demonstration only.
+
+### Production Roadmap
+
+- Real-time custodian attestations published on-chain
+- Merkle tree proofs for per-user balances
+- 3rd-party audits (similar cadence/style to USDC/Tether monthly attestations)
+- Custodian flow: deposit → broker purchase (Interactive Brokers/Apex) → custodian hold + cryptographic proof → mint token to user wallet
+- Chainlink oracle verifies custodian attestations every 24 hours
 
 **Key Base L2 Features Used**:
 - ✓ ERC-20 token tracking (USDC, WETH, DAI on Base)

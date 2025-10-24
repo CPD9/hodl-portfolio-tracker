@@ -371,3 +371,36 @@ export const WATCHLIST_TABLE_HEADER = [
     'Alert',
     'Action',
 ];
+
+// Proof of Reserves — Base Sepolia demo contracts
+export const POR_BASE_SEPOLIA_ADDRESSES: Record<string, { address: string; blockscoutUrl: string }> = {
+    AAPL: {
+        address: '0x334dFeb48aEC27fCb75249e77F546B687cC6aB94',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94',
+    },
+    TSLA: {
+        address: '0x3FF7a28970832F0B31ba496545a000971becFCC2',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x3FF7a28970832F0B31ba496545a000971becFCC2',
+    },
+    NVDA: {
+        address: '0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487',
+    },
+    MSFT: {
+        address: '0x532995D5C698a725B590550F67F9f90A00b352d8',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x532995D5C698a725B590550F67F9f90A00b352d8',
+    },
+    AMZN: {
+        address: '0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4',
+    },
+    GOOGL: {
+        address: '0x75687E5c95e15Ba306b49869e49F017b3103AbF2',
+        blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2',
+    },
+};
+
+export const POR_STOCK_CRYPTO_SWAP_CONTRACT = {
+    address: '0x4833D6D51b64f93B6708088c90aB6E138b6A1547',
+    blockscoutUrl: 'https://base-sepolia.blockscout.com/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547',
+};
