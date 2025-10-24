@@ -1,0 +1,27 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "ownerAddress": "0x55345C0B87F6Cd307Cd3B2E7A0941C002B3B2F52"
+  },
+  "version": "1",
+  "name": "HODL Portfolio Tracker",
+  "homeUrl": "https://hodl-portfolio-tracker.vercel.app/miniapp",
+  "iconUrl": "https://hodl-portfolio-tracker.vercel.app/favicon.ico",
+  "splashImageUrl": "https://hodl-portfolio-tracker.vercel.app/favicon.ico",
+  "splashBackgroundColor": "#0F0F0F",
+  "primaryCategory": "finance",
+  "tags": ["portfolio", "crypto", "stocks", "trading", "base"],
+  "subtitle": "Unified Stock & Crypto Tracker",
+  "description": "Track stocks and crypto together. Execute cross-asset swaps on Base Sepolia. Built for START HACK 2025 with proof of reserves and AI-powered insights.",
+  "tagline": "Your Unified Portfolio on Base",
+  "heroImageUrl": "https://hodl-portfolio-tracker.vercel.app/api/frame/portfolio/image",
+  "screenshotUrls": [],
+  "ogTitle": "HODL - Portfolio Tracker on Base",
+  "ogDescription": "Unified stock and crypto portfolio tracker with cross-asset swaps",
+  "ogImageUrl": "https://hodl-portfolio-tracker.vercel.app/api/frame/portfolio/image"
+}
+
