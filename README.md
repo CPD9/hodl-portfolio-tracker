@@ -49,6 +49,29 @@
 
 Our mission: Create a comprehensive stock and crypto tracking platform that bridges traditional finance with Web3, powered by Base's fast, secure, and low-cost blockchain infrastructure.
 
+### 🚀 Buildathon Submission
+
+**HODL** is the first unified stock and crypto portfolio tracker with cross-asset swap functionality on Base blockchain.
+
+#### Key Achievements
+- ✅ **6 Tokenized Stock Tokens** deployed on Base Sepolia
+- ✅ **Cross-Asset Swap Contract** for revolutionary stock ↔ crypto trading
+- ✅ **Farcaster Frames** for social discovery and engagement
+- ✅ **Base Mini App** with mobile-optimized experience
+- ✅ **Base Account** authentication with Smart Wallet
+- ✅ **Basenames** integration for human-readable identities
+
+#### Live Deployments
+- **Web App**: [hodl-portfolio-tracker.vercel.app](https://hodl-portfolio-tracker.vercel.app)
+- **Mini App**: [hodl-portfolio-tracker.vercel.app/miniapp](https://hodl-portfolio-tracker.vercel.app/miniapp)
+- **Portfolio Frame**: [hodl-portfolio-tracker.vercel.app/frame/portfolio](https://hodl-portfolio-tracker.vercel.app/frame/portfolio)
+- **Swap Frame**: [hodl-portfolio-tracker.vercel.app/frame/swap](https://hodl-portfolio-tracker.vercel.app/frame/swap)
+
+#### Documentation
+- 📄 [BUILDATHON.md](./BUILDATHON.md) - Complete buildathon submission details
+- 📄 [DEPLOYMENT_PROOF.md](./DEPLOYMENT_PROOF.md) - Smart contract addresses and transaction proofs
+- 📄 [VIDEO_SCRIPT.md](./VIDEO_SCRIPT.md) - Demo video recording guide
+
 ## Introduction
 
 **HODL** is an AI-powered financial tracking platform that combines traditional stock market data with cryptocurrency insights, all integrated with Base blockchain for seamless Web3 functionality. Built for the next generation of traders and investors who want the best of both traditional and decentralized finance.
@@ -122,21 +145,26 @@ Trade Apple stock for Ethereum. Trade Bitcoin for Tesla stock. Revolutionary cro
 
 ## Proof of Reserves (Demo)
 
-For transparency during the hackathon, tokenized stock contracts are deployed on Sepolia testnet. Anyone can independently verify supply and transactions.
+For transparency during the hackathon, tokenized stock contracts are deployed on **Base Sepolia testnet**. Anyone can independently verify supply and transactions.
 
 - How it works and production roadmap: see the Documentation → Proof of Reserves & Custody at `/docs#proof-of-reserves`.
-- Quick verification: Open each contract on Etherscan and check Contract → Read (e.g., totalSupply) and token transfers.
+- Quick verification: Open each contract on Base Sepolia Blockscout and check Contract → Read (e.g., totalSupply) and token transfers.
+- Complete deployment details: See [DEPLOYMENT_PROOF.md](./DEPLOYMENT_PROOF.md)
 
-Sepolia demo addresses:
+### Base Sepolia Deployed Contracts
 
-Sepolia demo addresses:
+#### Tokenized Stock Tokens
+- [AAPL](https://base-sepolia.blockscout.com/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94) - Apple Inc. Stock Token
+- [TSLA](https://base-sepolia.blockscout.com/address/0x3FF7a28970832F0B31ba496545a000971becFCC2) - Tesla Inc. Stock Token
+- [NVDA](https://base-sepolia.blockscout.com/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487) - NVIDIA Corp. Stock Token
+- [MSFT](https://base-sepolia.blockscout.com/address/0x532995D5C698a725B590550F67F9f90A00b352d8) - Microsoft Corp. Stock Token
+- [AMZN](https://base-sepolia.blockscout.com/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4) - Amazon.com Inc. Stock Token
+- [GOOGL](https://base-sepolia.blockscout.com/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2) - Alphabet Inc. Stock Token
 
-- [AAPL](https://sepolia.etherscan.io/address/0x334dFeb48aEC27fCb75249e77F546B687cC6aB94)
-- [TSLA](https://sepolia.etherscan.io/address/0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487)
-- [NVDA](https://sepolia.etherscan.io/address/0x532995D5C698a725B590550F67F9f90A00b352d8)
-- [MSFT](https://sepolia.etherscan.io/address/0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4)
-- [AMZN](https://sepolia.etherscan.io/address/0x75687E5c95e15Ba306b49869e49F017b3103AbF2)
-- [GOOGL](https://sepolia.etherscan.io/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547)
+#### Core Protocol Contracts
+- [StockCryptoSwap](https://base-sepolia.blockscout.com/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547) - Cross-Asset Swap & Proof of Reserves Contract
+
+**Network Info**: Base Sepolia (Chain ID: 84532) | [Get Testnet ETH](https://portal.cdp.coinbase.com/products/faucet)
 
 Coverage example: If totalSupply is 1,000 AAPL and spot price is $180, then backing should be 1,000 × $180 = $180,000 USDC. In production, reserves will be custodian-attested and oracle-verified on-chain.
 
@@ -239,10 +267,18 @@ NODEMAILER_PASSWORD=
 
 # BASE CHAIN INTEGRATION
 NEXT_PUBLIC_BASE_RPC_URL=https://mainnet.base.org
+BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
 NEXT_PUBLIC_BASE_CHAIN_ID=8453
 NEXT_PUBLIC_BASE_EXPLORER_URL=https://basescan.org
 NEXT_PUBLIC_ALCHEMY_API_KEY=
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=
+
+# ONCHAINKIT (for Base Account & Basenames)
+NEXT_PUBLIC_ONCHAINKIT_API_KEY=
+
+# FARCASTER FRAMES
+NEXT_PUBLIC_FRAME_URL=https://hodl-portfolio-tracker.vercel.app
+NEXT_PUBLIC_BASENAMES_ENABLED=true
 
 # COINGECKO API
 COINGECKO_API_KEY=
