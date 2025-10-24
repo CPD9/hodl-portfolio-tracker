@@ -8,6 +8,9 @@ import Link from "next/link";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
 import {searchCrypto, getCryptoMarketData} from "@/lib/actions/coingecko.actions";
 import {useDebounce} from "@/hooks/useDebounce";
+import {POPULAR_CRYPTO_SYMBOLS} from "@/lib/constants";
+
+type TabType = 'stocks' | 'crypto';
 
 export default function SearchCommand({ renderAs = 'button', label = 'Add stock', initialStocks }: SearchCommandProps) {
   const [open, setOpen] = useState(false)
@@ -15,10 +18,12 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
   const [loading, setLoading] = useState(false)
   const [stocks, setStocks] = useState<StockWithWatchlistStatus[]>(initialStocks);
   const [cryptos, setCryptos] = useState<any[]>([]);
+  const [popularCryptos, setPopularCryptos] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<TabType>('stocks');
 
   const isSearchMode = !!searchTerm.trim();
   const displayStocks = isSearchMode ? stocks : stocks?.slice(0, 10);
-  const displayCryptos = cryptos?.slice(0, 5); // Show top 5 crypto results
+  const displayCryptos = isSearchMode ? cryptos?.slice(0, 10) : popularCryptos?.slice(0, 10);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -30,6 +35,20 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [])
+
+  // Load popular cryptos on mount
+  useEffect(() => {
+    const loadPopularCryptos = async () => {
+      try {
+        const cryptoData = await getCryptoMarketData(POPULAR_CRYPTO_SYMBOLS);
+        setPopularCryptos(cryptoData);
+      } catch (error) {
+        console.error('Failed to load popular cryptos:', error);
+        setPopularCryptos([]);
+      }
+    };
+    loadPopularCryptos();
+  }, []);
 
   const handleSearch = async () => {
     if(!isSearchMode) {
@@ -85,70 +104,106 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
           <CommandInput value={searchTerm} onValueChange={setSearchTerm} placeholder="Search Stocks or Cryptos..." className="search-input" />
           {loading && <Loader2 className="search-loader" />}
         </div>
+        
+        {/* Tabs for Stocks and Crypto */}
+        <div className="flex border-b border-gray-700 px-4">
+          <button
+            onClick={() => setActiveTab('stocks')}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === 'stocks'
+                ? 'text-yellow-500 border-b-2 border-yellow-500'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+          >
+            <TrendingUp className="inline h-4 w-4 mr-2" />
+            Stocks
+          </button>
+          <button
+            onClick={() => setActiveTab('crypto')}
+            className={`px-4 py-2 text-sm font-medium transition-colors ${
+              activeTab === 'crypto'
+                ? 'text-yellow-500 border-b-2 border-yellow-500'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+          >
+            <Coins className="inline h-4 w-4 mr-2" />
+            Crypto
+          </button>
+        </div>
+
         <CommandList className="search-list">
           {loading ? (
               <CommandEmpty className="search-list-empty">Loading results...</CommandEmpty>
-          ) : (displayStocks?.length === 0 && displayCryptos?.length === 0) ? (
-              <div className="search-list-indicator">
-                {isSearchMode ? 'No results found' : 'No stocks available'}
-              </div>
-            ) : (
+          ) : (
             <>
-              {/* Stocks Section */}
-              {displayStocks?.length > 0 && (
-                <ul className="mb-4">
-                  <div className="search-count">
-                    {isSearchMode ? 'Stocks' : 'Popular stocks'}
-                    {` `}({displayStocks?.length || 0})
+              {/* Stocks Tab Content */}
+              {activeTab === 'stocks' && (
+                displayStocks?.length === 0 ? (
+                  <div className="search-list-indicator">
+                    {isSearchMode ? 'No stocks found' : 'No stocks available'}
                   </div>
-                  {displayStocks?.map((stock) => (
-                      <li key={`stock-${stock.symbol}`} className="search-item">
-            <Link
-              href={`/dashboard/stocks/${stock.symbol}`}
-                            onClick={handleSelect}
-                            className="search-item-link"
-                        >
-                          <TrendingUp className="h-4 w-4 text-gray-500" />
-                          <div className="flex-1">
-                            <div className="search-item-name">
-                              {stock.name}
+                ) : (
+                  <ul className="mb-4">
+                    <div className="search-count">
+                      {isSearchMode ? 'Stocks' : 'Popular stocks'}
+                      {` `}({displayStocks?.length || 0})
+                    </div>
+                    {displayStocks?.map((stock) => (
+                        <li key={`stock-${stock.symbol}`} className="search-item">
+              <Link
+                href={`/dashboard/stocks/${stock.symbol}`}
+                              onClick={handleSelect}
+                              className="search-item-link"
+                          >
+                            <TrendingUp className="h-4 w-4 text-gray-500" />
+                            <div className="flex-1">
+                              <div className="search-item-name">
+                                {stock.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {stock.symbol} | {stock.exchange} | {stock.type}
+                              </div>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {stock.symbol} | {stock.exchange} | {stock.type}
-                            </div>
-                          </div>
-                        </Link>
-                      </li>
-                  ))}
-                </ul>
+                          </Link>
+                        </li>
+                    ))}
+                  </ul>
+                )
               )}
 
-              {/* Cryptos Section */}
-              {displayCryptos?.length > 0 && (
-                <ul>
-                  <div className="search-count">
-                    Cryptocurrencies ({displayCryptos?.length || 0})
+              {/* Crypto Tab Content */}
+              {activeTab === 'crypto' && (
+                displayCryptos?.length === 0 ? (
+                  <div className="search-list-indicator">
+                    {isSearchMode ? 'No cryptocurrencies found' : 'Loading popular cryptocurrencies...'}
                   </div>
-                  {displayCryptos?.map((crypto) => (
-                      <li key={`crypto-${crypto.id}`} className="search-item">
-            <Link
-              href={`/dashboard/crypto/${crypto.symbol.toUpperCase()}`}
-                            onClick={handleSelect}
-                            className="search-item-link"
-                        >
-                          <Coins className="h-4 w-4 text-yellow-500" />
-                          <div className="flex-1">
-                            <div className="search-item-name">
-                              {crypto.name}
+                ) : (
+                  <ul>
+                    <div className="search-count">
+                      {isSearchMode ? 'Cryptocurrencies' : 'Popular cryptocurrencies'}
+                      {` `}({displayCryptos?.length || 0})
+                    </div>
+                    {displayCryptos?.map((crypto) => (
+                        <li key={`crypto-${crypto.id}`} className="search-item">
+              <Link
+                href={`/dashboard/crypto/${crypto.symbol.toUpperCase()}`}
+                              onClick={handleSelect}
+                              className="search-item-link"
+                          >
+                            <Coins className="h-4 w-4 text-yellow-500" />
+                            <div className="flex-1">
+                              <div className="search-item-name">
+                                {crypto.name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                {crypto.symbol.toUpperCase()} | Rank #{crypto.market_cap_rank || 'N/A'}
+                              </div>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {crypto.symbol.toUpperCase()} | Rank #{crypto.market_cap_rank || 'N/A'}
-                            </div>
-                          </div>
-                        </Link>
-                      </li>
-                  ))}
-                </ul>
+                          </Link>
+                        </li>
+                    ))}
+                  </ul>
+                )
               )}
             </>
           )
