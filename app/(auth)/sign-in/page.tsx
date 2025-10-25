@@ -29,16 +29,21 @@ const SignIn = () => {
         try {
             const result = await signInWithEmail(data);
             
-            if(result.success) {
+            if (result.success) {
                 toast.success('Welcome back!', {
                     description: 'Successfully signed in to your account'
                 });
-                router.push('/dashboard');
-            } else {
-                toast.error('Sign in failed', {
-                    description: result.error || 'Please check your credentials and try again'
-                });
+                // Force a full reload to ensure auth cookies are available immediately
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/dashboard';
+                } else {
+                    router.push('/dashboard');
+                }
+                return;
             }
+            toast.error('Sign in failed', {
+                description: result.error || 'Please check your credentials and try again'
+            });
         } catch (e) {
             console.error('Unexpected error:', e);
             toast.error('Sign in failed', {

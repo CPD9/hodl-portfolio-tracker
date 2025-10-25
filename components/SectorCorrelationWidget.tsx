@@ -81,6 +81,31 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
               }`}
             >
               <div className="flex items-center flex-1 space-x-3">
+                {/* Correlation meter (pretty, crypto-style) */}
+                {(() => {
+                  const corr = typeof crypto.correlation === 'number'
+                    ? Math.max(0, Math.min(1, crypto.correlation))
+                    : null;
+                  const perc = corr != null ? Math.round(corr * 100) : null;
+                  const strengthClass = corr == null
+                    ? 'bg-slate-500/40'
+                    : corr >= 0.75
+                      ? 'bg-green-500/60'
+                      : corr >= 0.5
+                        ? 'bg-yellow-500/60'
+                        : 'bg-slate-500/50';
+                  return (
+                    <div className="relative h-5 min-w-[54px] rounded-full border border-gray-600/60 overflow-hidden bg-gray-900">
+                      <div
+                        className={`absolute left-0 top-0 bottom-0 ${strengthClass}`}
+                        style={{ width: perc != null ? `${perc}%` : '0%' }}
+                      />
+                      <div className="relative z-10 flex h-full items-center justify-center text-[11px] font-medium text-gray-100">
+                        {perc != null ? `${perc}%` : '—'}
+                      </div>
+                    </div>
+                  );
+                })()}
                 {/* Checkbox */}
                 <input
                   type="checkbox"
@@ -91,7 +116,7 @@ const SectorCorrelationWidget: React.FC<SectorCorrelationWidgetProps> = ({
                 />
                 
                 <Link 
-                  href={`/crypto/${crypto.symbol}`}
+                  href={`/dashboard/crypto/${crypto.symbol}`}
                   className="flex-1 hover:opacity-80 transition-opacity"
                 >
                   <div className="flex items-center space-x-2">
