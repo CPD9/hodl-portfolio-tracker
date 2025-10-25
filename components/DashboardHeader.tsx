@@ -8,6 +8,7 @@ import PixelCharacter from '@/components/PixelCharacter'
 import NavItems from '@/components/NavItems'
 import OnchainWalletConnect from '@/components/OnchainWalletConnect'
 import UserDropdown from '@/components/UserDropdown'
+import { signOutAction } from '@/lib/actions/auth.actions'
 
 type Props = {
   user: User
@@ -48,6 +49,10 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
     const menu = document.getElementById('dashboardMobileMenu')
     if (!menu) return
     menu.classList.toggle('hidden')
+  }
+
+  const handleLogout = async () => {
+    await signOutAction()
   }
 
   return (
@@ -104,11 +109,29 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
           <i className='bx bx-x'></i>
         </button>
         <div className="mx-auto w-full max-w-sm max-h-[70vh] rounded-xl bg-gray-900/90 border border-gray-800 p-4 shadow-xl shadow-black/40 flex flex-col">
+          {/* Account Icon at Top */}
+          <div className="flex justify-center mb-3 pb-3 border-b border-gray-800">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600">
+              <i className='bx bx-user text-2xl text-black'></i>
+            </div>
+          </div>
+          
           <nav className="mt-0 flex-1 overflow-y-auto scrollbar-black flex flex-col gap-1 items-stretch text-center">
             <NavItems initialStocks={initialStocks} vertical onNavigate={toggleMobileMenu} />
           </nav>
           <div className="mt-4 border-t border-gray-800 pt-3 flex justify-center">
             <OnchainWalletConnect />
+          </div>
+          
+          {/* Logout Button at Bottom */}
+          <div className="mt-3 border-t border-gray-800 pt-3">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 p-3 rounded-lg bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 transition-all text-black font-semibold"
+            >
+              <i className='bx bx-log-out text-xl'></i>
+              <span>Log Out</span>
+            </button>
           </div>
         </div>
       </div>
