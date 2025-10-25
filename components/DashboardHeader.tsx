@@ -8,7 +8,7 @@ import PixelCharacter from '@/components/PixelCharacter'
 import NavItems from '@/components/NavItems'
 import OnchainWalletConnect from '@/components/OnchainWalletConnect'
 import UserDropdown from '@/components/UserDropdown'
-import { signOutAction } from '@/lib/actions/auth.actions'
+import { signOut } from '@/lib/actions/auth.actions'
 
 type Props = {
   user: User
@@ -52,7 +52,7 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
   }
 
   const handleLogout = async () => {
-    await signOutAction()
+    await signOut()
   }
 
   return (
@@ -111,8 +111,8 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
         <div className="mx-auto w-full max-w-sm max-h-[70vh] rounded-xl bg-gray-900/90 border border-gray-800 p-4 shadow-xl shadow-black/40 flex flex-col">
           {/* Account Icon at Top */}
           <div className="flex justify-center mb-3 pb-3 border-b border-gray-800">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600">
-              <i className='bx bx-user text-2xl text-black'></i>
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-500 text-yellow-900 text-xl font-bold">
+              {user.name[0].toUpperCase()}
             </div>
           </div>
           

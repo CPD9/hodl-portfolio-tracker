@@ -13,7 +13,9 @@ const Layout = async ({ children }: { children : React.ReactNode }) => {
         <main className="auth-layout">
             <section className="auth-left-section scrollbar-hide-default">
                 <Link href="/" className="auth-logo">
-                    <Image src="/assets/icons/logo.svg" alt="HODL logo" width={140} height={32} className='h-8 w-auto' />
+                    <h1 className="text-2xl md:text-3xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent whitespace-nowrap">
+                        HODL
+                    </h1>
                 </Link>
 
                 <div className="pb-6 lg:pb-8 flex-1">{children}</div>
