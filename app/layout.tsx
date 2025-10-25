@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import type { Metadata } from "next";
 import { OnchainProviders } from "@/components/OnchainProviders";
+import { FarcasterProvider } from "@/components/FarcasterProvider";
 import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
@@ -57,10 +58,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <OnchainProviders>
-          {children}
-          <Toaster />
-        </OnchainProviders>
+        <FarcasterProvider>
+          <OnchainProviders>
+            {children}
+            <Toaster />
+          </OnchainProviders>
+        </FarcasterProvider>
       </body>
     </html>
   );
