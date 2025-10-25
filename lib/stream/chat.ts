@@ -2,16 +2,24 @@ import "server-only";
 
 import { StreamChat } from "stream-chat";
 
-if (!process.env.STREAM_CHAT_API_KEY) {
-  throw new Error("STREAM_CHAT_API_KEY is not set");
-}
+let cachedChat: StreamChat | null = null;
 
-if (!process.env.STREAM_CHAT_SECRET_KEY) {
-  throw new Error("STREAM_CHAT_SECRET_KEY is not set");
-}
+/**
+ * Lazily initialize the Stream Chat client to avoid import-time env throws
+ * during static analysis/build on platforms like Vercel. We only validate
+ * required environment variables at the moment of first use.
+ */
+export function getStreamChat(): StreamChat {
+  if (cachedChat) return cachedChat;
 
-export const streamChat = StreamChat.getInstance(
-  process.env.STREAM_CHAT_API_KEY,
-  process.env.STREAM_CHAT_SECRET_KEY
-);
+  const apiKey = process.env.STREAM_CHAT_API_KEY;
+  const secret = process.env.STREAM_CHAT_SECRET_KEY;
+
+  if (!apiKey || !secret) {
+    throw new Error("Stream Chat environment variables missing: require STREAM_CHAT_API_KEY and STREAM_CHAT_SECRET_KEY");
+  }
+
+  cachedChat = StreamChat.getInstance(apiKey, secret);
+  return cachedChat;
+}
 
