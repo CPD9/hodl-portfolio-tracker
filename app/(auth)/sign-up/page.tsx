@@ -41,8 +41,12 @@ const SignUp = () => {
                 toast.success('Account created successfully!', {
                     description: 'Welcome to HODL Portfolio Tracker'
                 });
-                // Force a full page reload to ensure session cookie is loaded
-                window.location.href = '/dashboard';
+                // Force a full reload to ensure auth cookies are available immediately
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/dashboard';
+                } else {
+                    router.push('/dashboard');
+                }
             } else {
                 toast.error('Sign up failed', {
                     description: result.error || 'Failed to create an account. Please try again.'
