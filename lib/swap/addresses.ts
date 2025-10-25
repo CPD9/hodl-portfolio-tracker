@@ -1,9 +1,12 @@
 import { base, baseSepolia } from 'wagmi/chains';
 
+// Native ETH sentinel address used in swap operations
+export const NATIVE_ETH = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' as const;
+
 // Uniswap Universal Router deployments (sourced from Uniswap/universal-router deploy-addresses)
 // Base mainnet and Base Sepolia testnet
 export const UNIVERSAL_ROUTER: Record<number, string> = {
-  [base.id]: '0x6ff5693b99212da76ad316178a184ab56d299b43', // UniversalRouterV2 on Base
+  [base.id]: '0x198EF79F1F515F02dFE9e3115eD9fC07183f02fC', // UniversalRouterV2 on Base
   [baseSepolia.id]: '0x95273d871c8156636e114b63797d78D7E1720d81', // UniversalRouterV2 on Base Sepolia
 };
 

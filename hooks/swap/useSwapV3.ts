@@ -1,6 +1,7 @@
 import { Address } from 'viem';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import swapRouterAbi from '@/lib/swap/abis/swapRouter.json';
+import { NATIVE_ETH } from '@/lib/swap/addresses';
 
 export type SwapV3Params = {
   routerAddress?: Address; // If not provided, will try env var
@@ -27,11 +28,15 @@ export function useSwapV3() {
     if (!router) throw new Error('Swap Router address not configured');
     if (!address) throw new Error('Wallet not connected');
 
+    // Check if swapping native ETH - if so, send ETH as msg.value
+    const isNativeETH = params.tokenIn.toLowerCase() === NATIVE_ETH.toLowerCase();
+    const txValue = isNativeETH ? params.amountIn : 0n;
+
     writeContract({
       address: router,
-      abi: swapRouterAbi as any,
+      abi: swapRouterAbi,
       functionName: 'exactInputSingle',
-      value: 0n,
+      value: txValue,
       args: [
         {
           tokenIn: params.tokenIn,

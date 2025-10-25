@@ -228,16 +228,6 @@ export function StockCryptoSwap() {
 
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
-      {(!process.env.NEXT_PUBLIC_UNISWAP_V3_QUOTER_ADDRESS) && (
-        <div className="mb-3 p-3 text-xs rounded-md border border-yellow-600/40 bg-yellow-500/10 text-yellow-300">
-          Set NEXT_PUBLIC_UNISWAP_V3_QUOTER_ADDRESS to show on-chain quotes. Falling back to estimated prices.
-        </div>
-      )}
-      {(!getSwapRouterFromEnv()) && (
-        <div className="mb-3 p-3 text-xs rounded-md border border-red-600/40 bg-red-500/10 text-red-300">
-          Set NEXT_PUBLIC_UNISWAP_V3_SWAP_ROUTER_ADDRESS to enable on-chain swaps via Uniswap V3.
-        </div>
-      )}
       {(!isSupportedChain) && (
         <div className="mb-3 p-3 text-xs rounded-md border border-blue-600/40 bg-blue-500/10 text-blue-300">
           Please switch your wallet network to Base or Base Sepolia to swap.
