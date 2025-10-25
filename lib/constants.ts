@@ -359,16 +359,16 @@ export const POPULAR_STOCK_SYMBOLS = [
 ];
 
 export const POPULAR_CRYPTO_SYMBOLS = [
-    'bitcoin',           // #1 - BTC
-    'ethereum',          // #2 - ETH
-    'tether',            // #3 - USDT
-    'binancecoin',       // #4 - BNB
-    'solana',            // #5 - SOL
-    'usd-coin',          // #6 - USDC
-    'ripple',            // #7 - XRP
-    'dogecoin',          // #8 - DOGE
-    'cardano',           // #9 - ADA
-    'tron',              // #10 - TRX
+    'BTC',   // Bitcoin
+    'ETH',   // Ethereum
+    'USDT',  // Tether
+    'BNB',   // BNB
+    'SOL',   // Solana
+    'USDC',  // USD Coin
+    'XRP',   // XRP
+    'DOGE',  // Dogecoin
+    'ADA',   // Cardano
+    'TRX',   // TRON
 ];
 
 export const NO_MARKET_NEWS =

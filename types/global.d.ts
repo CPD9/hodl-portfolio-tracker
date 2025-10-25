@@ -70,7 +70,7 @@ declare global {
     type User = {
         id: string;
         name: string;
-        email: string;
+        email?: string; // Optional - not passed to client components for privacy
     };
 
     type Stock = {

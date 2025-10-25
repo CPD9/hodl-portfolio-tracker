@@ -4,7 +4,7 @@ import 'aos/dist/aos.css'
 
 // @ts-ignore - AOS types not available
 import AOS from 'aos'
-import { useEffect, Suspense } from 'react'
+import { useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 // Eagerly load critical above-the-fold components

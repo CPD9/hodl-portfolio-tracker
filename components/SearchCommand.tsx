@@ -111,6 +111,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
         {/* Tabs for Stocks and Crypto */}
         <div className="flex border-b border-gray-700 px-4" role="tablist" aria-label="Search tabs">
           <button
+            id="stocks-tab"
             role="tab"
             aria-selected={activeTab === 'stocks'}
             aria-controls="stocks-panel"
@@ -125,6 +126,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
             Stocks
           </button>
           <button
+            id="crypto-tab"
             role="tab"
             aria-selected={activeTab === 'crypto'}
             aria-controls="crypto-panel"

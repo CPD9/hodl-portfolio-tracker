@@ -23,17 +23,12 @@ const AITradingCompanion: React.FC = () => {
     investmentHorizon: 'MEDIUM'
   });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [selectedSignal, setSelectedSignal] = useState<TradingSignal | null>(null);
-  const [randomValues, setRandomValues] = useState<{rsi: number, ma: number}>({rsi: 0, ma: 0});
   const [isMounted, setIsMounted] = useState(false);
 
-  // Set mounted flag and generate random values on client only
+  // Set mounted flag on client only
   useEffect(() => {
     setIsMounted(true);
-    setRandomValues({
-      rsi: Math.random() * 40 + 30,
-      ma: Math.random() * 0.1
-    });
+    // TODO: Fetch real technical indicator data (RSI, MA) from market data API
   }, []);
 
   // Real AI analysis using the AI trading engine
@@ -218,19 +213,21 @@ const AITradingCompanion: React.FC = () => {
                 <p className="text-xs md:text-sm text-gray-200 italic">"{signal.aiInsights}"</p>
               </div>
 
-              {/* Technical Indicators */}
+              {/* Technical Indicators - DEMO DATA */}
               <div className="mb-3 grid grid-cols-3 gap-2">
-                <div className="bg-gray-800 rounded p-2 text-center">
+                <div className="bg-gray-800 rounded p-2 text-center relative">
+                  <span className="absolute top-1 right-1 text-[8px] text-yellow-500 font-bold">DEMO</span>
                   <p className="text-xs text-gray-400 mb-1">RSI (14)</p>
-                  <p className="text-sm font-bold text-blue-400">{isMounted ? randomValues.rsi.toFixed(1) : '—'}</p>
+                  <p className="text-sm font-bold text-blue-400">—</p>
                 </div>
                 <div className="bg-gray-800 rounded p-2 text-center">
                   <p className="text-xs text-gray-400 mb-1">MACD</p>
                   <p className="text-sm font-bold text-green-400">{signal.action === 'BUY' ? '↑ Bullish' : signal.action === 'SELL' ? '↓ Bearish' : '→ Neutral'}</p>
                 </div>
-                <div className="bg-gray-800 rounded p-2 text-center">
+                <div className="bg-gray-800 rounded p-2 text-center relative">
+                  <span className="absolute top-1 right-1 text-[8px] text-yellow-500 font-bold">DEMO</span>
                   <p className="text-xs text-gray-400 mb-1">MA (50)</p>
-                  <p className="text-sm font-bold text-purple-400">{isMounted ? `$${(Number(signal.currentPrice) * (0.95 + randomValues.ma)).toFixed(2)}` : '—'}</p>
+                  <p className="text-sm font-bold text-purple-400">—</p>
                 </div>
               </div>
 
