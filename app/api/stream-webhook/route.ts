@@ -11,10 +11,10 @@ import AIAdvisor from '@/database/models/ai-advisor.model';
 import Consultation from '@/database/models/consultation.model';
 import { connectToDatabase } from '@/database/mongoose';
 import { inngest } from '@/lib/inngest/client';
-import { getStreamVideo } from '@/lib/stream/video';
+import { streamVideo } from '@/lib/stream/video';
 
 function verifySignature(body: string, signature: string): boolean {
-  return getStreamVideo().verifyWebhook(body, signature);
+  return streamVideo.verifyWebhook(body, signature);
 }
 
 export async function POST(req: NextRequest) {
@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
 
     // Connect OpenAI Realtime API to the call
     try {
-  const call = getStreamVideo().video.call('default', consultationId);
-  const realtimeClient = await getStreamVideo().video.connectOpenAi({
+  const call = streamVideo.video.call('default', consultationId);
+  const realtimeClient = await streamVideo.video.connectOpenAi({
         call,
         openAiApiKey: process.env.OPENAI_API_KEY!,
         agentUserId: advisor._id.toString(),
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-  const call = getStreamVideo().video.call('default', consultationId);
+  const call = streamVideo.video.call('default', consultationId);
       await call.end();
       console.log(`Call ended for consultation ${consultationId}`);
     } catch (error) {
