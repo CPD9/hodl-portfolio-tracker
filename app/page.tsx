@@ -28,6 +28,9 @@ const CompetitiveLandscapeSection = dynamic(() => import('@/components/landing/C
 const TransparencySection = dynamic(() => import('@/components/landing/TransparencySection'), {
   loading: () => <div className="min-h-screen" />,
 })
+const ProofOfReservesSection = dynamic(() => import('@/components/landing/ProofOfReservesSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
 const FeaturesSection = dynamic(() => import('@/components/landing/FeaturesSection'), {
   loading: () => <div className="min-h-screen" />,
 })
@@ -95,6 +98,11 @@ export default function LandingPage() {
       {/* Transparency Section */}
       <div data-aos="fade-up">
         <TransparencySection />
+      </div>
+      
+      {/* Proof of Reserves Section */}
+      <div data-aos="fade-up">
+        <ProofOfReservesSection />
       </div>
       
       {/* Features Section */}
