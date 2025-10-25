@@ -1,0 +1,33 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "baseBuilder": {
+    "ownerAddress": "0x55345C8B7F6Fcd3b7366bE7A941C02e2003B2F52"
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "HODL Portfolio Tracker",
+    "homeUrl": "https://hodl-portfolio-tracker.vercel.app",
+    "iconUrl": "https://hodl-portfolio-tracker.vercel.app/icon-512x512.png",
+    "splashImageUrl": "https://hodl-portfolio-tracker.vercel.app/splash-200x200.png",
+    "splashBackgroundColor": "#000000",
+    "subtitle": "AI-powered portfolio tracker",
+    "description": "Track stocks & crypto with AI insights, real-time alerts, and Base blockchain integration. Built for smart investors.",
+    "screenshotUrls": [
+      "https://hodl-portfolio-tracker.vercel.app/screenshot-1.png",
+      "https://hodl-portfolio-tracker.vercel.app/screenshot-2.png",
+      "https://hodl-portfolio-tracker.vercel.app/screenshot-3.png"
+    ],
+    "primaryCategory": "finance",
+    "tags": ["finance", "crypto", "stocks", "portfolio", "base"],
+    "heroImageUrl": "https://hodl-portfolio-tracker.vercel.app/hero-1200x630.png",
+    "tagline": "Smart investing, simplified",
+    "ogTitle": "HODL Portfolio Tracker",
+    "ogDescription": "AI-powered stock & crypto tracker with Base. Track portfolios and get personalized alerts.",
+    "ogImageUrl": "https://hodl-portfolio-tracker.vercel.app/og-1200x630.png",
+    "noindex": false
+  }
+}

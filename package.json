@@ -10,7 +10,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test:db": "node scripts/test-db.mjs"
+    "test:db": "node scripts/test-db.mjs",
+    "validate:farcaster": "node scripts/validate-farcaster-manifest.js"
   },
   "dependencies": {
     "@coinbase/onchainkit": "^1.1.1",
