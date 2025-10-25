@@ -29,7 +29,7 @@ const SignIn = () => {
         try {
             const result = await signInWithEmail(data);
             
-            if(result.success) {
+            if (result.success) {
                 toast.success('Welcome back!', {
                     description: 'Successfully signed in to your account'
                 });
@@ -39,11 +39,11 @@ const SignIn = () => {
                 } else {
                     router.push('/dashboard');
                 }
-            } else {
-                toast.error('Sign in failed', {
-                    description: result.error || 'Please check your credentials and try again'
-                });
+                return;
             }
+            toast.error('Sign in failed', {
+                description: result.error || 'Please check your credentials and try again'
+            });
         } catch (e) {
             console.error('Unexpected error:', e);
             toast.error('Sign in failed', {
