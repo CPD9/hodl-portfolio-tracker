@@ -67,7 +67,7 @@ export default function NewConsultationDialog({
         toast.success('Consultation created successfully!');
         onOpenChange(false);
         form.reset();
-  router.push(`/dashboard/call/${consultation._id}`);
+        router.push(`/consultation/${consultation._id}`);
         router.refresh();
       } catch (error: any) {
         toast.error(error.message || 'Failed to create consultation');

@@ -1,4 +1,4 @@
-// Client-safe chat actions. Do not mark this file as 'use server'.
+'use server';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -20,7 +20,7 @@ export async function sendChatMessage(
   userContext?: string | null
 ): Promise<ChatMessage | null> {
   try {
-    const response = await fetch(`/api/chat`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,12 +35,7 @@ export async function sendChatMessage(
     });
 
     if (!response.ok) {
-      let details: string | undefined;
-      try {
-        const err = await response.json();
-        details = err?.details || err?.error;
-      } catch {}
-      throw new Error(`Failed to send message (HTTP ${response.status} ${response.statusText})${details ? `: ${details}` : ''}`);
+      throw new Error('Failed to send message');
     }
 
     const data = await response.json();

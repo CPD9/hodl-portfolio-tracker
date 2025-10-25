@@ -29,7 +29,6 @@ export default function VideoCallProvider({
   const { data: session } = auth.useSession();
   const [client, setClient] = useState<StreamVideoClient>();
   const [call, setCall] = useState<Call>();
-  const videoApiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
 
   // Generate token mutation
   const generateToken = useMutation({
@@ -42,11 +41,10 @@ export default function VideoCallProvider({
   // Initialize Stream Video client
   useEffect(() => {
     if (!session?.user) return;
-    if (!videoApiKey) return; // do not init when not configured
 
     const initClient = async () => {
       const _client = new StreamVideoClient({
-        apiKey: videoApiKey!,
+        apiKey: process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY!,
         user: {
           id: session.user.id,
           name: session.user.name,
@@ -87,19 +85,6 @@ export default function VideoCallProvider({
       }
     };
   }, [client, consultationId]);
-
-  if (!videoApiKey) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-900">
-        <div className="max-w-md text-center">
-          <p className="text-gray-200 text-lg font-semibold mb-2">Video calling is disabled</p>
-          <p className="text-gray-400 text-sm">
-            This environment is missing Stream Video keys. You can still create and view consultations, but joining calls requires configuring NEXT_PUBLIC_STREAM_VIDEO_API_KEY and STREAM_VIDEO_SECRET_KEY.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (!client || !call || !session) {
     return (

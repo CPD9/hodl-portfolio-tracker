@@ -311,43 +311,6 @@ export async function findCorrelatedCryptos(
 }
 
 /**
- * Variant that also returns a normalized correlation value (0..1) derived from the internal score (0..100).
- * Keeps existing algorithm logic but exposes scores for UI display.
- */
-export async function findCorrelatedCryptosWithScores(
-  stockSymbol: string,
-  stockIndustry?: string,
-  stockMarketCap?: number,
-  limit: number = 10
-): Promise<Array<{ symbol: string; correlation: number }>> {
-  try {
-    const relevantCategories = getRelevantCryptoCategories(stockIndustry);
-    const candidates = getCryptoCandidates(relevantCategories);
-    const relevantCryptos = filterByMarketCapRelevance(candidates);
-    const scored = await scoreCryptos(
-      relevantCryptos,
-      stockSymbol,
-      stockIndustry,
-      stockMarketCap
-    );
-    const top = scored
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-  .map((c) => ({ symbol: c.symbol, correlation: Math.max(0, Math.min(1, c.score / 100)) }));
-    return top;
-  } catch (error) {
-    console.error('Error finding correlated cryptos with scores:', error);
-    return [
-      { symbol: 'BTC', correlation: 0.5 },
-      { symbol: 'ETH', correlation: 0.5 },
-      { symbol: 'SOL', correlation: 0.5 },
-      { symbol: 'AVAX', correlation: 0.5 },
-      { symbol: 'MATIC', correlation: 0.5 },
-    ].slice(0, limit);
-  }
-}
-
-/**
  * Determine relevant crypto categories based on stock industry
  * Uses SMART FUZZY MATCHING for better coverage
  */

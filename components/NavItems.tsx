@@ -5,7 +5,7 @@ import {NAV_ITEMS} from "@/lib/constants";
 import SearchCommand from "@/components/SearchCommand";
 import {usePathname} from "next/navigation";
 
-const NavItems = ({initialStocks, vertical = false, onNavigate, dense = false}: { initialStocks: StockWithWatchlistStatus[], vertical?: boolean, onNavigate?: () => void, dense?: boolean }) => {
+const NavItems = ({initialStocks, vertical = false, onNavigate}: { initialStocks: StockWithWatchlistStatus[], vertical?: boolean, onNavigate?: () => void }) => {
     const pathname = usePathname()
 
     const isActive = (path: string) => {
@@ -15,17 +15,15 @@ const NavItems = ({initialStocks, vertical = false, onNavigate, dense = false}: 
     }
 
     return (
-        <ul className={`flex ${vertical ? 'flex-col' : 'flex-col sm:flex-row'} p-2 gap-3 ${vertical ? 'gap-3' : (dense ? 'sm:gap-5' : 'sm:gap-10')} font-medium ${dense ? 'text-sm' : ''}`}>
+        <ul className={`flex ${vertical ? 'flex-col' : 'flex-col sm:flex-row'} p-2 gap-3 ${vertical ? 'gap-3' : 'sm:gap-10'} font-medium`}>
             {NAV_ITEMS.map(({ href, label }) => {
                 if(href === '/search') return (
-                    <li key="search-trigger" className={vertical ? 'w-full' : ''}>
-                        <span className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500/70' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-400 sm:hover:text-yellow-500 transition-colors cursor-pointer`}>
-                            <SearchCommand
-                                renderAs="text"
-                                label="Search"
-                                initialStocks={initialStocks}
-                            />
-                        </span>
+                    <li key="search-trigger">
+                        <SearchCommand
+                            renderAs="text"
+                            label="Search"
+                            initialStocks={initialStocks}
+                        />
                     </li>
                 )
 
@@ -33,7 +31,7 @@ const NavItems = ({initialStocks, vertical = false, onNavigate, dense = false}: 
                     <Link 
                         href={href}
                         onClick={onNavigate}
-                        className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500/70' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-400 sm:hover:text-yellow-500 transition-colors ${
+                        className={`${vertical ? 'block py-2 px-2 rounded hover:bg-gray-700' : ''} hover:text-yellow-500 transition-colors ${
                             isActive(href) ? 'text-gray-100' : ''
                         }`}
                     >

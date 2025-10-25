@@ -56,10 +56,10 @@ export default function ConsultationsTable({
   }
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg border border-gray-700/50 overflow-hidden">
+    <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="border-gray-700/50">
+          <TableRow className="border-gray-700">
             <TableHead className="text-gray-400">Consultation</TableHead>
             <TableHead className="text-gray-400">Advisor</TableHead>
             <TableHead className="text-gray-400">Status</TableHead>
@@ -72,7 +72,7 @@ export default function ConsultationsTable({
           {consultations.map((consultation) => (
             <TableRow
               key={consultation._id}
-              className="border-gray-700/50 hover:bg-gray-700/30 transition"
+              className="border-gray-700 hover:bg-gray-750 transition"
             >
               <TableCell className="font-medium text-gray-100">
                 {consultation.name}
@@ -132,7 +132,7 @@ export default function ConsultationsTable({
                     size="sm"
                     className="bg-yellow-500 hover:bg-yellow-600 text-black"
                   >
-                    <Link href={`/dashboard/call/${consultation._id}`}>
+                    <Link href={`/call/${consultation._id}`}>
                       <Video className="w-4 h-4 mr-2" />
                       Join
                     </Link>
@@ -145,7 +145,7 @@ export default function ConsultationsTable({
                     variant="ghost"
                     className="text-gray-400"
                   >
-                    <Link href={`/dashboard/consultation/${consultation._id}`}>
+                    <Link href={`/consultation/${consultation._id}`}>
                       View Details
                     </Link>
                   </Button>

@@ -3,11 +3,11 @@ import { headers } from "next/headers";
 import CryptoDetailsClient from "./CryptoDetailsClient";
 
 interface CryptoDetailsPageProps {
-  params: { symbol: string };
+  params: Promise<{ symbol: string }>;
 }
 
 export default async function CryptoDetails({ params }: CryptoDetailsPageProps) {
-  const { symbol } = params;
+  const { symbol } = await params;
 
   // Get user session
   const session = await auth.api.getSession({ headers: await headers() });

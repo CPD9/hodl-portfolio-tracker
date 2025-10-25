@@ -78,11 +78,11 @@ const CryptoHeatmap: React.FC = () => {
   };
 
   const getSizeClass = (marketCap: number) => {
-    if (marketCap > 100000000000) return 'min-w-[120px] min-h-[120px] text-sm'; // > $100B
-    if (marketCap > 10000000000) return 'min-w-[100px] min-h-[100px] text-xs'; // > $10B
-    if (marketCap > 1000000000) return 'min-w-[85px] min-h-[85px] text-xs'; // > $1B
-    if (marketCap > 100000000) return 'min-w-[70px] min-h-[70px] text-[10px]'; // > $100M
-    return 'min-w-[60px] min-h-[60px] text-[9px]'; // < $100M
+    if (marketCap > 100000000000) return 'w-24 h-24 text-lg'; // > $100B
+    if (marketCap > 10000000000) return 'w-20 h-20 text-base'; // > $10B
+    if (marketCap > 1000000000) return 'w-16 h-16 text-sm'; // > $1B
+    if (marketCap > 100000000) return 'w-12 h-12 text-xs'; // > $100M
+    return 'w-10 h-10 text-xs'; // < $100M
   };
 
   const formatPrice = (price: number) => {
@@ -180,22 +180,22 @@ const CryptoHeatmap: React.FC = () => {
                 {category} ({categoryCryptos.length})
               </h4>
               
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
                 {categoryCryptos.map((crypto) => (
                   <div
                     key={crypto.symbol}
-                    className={`${getSizeClass(crypto.marketCap)} ${getChangeColor(crypto.changePercent24h)} rounded-lg border-2 flex flex-col items-center justify-center p-3 hover:scale-105 transition-transform cursor-pointer group relative`}
+                    className={`${getSizeClass(crypto.marketCap)} ${getChangeColor(crypto.changePercent24h)} rounded-lg border-2 flex flex-col items-center justify-center p-2 hover:scale-105 transition-transform cursor-pointer group`}
                   >
-                    <div className="text-center w-full overflow-hidden">
-                      <div className="font-bold mb-1 truncate">{crypto.symbol}</div>
-                      <div className="opacity-80 truncate leading-tight">{formatPrice(crypto.price)}</div>
-                      <div className="font-semibold mt-1 truncate">
+                    <div className="text-center">
+                      <div className="font-bold text-xs mb-1">{crypto.symbol}</div>
+                      <div className="text-xs opacity-80">{formatPrice(crypto.price)}</div>
+                      <div className="text-xs font-semibold">
                         {crypto.changePercent24h >= 0 ? '+' : ''}{crypto.changePercent24h.toFixed(1)}%
                       </div>
                     </div>
                     
                     {/* Hover Tooltip */}
-                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none shadow-lg border border-gray-700">
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
                       <div className="font-semibold">{crypto.name}</div>
                       <div>Price: {formatPrice(crypto.price)}</div>
                       <div>24h: {crypto.changePercent24h >= 0 ? '+' : ''}{crypto.changePercent24h.toFixed(2)}%</div>

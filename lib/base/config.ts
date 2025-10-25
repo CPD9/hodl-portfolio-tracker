@@ -14,7 +14,7 @@ export const BASE_CONFIG = {
       decimals: 18,
     },
   },
-
+  
   // Base Sepolia Testnet
   TESTNET: {
     chainId: 84532,

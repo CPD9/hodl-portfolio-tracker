@@ -194,8 +194,6 @@ declare global {
         change24h: number;
         marketCap: number;
         sector: string;
-        // Normalized (0..1) correlation score between the stock and this crypto
-        correlation?: number;
     };
 
     type SectorCorrelationProps = {
@@ -318,6 +316,3 @@ declare global {
 }
 
 export {};
-
-// Module declarations for libraries without TypeScript types
-declare module 'aos';

@@ -1,6 +1,6 @@
 'use server';
 
-import { findCorrelatedCryptos, findCorrelatedCryptosWithScores, getStockIndustry } from '@/lib/services/crypto-correlation-algorithm';
+import { findCorrelatedCryptos, getStockIndustry } from '@/lib/services/crypto-correlation-algorithm';
 import { getMultipleCryptoData } from './coingecko.actions';
 import { getCryptoName } from '@/lib/services/sector-correlation';
 
@@ -14,14 +14,14 @@ export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
     const industry = await getStockIndustry(stockSymbol);
     
     // Step 2: Use AI algorithm to find correlated cryptos
-    const correlated = await findCorrelatedCryptosWithScores(
+    const correlatedSymbols = await findCorrelatedCryptos(
       stockSymbol,
       industry,
-      undefined,
-      10
+      undefined, // Market cap could be fetched from Finnhub in production
+      10 // Limit to 10 cryptos
     );
 
-    if (!correlated || correlated.length === 0) {
+    if (!correlatedSymbols || correlatedSymbols.length === 0) {
       return {
         sector: industry || null,
         sectorDescription: industry ? `${industry} sector` : 'No industry mapping found',
@@ -30,16 +30,12 @@ export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
     }
 
     // Step 3: Fetch market data for all correlated cryptos
-    const symbols = correlated.map((c) => c.symbol);
-    const cryptos = await getMultipleCryptoData(symbols);
+    const cryptos = await getMultipleCryptoData(correlatedSymbols);
 
     // Step 4: Fill in any missing data with fallback
-    const result = symbols.map(symbol => {
+    const result = correlatedSymbols.map(symbol => {
       const existingData = cryptos.find(c => c.symbol === symbol);
-      if (existingData) {
-        const corr = correlated.find((c) => c.symbol === symbol)?.correlation ?? 0;
-        return { ...existingData, correlation: corr } as CorrelatedCrypto;
-      }
+      if (existingData) return existingData;
 
       // Fallback if API fails
       return {
@@ -49,7 +45,6 @@ export async function getCorrelatedCrypto(stockSymbol: string): Promise<{
         change24h: 0,
         marketCap: 0,
         sector: industry || 'Technology',
-        correlation: correlated.find((c) => c.symbol === symbol)?.correlation ?? 0,
       };
     });
 
