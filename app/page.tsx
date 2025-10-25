@@ -4,16 +4,45 @@ import 'aos/dist/aos.css'
 
 // @ts-ignore - AOS types not available
 import AOS from 'aos'
-import ChallengesSection from '@/components/landing/ChallengesSection'
-import FeaturesSection from '@/components/landing/FeaturesSection'
-import HeroSection from '@/components/landing/HeroSection'
-import HowItWorksSection from '@/components/landing/HowItWorksSection'
-import LandingFooter from '@/components/landing/LandingFooter'
-import LandingHeader from '@/components/landing/LandingHeader'
-import StatsSection from '@/components/landing/StatsSection'
-import TransparencySection from '@/components/landing/TransparencySection'
-import WhyHODLSection from '@/components/landing/WhyHODLSection'
 import { useEffect } from 'react'
+import dynamic from 'next/dynamic'
+
+// Eagerly load critical above-the-fold components
+import LandingHeader from '@/components/landing/LandingHeader'
+import HeroSection from '@/components/landing/HeroSection'
+import WhyHODLSection from '@/components/landing/WhyHODLSection'
+
+// Lazy load below-the-fold components to reduce initial bundle
+const HowItWorksSection = dynamic(() => import('@/components/landing/HowItWorksSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const MarketOpportunitySection = dynamic(() => import('@/components/landing/MarketOpportunitySection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const BusinessModelSection = dynamic(() => import('@/components/landing/BusinessModelSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const CompetitiveLandscapeSection = dynamic(() => import('@/components/landing/CompetitiveLandscapeSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const TransparencySection = dynamic(() => import('@/components/landing/TransparencySection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const ProofOfReservesSection = dynamic(() => import('@/components/landing/ProofOfReservesSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const FeaturesSection = dynamic(() => import('@/components/landing/FeaturesSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const StatsSection = dynamic(() => import('@/components/landing/StatsSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const ChallengesSection = dynamic(() => import('@/components/landing/ChallengesSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
+const LandingFooter = dynamic(() => import('@/components/landing/LandingFooter'), {
+  loading: () => <div className="min-h-[400px]" />,
+})
 
 export default function LandingPage() {
   useEffect(() => {
@@ -33,6 +62,8 @@ export default function LandingPage() {
       
       {/* Header - No AOS animation for fixed header */}
       <LandingHeader />
+      {/* Spacer to prevent header from overlapping intro content */}
+      <div aria-hidden className="h-[72px] md:h-[80px]" />
       
       {/* Hero Section */}
       <div data-aos="fade-right">
@@ -49,9 +80,29 @@ export default function LandingPage() {
         <HowItWorksSection />
       </div>
       
+      {/* Market Opportunity Section */}
+      <div data-aos="fade-up">
+        <MarketOpportunitySection />
+      </div>
+
+      {/* Competitive Landscape Section */}
+      <div data-aos="fade-up">
+        <CompetitiveLandscapeSection />
+      </div>
+
+      {/* Business Model / Pricing Section */}
+      <div data-aos="fade-up">
+        <BusinessModelSection />
+      </div>
+
       {/* Transparency Section */}
       <div data-aos="fade-up">
         <TransparencySection />
+      </div>
+      
+      {/* Proof of Reserves Section */}
+      <div data-aos="fade-up">
+        <ProofOfReservesSection />
       </div>
       
       {/* Features Section */}

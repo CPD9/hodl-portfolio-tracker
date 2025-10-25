@@ -53,7 +53,7 @@ export default async function ConsultationDetailPage({
   const consultation = await getConsultation(id, userId);
 
   if (!consultation) {
-    redirect('/consultation');
+    redirect('/dashboard/consultation');
   }
 
   const transcript =
@@ -62,7 +62,7 @@ export default async function ConsultationDetailPage({
       : [];
 
   return (
-    <div className="min-h-screen p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8 home-wrapper">
       <div className="container mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-6">
@@ -76,7 +76,7 @@ export default async function ConsultationDetailPage({
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-100 mb-2">
+              <h1 className="text-3xl font-bold text-yellow-500 mb-2">
                 {consultation.name}
               </h1>
               <div className="flex items-center space-x-4">
@@ -97,7 +97,7 @@ export default async function ConsultationDetailPage({
                 asChild
                 className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
               >
-                <Link href={`/call/${consultation._id}`}>
+                <Link href={`/dashboard/call/${consultation._id}`}>
                   <Video className="w-4 h-4 mr-2" />
                   Join Consultation
                 </Link>
@@ -108,7 +108,7 @@ export default async function ConsultationDetailPage({
 
         {/* Details Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
             <div className="flex items-center space-x-3 mb-2">
               <Calendar className="w-5 h-5 text-yellow-500" />
               <h3 className="font-semibold text-gray-100">Date & Time</h3>
@@ -121,7 +121,7 @@ export default async function ConsultationDetailPage({
           </div>
 
           {consultation.duration && (
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
               <div className="flex items-center space-x-3 mb-2">
                 <Clock className="w-5 h-5 text-yellow-500" />
                 <h3 className="font-semibold text-gray-100">Duration</h3>
@@ -136,7 +136,7 @@ export default async function ConsultationDetailPage({
           )}
 
           {consultation.advisor && (
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
               <div className="flex items-center space-x-3 mb-2">
                 <PixelCharacter variant="hero" size="sm" />
                 <h3 className="font-semibold text-gray-100">AI Advisor</h3>
@@ -151,7 +151,7 @@ export default async function ConsultationDetailPage({
 
         {/* Summary */}
         {consultation.summary && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <FileText className="w-5 h-5 text-yellow-500" />
               <h3 className="text-xl font-semibold text-gray-100">AI Summary</h3>
@@ -166,7 +166,7 @@ export default async function ConsultationDetailPage({
 
         {/* Recording */}
         {consultation.recordingUrl && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Play className="w-5 h-5 text-yellow-500" />
               <h3 className="text-xl font-semibold text-gray-100">Recording</h3>
@@ -181,7 +181,7 @@ export default async function ConsultationDetailPage({
 
         {/* Transcript */}
         {transcript.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50">
             <div className="flex items-center space-x-3 mb-4">
               <FileText className="w-5 h-5 text-yellow-500" />
               <h3 className="text-xl font-semibold text-gray-100">Transcript</h3>
@@ -222,7 +222,7 @@ export default async function ConsultationDetailPage({
 
         {/* Processing State */}
         {consultation.status === 'processing' && (
-          <div className="bg-yellow-900/20 border border-yellow-500/50 rounded-lg p-6 text-center">
+          <div className="bg-yellow-900/20 backdrop-blur-sm border border-yellow-500/50 rounded-lg p-6 text-center">
             <div className="inline-flex items-center space-x-3 text-yellow-400">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-yellow-400" />
               <span className="font-semibold">

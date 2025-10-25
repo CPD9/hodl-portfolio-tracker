@@ -78,6 +78,9 @@ const CryptoTradingInterface: React.FC<CryptoTradingInterfaceProps> = ({
           // Refresh position
           const updatedPosition = await getUserCryptoPosition(userId, symbol);
           setUserPosition(updatedPosition);
+          
+          // Trigger a custom event to notify other components (like dashboard)
+          window.dispatchEvent(new CustomEvent('portfolioUpdated'));
         } else {
           toast.error(result.message);
         }

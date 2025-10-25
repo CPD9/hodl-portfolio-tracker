@@ -12,7 +12,7 @@ export async function generateStreamVideoToken(userId: string): Promise<string> 
     const expirationTime = Math.floor(Date.now() / 1000) + 3600; // 1 hour
     const issuedAt = Math.floor(Date.now() / 1000) - 60;
 
-    const token = streamVideo.generateUserToken({
+  const token = streamVideo.generateUserToken({
       user_id: userId,
       exp: expirationTime,
       validity_in_seconds: issuedAt,
@@ -27,8 +27,8 @@ export async function generateStreamVideoToken(userId: string): Promise<string> 
 
 export async function generateStreamChatToken(userId: string): Promise<string> {
   try {
-    const token = streamChat.createToken(userId);
-    await streamChat.upsertUser({
+  const token = streamChat.createToken(userId);
+  await streamChat.upsertUser({
       id: userId,
       role: 'admin',
     });
@@ -65,7 +65,7 @@ export async function createConsultation(
     });
 
     // Create Stream video call
-    const call = streamVideo.video.call('default', consultation._id);
+  const call = streamVideo.video.call('default', consultation._id);
     await call.create({
       data: {
         created_by_id: userId,
@@ -88,7 +88,7 @@ export async function createConsultation(
     });
 
     // Upsert AI advisor as Stream user
-    await streamVideo.upsertUsers([
+  await streamVideo.upsertUsers([
       {
         id: advisor._id.toString(),
         name: advisor.name,

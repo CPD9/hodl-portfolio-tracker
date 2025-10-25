@@ -358,6 +358,19 @@ export const POPULAR_STOCK_SYMBOLS = [
     'SE',
 ];
 
+export const POPULAR_CRYPTO_SYMBOLS = [
+    'BTC',   // Bitcoin
+    'ETH',   // Ethereum
+    'USDT',  // Tether
+    'BNB',   // BNB
+    'SOL',   // Solana
+    'USDC',  // USD Coin
+    'XRP',   // XRP
+    'DOGE',  // Dogecoin
+    'ADA',   // Cardano
+    'TRX',   // TRON
+];
+
 export const NO_MARKET_NEWS =
     '<p class="mobile-text" style="margin:0 0 20px 0;font-size:16px;line-height:1.6;color:#4b5563;">No market news available today. Please check back tomorrow.</p>';
 
@@ -371,3 +384,14 @@ export const WATCHLIST_TABLE_HEADER = [
     'Alert',
     'Action',
 ];
+
+// Proof of Reserves (Hackathon Demo) – Sepolia ERC-20 token addresses for tokenized stocks
+// These are used for transparent on-chain verification in demo environments.
+export const POR_DEMO_SEPOLIA_ADDRESSES: Record<string, string> = {
+    AAPL: '0x334dFeb48aEC27fCb75249e77F546B687cC6aB94',
+    TSLA: '0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487',
+    NVDA: '0x532995D5C698a725B590550F67F9f90A00b352d8',
+    MSFT: '0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4',
+    AMZN: '0x75687E5c95e15Ba306b49869e49F017b3103AbF2',
+    GOOGL: '0x4833D6D51b64f93B6708088c90aB6E138b6A1547',
+};

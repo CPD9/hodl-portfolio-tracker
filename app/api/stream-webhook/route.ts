@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
 
     // Connect OpenAI Realtime API to the call
     try {
-      const call = streamVideo.video.call('default', consultationId);
-      const realtimeClient = await streamVideo.video.connectOpenAi({
+  const call = streamVideo.video.call('default', consultationId);
+  const realtimeClient = await streamVideo.video.connectOpenAi({
         call,
         openAiApiKey: process.env.OPENAI_API_KEY!,
         agentUserId: advisor._id.toString(),
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      const call = streamVideo.video.call('default', consultationId);
+  const call = streamVideo.video.call('default', consultationId);
       await call.end();
       console.log(`Call ended for consultation ${consultationId}`);
     } catch (error) {

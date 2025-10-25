@@ -3,6 +3,7 @@
 import { AlertTriangle, BarChart3, Brain, Clock, DollarSign, Settings, Shield, Target, TrendingDown, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { RiskProfile, TradingSignal, generateTradingSignals, getRecommendedSymbols } from '@/lib/actions/ai-trading.actions';
 
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,7 @@ import { toast } from 'sonner';
 // Types are now imported from ai-trading.actions
 
 const AITradingCompanion: React.FC = () => {
+  const router = useRouter();
   const [signals, setSignals] = useState<TradingSignal[]>([]);
   const [riskProfile, setRiskProfile] = useState<RiskProfile>({
     maxRiskPerTrade: 2,
@@ -21,7 +23,13 @@ const AITradingCompanion: React.FC = () => {
     investmentHorizon: 'MEDIUM'
   });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [selectedSignal, setSelectedSignal] = useState<TradingSignal | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Set mounted flag on client only
+  useEffect(() => {
+    setIsMounted(true);
+    // TODO: Fetch real technical indicator data (RSI, MA) from market data API
+  }, []);
 
   // Real AI analysis using the AI trading engine
   const analyzeMarket = async () => {
@@ -205,19 +213,21 @@ const AITradingCompanion: React.FC = () => {
                 <p className="text-xs md:text-sm text-gray-200 italic">"{signal.aiInsights}"</p>
               </div>
 
-              {/* Technical Indicators */}
+              {/* Technical Indicators - DEMO DATA */}
               <div className="mb-3 grid grid-cols-3 gap-2">
-                <div className="bg-gray-800 rounded p-2 text-center">
+                <div className="bg-gray-800 rounded p-2 text-center relative">
+                  <span className="absolute top-1 right-1 text-[8px] text-yellow-500 font-bold">DEMO</span>
                   <p className="text-xs text-gray-400 mb-1">RSI (14)</p>
-                  <p className="text-sm font-bold text-blue-400">{(Math.random() * 40 + 30).toFixed(1)}</p>
+                  <p className="text-sm font-bold text-blue-400">—</p>
                 </div>
                 <div className="bg-gray-800 rounded p-2 text-center">
                   <p className="text-xs text-gray-400 mb-1">MACD</p>
                   <p className="text-sm font-bold text-green-400">{signal.action === 'BUY' ? '↑ Bullish' : signal.action === 'SELL' ? '↓ Bearish' : '→ Neutral'}</p>
                 </div>
-                <div className="bg-gray-800 rounded p-2 text-center">
+                <div className="bg-gray-800 rounded p-2 text-center relative">
+                  <span className="absolute top-1 right-1 text-[8px] text-yellow-500 font-bold">DEMO</span>
                   <p className="text-xs text-gray-400 mb-1">MA (50)</p>
-                  <p className="text-sm font-bold text-purple-400">${(parseFloat(signal.currentPrice) * (0.95 + Math.random() * 0.1)).toFixed(2)}</p>
+                  <p className="text-sm font-bold text-purple-400">—</p>
                 </div>
               </div>
 
@@ -277,7 +287,7 @@ const AITradingCompanion: React.FC = () => {
                   Execute {signal.action}
                 </Button>
                 <Button
-                  onClick={() => setSelectedSignal(signal)}
+                  onClick={() => router.push(`/dashboard/stocks/${encodeURIComponent(signal.symbol)}`)}
                   variant="outline"
                   size="sm"
                   className="sm:w-auto text-sm"

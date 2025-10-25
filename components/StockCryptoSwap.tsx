@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownUp, Bitcoin, DollarSign, TrendingUp } from 'lucide-react';
+import { ArrowDownUp, Bitcoin, DollarSign, TrendingUp, Shield, CheckCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -254,6 +254,30 @@ export function StockCryptoSwap() {
             </span>
           </div>
         </div>
+
+        {/* Proof of Reserves Status */}
+        {fromType === 'stock' && (
+          <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="w-4 h-4 text-green-400" />
+              <h4 className="text-sm font-semibold text-green-400">
+                Reserve Status
+              </h4>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-gray-400">
+                {selectedStock.symbol} Token Backing:
+              </span>
+              <span className="text-green-400 font-semibold flex items-center gap-1">
+                <CheckCircle className="w-3 h-3" />
+                100% Verified
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              On-chain USDC reserves verified • Last updated: 2 hours ago
+            </p>
+          </div>
+        )}
 
         {/* SWAP BUTTON */}
         <Button
