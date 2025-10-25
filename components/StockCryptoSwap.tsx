@@ -133,7 +133,9 @@ export function StockCryptoSwap() {
     if (!amount || Number(amount) <= 0) return false;
     if (!quote.amountOut) return false;
     if (needsApproval) return false;
-    if (!getSwapRouterFromEnv()) return false;
+    // Check if router is available (env var or Universal Router)
+    const universalRouter = getUniversalRouter(chainId);
+    if (!getSwapRouterFromEnv() && !universalRouter) return false;
     return true;
   })();
 

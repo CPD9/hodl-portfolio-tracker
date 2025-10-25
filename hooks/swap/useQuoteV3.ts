@@ -58,7 +58,6 @@ export function useQuoteV3Single({ tokenIn, tokenOut, amountIn, decimalsIn, fee 
 
   useEffect(() => {
     setError(undefined);
-    if (!quoter) setError('Quoter address not configured for this chain');
     if (wagmiError) setError(wagmiError.message);
   }, [quoter, wagmiError]);
 

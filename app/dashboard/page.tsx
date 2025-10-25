@@ -10,6 +10,7 @@ import {
 import AITradingCompanion from "@/components/AITradingCompanion";
 import BaseIntegration from "@/components/BaseIntegration";
 import FearGreedIndex from "@/components/FearGreedIndex";
+import { StockCryptoSwap } from "@/components/StockCryptoSwap";
 import TradingViewWidget from "@/components/TradingViewWidget";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -387,7 +388,7 @@ const Home = () => {
                 </motion.section>
 
                 {/* AI Trading Companion Section */}
-                <motion.section 
+                <motion.section
                     {...fadeInUp}
                     className="mb-12 relative"
                 >
@@ -404,6 +405,27 @@ const Home = () => {
                     </div>
                     <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-6 border border-yellow-500/20 shadow-2xl shadow-yellow-500/10">
                         <AITradingCompanion />
+                    </div>
+                </motion.section>
+
+                {/* Stock-Crypto Swap Section */}
+                <motion.section
+                    {...fadeInUp}
+                    className="mb-12 relative"
+                >
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30">
+                            <i className='bx bx-transfer-alt text-2xl text-white'></i>
+                        </div>
+                        <div>
+                            <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                                Stock ↔ Crypto Swap
+                            </h2>
+                            <p className="text-gray-400 text-sm">Revolutionary cross-asset trading on Base blockchain</p>
+                        </div>
+                    </div>
+                    <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-6 border border-orange-500/20 shadow-2xl shadow-orange-500/10">
+                        <StockCryptoSwap />
                     </div>
                 </motion.section>
 
