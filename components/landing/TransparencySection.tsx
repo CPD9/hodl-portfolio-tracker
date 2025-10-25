@@ -8,7 +8,7 @@ const TransparencySection = () => {
       token: 'tAAPL',
       name: 'Tokenized Apple',
       amount: '1,000 shares',
-      contract: '0x1234...5678',
+      contract: '0x334dFeb48aEC27fCb75249e77F546B687cC6aB94',
       backing: '1,000 AAPL shares',
       status: 'Active'
     },
@@ -16,7 +16,7 @@ const TransparencySection = () => {
       token: 'tNVDA',
       name: 'Tokenized NVIDIA',
       amount: '500 shares',
-      contract: '0xabcd...ef01',
+      contract: '0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487',
       backing: '500 NVDA shares',
       status: 'Active'
     },
@@ -24,7 +24,7 @@ const TransparencySection = () => {
       token: 'tTSLA',
       name: 'Tokenized Tesla',
       amount: '750 shares',
-      contract: '0x9876...5432',
+      contract: '0x3FF7a28970832F0B31ba496545a000971becFCC2',
       backing: '750 TSLA shares',
       status: 'Active'
     },
@@ -32,7 +32,7 @@ const TransparencySection = () => {
       token: 'tAMZN',
       name: 'Tokenized Amazon',
       amount: '350 shares',
-      contract: '0x4567...8901',
+      contract: '0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4',
       backing: '350 AMZN shares',
       status: 'Active'
     },
@@ -40,8 +40,16 @@ const TransparencySection = () => {
       token: 'tGOOGL',
       name: 'Tokenized Google',
       amount: '600 shares',
-      contract: '0x2345...6789',
+      contract: '0x75687E5c95e15Ba306b49869e49F017b3103AbF2',
       backing: '600 GOOGL shares',
+      status: 'Active'
+    },
+    {
+      token: 'tMSFT',
+      name: 'Tokenized Microsoft',
+      amount: '450 shares',
+      contract: '0x532995D5C698a725B590550F67F9f90A00b352d8',
+      backing: '450 MSFT shares',
       status: 'Active'
     }
   ]
@@ -108,12 +116,12 @@ const TransparencySection = () => {
                     <td className="py-4 px-6 text-right text-gray-300">{reserve.amount}</td>
                     <td className="py-4 px-6">
                       <a 
-                        href={`https://basescan.org/address/${reserve.contract}`}
+                        href={`https://base-sepolia.blockscout.com/address/${reserve.contract}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-mono text-sm text-purple-400 hover:text-purple-300 transition-colors"
                       >
-                        {reserve.contract}
+                        {reserve.contract.slice(0, 6)}...{reserve.contract.slice(-4)}
                         <i className='bx bx-link-external ml-1 text-xs'></i>
                       </a>
                     </td>
@@ -128,6 +136,33 @@ const TransparencySection = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* StockCryptoSwap Contract */}
+        <div className="mt-6 p-6 bg-gradient-to-r from-purple-900/30 to-purple-800/20 rounded-lg border border-purple-500/30">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <i className='bx bx-shield text-white text-xl'></i>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-purple-400">StockCryptoSwap (Proof of Reserves)</p>
+                <a 
+                  href="https://base-sepolia.blockscout.com/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-mono text-xs text-purple-300 hover:text-purple-200 transition-colors"
+                >
+                  0x4833...1547
+                  <i className='bx bx-link-external ml-1 text-xs'></i>
+                </a>
+              </div>
+            </div>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-400 border border-green-500/30">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              Active
+            </span>
           </div>
         </div>
 
