@@ -16,8 +16,14 @@ const Layout = async ({ children }: { children : React.ReactNode }) => {
         // email excluded; not needed for client components
     }
 
-    // Defer to header/client to fetch on demand (SWR/ISR-backed)
-    const initialStocks: any[] = [];
+    // Preload a small set of popular stocks for the header search (non-blocking)
+    let initialStocks: StockWithWatchlistStatus[] = [];
+    try {
+        initialStocks = await searchStocks(''); // returns POPULAR_STOCK_SYMBOLS mapped, cached
+    } catch (e) {
+        // If fetching fails (e.g., missing token), keep empty to avoid blocking render
+        initialStocks = [];
+    }
 
     return (
         <main className="relative min-h-screen bg-black text-white overflow-hidden">
