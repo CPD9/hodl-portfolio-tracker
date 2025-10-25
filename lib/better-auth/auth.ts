@@ -8,6 +8,12 @@ let authInstance: ReturnType<typeof betterAuth> | null = null;
 export const getAuth = async () => {
     if(authInstance) return authInstance;
 
+    // Skip database connection during Next.js build phase
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+        console.warn('[BUILD] Skipping auth initialization during build');
+        return {} as ReturnType<typeof betterAuth>;
+    }
+
     const mongoose = await connectToDatabase();
     const db = mongoose.connection.db;
 
@@ -31,4 +37,38 @@ export const getAuth = async () => {
     return authInstance;
 }
 
-export const auth = await getAuth();
+// Helper to create a recursive proxy that wraps nested objects
+function createAsyncProxy(getValue: () => Promise<any>, path: string[] = []): any {
+    return new Proxy(() => {}, {
+        get(target, prop) {
+            if (prop === 'then' || prop === 'catch' || prop === 'finally') {
+                // Don't intercept promise methods
+                return undefined;
+            }
+
+            // Return a proxy for the nested property
+            return createAsyncProxy(getValue, [...path, prop as string]);
+        },
+        apply(target, thisArg, args) {
+            // When called as a function, resolve the full path and call the final method
+            return (async () => {
+                const instance = await getValue();
+
+                // Navigate to the nested property
+                let current = instance;
+                for (const key of path) {
+                    current = current[key];
+                }
+
+                // Call the final method if it's a function
+                if (typeof current === 'function') {
+                    return current.apply(instance, args);
+                }
+                return current;
+            })();
+        }
+    });
+}
+
+// Lazy proxy to avoid top-level await during build
+export const auth = createAsyncProxy(getAuth);
