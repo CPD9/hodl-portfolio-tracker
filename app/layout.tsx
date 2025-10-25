@@ -37,6 +37,14 @@ export const metadata: Metadata = {
     description: "AI-powered stock & crypto tracking platform with Base blockchain integration",
     type: "website",
   },
+  other: {
+    // Farcaster Frame metadata - enables rich embeds when shared
+    'fc:frame': 'vNext',
+    'fc:frame:image': 'https://hodl-portfolio-tracker.vercel.app/og-image.png',
+    'fc:frame:button:1': 'Launch HODL',
+    'fc:frame:button:1:action': 'link',
+    'fc:frame:button:1:target': 'https://hodl-portfolio-tracker.vercel.app',
+  },
 };
 
 export default function RootLayout({
