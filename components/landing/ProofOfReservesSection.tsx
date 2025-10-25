@@ -159,10 +159,6 @@ const ProofOfReservesSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          <h4 className="text-lg font-semibold text-gray-100 mb-4 flex items-center gap-2">
-            <i className='bx bx-link-external text-yellow-500'></i>
-            Verify Stock Token Contracts on Base Sepolia
-          </h4>
           <div className="grid md:grid-cols-3 gap-3">
             {[
               { symbol: 'AAPL', address: '0x334dFeb48aEC27fCb75249e77F546B687cC6aB94' },
@@ -190,6 +186,29 @@ const ProofOfReservesSection = () => {
                 </div>
               </a>
             ))}
+          </div>
+          
+          {/* StockCryptoSwap Proof of Reserves Contract */}
+          <div className="mt-4">
+            <a
+              href="https://base-sepolia.blockscout.com/address/0x4833D6D51b64f93B6708088c90aB6E138b6A1547"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-r from-purple-900/30 to-purple-800/20 rounded-lg p-4 border border-purple-500/30 hover:border-purple-500/50 transition-all group flex items-center justify-between"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <i className='bx bx-shield text-white text-xl'></i>
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-purple-400">StockCryptoSwap (Proof of Reserves)</div>
+                  <div className="text-xs text-gray-500 font-mono">
+                    0x4833...1547
+                  </div>
+                </div>
+              </div>
+              <i className='bx bx-link-external text-gray-600 group-hover:text-purple-400 transition-colors'></i>
+            </a>
           </div>
         </motion.div>
       </div>
