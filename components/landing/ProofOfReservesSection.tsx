@@ -151,43 +151,6 @@ const ProofOfReservesSection = () => {
             </div>
           </div>
         </motion.div>
-
-        {/* Smart Contract Links */}
-        <motion.div
-          className="mt-8 bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-6 border border-gray-700"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <div className="grid md:grid-cols-3 gap-3">
-            {[
-              { symbol: 'AAPL', address: '0x334dFeb48aEC27fCb75249e77F546B687cC6aB94' },
-              { symbol: 'TSLA', address: '0x3FF7a28970832F0B31ba496545a000971becFCC2' },
-              { symbol: 'NVDA', address: '0x7c57A5BD9942e82Ba61C27B6141c6228c38c7487' },
-              { symbol: 'MSFT', address: '0x532995D5C698a725B590550F67F9f90A00b352d8' },
-              { symbol: 'AMZN', address: '0x8Fe92F95f0E4CAeE9494341C2B0Fbd93A2BE89A4' },
-              { symbol: 'GOOGL', address: '0x75687E5c95e15Ba306b49869e49F017b3103AbF2' },
-            ].map((token) => (
-              <a
-                key={token.symbol}
-                href={`https://base-sepolia.blockscout.com/address/${token.address}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gray-800/50 rounded-lg p-3 border border-gray-700/50 hover:border-yellow-500/50 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-bold text-yellow-400">{token.symbol}</div>
-                    <div className="text-xs text-gray-500 font-mono">
-                      {token.address.slice(0, 6)}...{token.address.slice(-4)}
-                    </div>
-                  </div>
-                  <i className='bx bx-link-external text-gray-600 group-hover:text-yellow-500 transition-colors'></i>
-                </div>
-              </a>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
