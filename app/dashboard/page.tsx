@@ -147,23 +147,23 @@ const Home = () => {
                 {/* Quick Stats Bar - Enhanced with Real Portfolio Data */}
                 <motion.div 
                     {...fadeInUp}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+                    className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-12"
                 >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0 * 0.1 }}
-                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
+                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-3 md:p-6 border border-yellow-500/20 hover:border-yellow-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
                         onClick={() => window.location.href = '/dashboard/portfolio'}
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-2">
-                                <DollarSign className="w-8 h-8 text-yellow-500" />
+                            <div className="flex items-center justify-between mb-1 md:mb-2">
+                                <DollarSign className="w-5 h-5 md:w-8 md:h-8 text-yellow-500" />
                                 {loading ? (
-                                    <div className="w-16 h-5 bg-gray-700 rounded animate-pulse"></div>
+                                    <div className="w-12 md:w-16 h-4 md:h-5 bg-gray-700 rounded animate-pulse"></div>
                                 ) : (
-                                    <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+                                    <span className={`text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded-full ${
                                         portfolioData?.totalPnL >= 0 
                                             ? 'bg-green-500/10 text-green-400' 
                                             : 'bg-red-500/10 text-red-400'
@@ -172,11 +172,11 @@ const Home = () => {
                                     </span>
                                 )}
                             </div>
-                            <p className="text-gray-400 text-sm mb-1">Portfolio Value</p>
+                            <p className="text-gray-400 text-[10px] md:text-sm mb-0.5 md:mb-1">Portfolio Value</p>
                             {loading ? (
-                                <div className="w-32 h-8 bg-gray-700 rounded animate-pulse"></div>
+                                <div className="w-24 md:w-32 h-6 md:h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-xl md:text-2xl font-bold text-white">
+                                <p className="text-sm md:text-2xl font-bold text-white truncate">
                                     {portfolioData ? formatCurrency(portfolioData.totalValue + portfolioData.cashBalance) : '$100,000'}
                                 </p>
                             )}
@@ -187,21 +187,21 @@ const Home = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 1 * 0.1 }}
-                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 overflow-hidden"
+                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-3 md:p-6 border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-2">
-                                <i className="bx bx-bitcoin text-3xl text-purple-500"></i>
-                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-purple-500/10 text-purple-400">
+                            <div className="flex items-center justify-between mb-1 md:mb-2">
+                                <i className="bx bx-bitcoin text-xl md:text-3xl text-purple-500"></i>
+                                <span className="text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded-full bg-purple-500/10 text-purple-400">
                                     Crypto
                                 </span>
                             </div>
-                            <p className="text-gray-400 text-sm mb-1">Crypto Holdings</p>
+                            <p className="text-gray-400 text-[10px] md:text-sm mb-0.5 md:mb-1">Crypto Holdings</p>
                             {loading ? (
-                                <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
+                                <div className="w-20 md:w-28 h-6 md:h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-xl md:text-2xl font-bold text-white">
+                                <p className="text-sm md:text-2xl font-bold text-white truncate">
                                     {portfolioData ? formatCurrency(portfolioData.holdings?.filter((h: any) => h.type === 'CRYPTO').reduce((sum: number, h: any) => sum + h.currentValue, 0) || 0) : '$0.00'}
                                 </p>
                             )}
@@ -212,21 +212,21 @@ const Home = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 2 * 0.1 }}
-                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden"
+                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-3 md:p-6 border border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300 overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-2">
-                                <i className="bx bx-line-chart text-3xl text-cyan-500"></i>
-                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-cyan-500/10 text-cyan-400">
+                            <div className="flex items-center justify-between mb-1 md:mb-2">
+                                <i className="bx bx-line-chart text-xl md:text-3xl text-cyan-500"></i>
+                                <span className="text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded-full bg-cyan-500/10 text-cyan-400">
                                     Stocks
                                 </span>
                             </div>
-                            <p className="text-gray-400 text-sm mb-1">Stock Holdings</p>
+                            <p className="text-gray-400 text-[10px] md:text-sm mb-0.5 md:mb-1">Stock Holdings</p>
                             {loading ? (
-                                <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
+                                <div className="w-20 md:w-28 h-6 md:h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-xl md:text-2xl font-bold text-white">
+                                <p className="text-sm md:text-2xl font-bold text-white truncate">
                                     {portfolioData ? formatCurrency(portfolioData.holdings?.filter((h: any) => h.type === 'STOCK').reduce((sum: number, h: any) => sum + h.currentValue, 0) || 0) : '$0.00'}
                                 </p>
                             )}
@@ -237,21 +237,21 @@ const Home = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 3 * 0.1 }}
-                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 overflow-hidden"
+                        className="relative group bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-3 md:p-6 border border-green-500/20 hover:border-green-500/50 transition-all duration-300 overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative z-10">
-                            <div className="flex items-center justify-between mb-2">
-                                <i className="bx bx-wallet text-3xl text-green-500"></i>
-                                <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-500/10 text-green-400">
+                            <div className="flex items-center justify-between mb-1 md:mb-2">
+                                <i className="bx bx-wallet text-xl md:text-3xl text-green-500"></i>
+                                <span className="text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded-full bg-green-500/10 text-green-400">
                                     Paper
                                 </span>
                             </div>
-                            <p className="text-gray-400 text-sm mb-1">Cash Balance</p>
+                            <p className="text-gray-400 text-[10px] md:text-sm mb-0.5 md:mb-1">Cash Balance</p>
                             {loading ? (
-                                <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
+                                <div className="w-20 md:w-28 h-6 md:h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-xl md:text-2xl font-bold text-white">
+                                <p className="text-sm md:text-2xl font-bold text-white truncate">
                                     {portfolioData ? formatCurrency(portfolioData.cashBalance) : '$100,000'}
                                 </p>
                             )}
