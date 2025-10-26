@@ -81,10 +81,10 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
             </Link>
             <button
               onClick={toggleHeaderCollapse}
-              className="ml-1 text-yellow-500 hover:text-yellow-400 transition-colors p-1"
+              className="ml-1 text-yellow-500 hover:text-yellow-400 transition-colors p-0.5"
               aria-label="Toggle header"
             >
-              <i className='bx bx-chevron-up text-xl'></i>
+              <i className='bx bx-chevron-up text-lg'></i>
             </button>
           </div>
 
