@@ -1,6 +1,6 @@
 'use client';
 
-import { Clock, Download, ExternalLink, Filter, TrendingDown, TrendingUp } from 'lucide-react';
+import { Clock, Download, ExternalLink, Filter, TrendingDown, TrendingUp, ChevronDown } from 'lucide-react';
 import React, { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -73,8 +73,24 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
           <h3 className="text-lg font-semibold text-gray-100">Transaction History</h3>
         </div>
         <div className="flex items-center space-x-3">
-          {/* Filter */}
-          <div className="flex items-center space-x-2 bg-gray-700 rounded-lg p-1">
+          {/* Filter - mobile dropdown */}
+          <div className="md:hidden relative inline-block">
+            <label htmlFor="tx-filter" className="sr-only">Filter</label>
+            <select
+              id="tx-filter"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as 'ALL' | 'STOCK' | 'CRYPTO')}
+              className="bg-gray-700 text-gray-200 text-xs rounded-lg px-2 pr-7 py-1 appearance-none focus:outline-none focus:ring-0 focus:border-gray-600 border border-gray-600"
+            >
+              <option value="ALL">All</option>
+              <option value="STOCK">Stocks</option>
+              <option value="CRYPTO">Crypto</option>
+            </select>
+            <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Filter - desktop buttons */}
+          <div className="hidden md:flex items-center space-x-2 bg-gray-700 rounded-lg p-1">
             <button
               onClick={() => setFilter('ALL')}
               className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
@@ -106,7 +122,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
             onClick={exportToCSV}
             variant="outline"
             size="sm"
-            className="text-gray-400 hover:text-white"
+            className="text-gray-400 hover:text-white hidden md:inline-flex"
           >
             <Download className="w-4 h-4 mr-2" />
             Export CSV
@@ -230,6 +246,17 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
           </div>
         </div>
       )}
+
+      {/* Mobile Export Button at Bottom */}
+      <div className="mt-4 md:hidden">
+        <Button
+          onClick={exportToCSV}
+          className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold"
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Export CSV
+        </Button>
+      </div>
     </div>
   );
 };
