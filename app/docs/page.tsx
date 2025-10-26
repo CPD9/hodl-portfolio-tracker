@@ -244,7 +244,7 @@ console.log(data.usd) // $3,245.67`
           </Link>
           <Link
             href="/sign-up"
-            className="bg-yellow-500 text-black py-2 px-6 rounded-full font-medium transition-all duration-300 hover:bg-yellow-400"
+            className="bg-yellow-500 text-black py-1.5 px-4 rounded-full font-medium text-sm transition-all duration-300 hover:bg-yellow-400"
           >
             Get Started
           </Link>
