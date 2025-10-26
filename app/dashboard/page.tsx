@@ -328,20 +328,20 @@ const Home = () => {
                                 <table className="min-w-full">
                                     <thead>
                                         <tr className="border-b border-gray-700">
-                                            <th className="py-3 px-4 text-left text-xs font-semibold text-gray-400">Symbol</th>
-                                            <th className="py-3 px-4 text-left text-xs font-semibold text-gray-400">Type</th>
-                                            <th className="py-3 px-4 text-right text-xs font-semibold text-gray-400">Value</th>
-                                            <th className="py-3 px-4 text-right text-xs font-semibold text-gray-400">P&L</th>
+                                            <th className="py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-xs font-semibold text-gray-400">Symbol</th>
+                                            <th className="py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-xs font-semibold text-gray-400">Type</th>
+                                            <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-xs font-semibold text-gray-400">Value</th>
+                                            <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-xs font-semibold text-gray-400">P&L</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {portfolioData.holdings.slice(0, 5).map((holding: any) => (
                                             <tr key={`${holding.symbol}-${holding.type}`} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
-                                                <td className="py-3 px-4">
-                                                    <span className="font-semibold text-blue-400">{holding.symbol}</span>
+                                                <td className="py-2 md:py-3 px-2 md:px-4">
+                                                    <span className="font-semibold text-blue-400 text-xs md:text-base">{holding.symbol}</span>
                                                 </td>
-                                                <td className="py-3 px-4">
-                                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                <td className="py-2 md:py-3 px-2 md:px-4">
+                                                    <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium ${
                                                         holding.type === 'STOCK' 
                                                             ? 'bg-blue-900/30 text-blue-400' 
                                                             : 'bg-purple-900/30 text-purple-400'
@@ -349,11 +349,11 @@ const Home = () => {
                                                         {holding.type}
                                                     </span>
                                                 </td>
-                                                <td className="py-3 px-4 text-right font-semibold text-gray-100">
+                                                <td className="py-2 md:py-3 px-2 md:px-4 text-right font-semibold text-gray-100 text-xs md:text-base">
                                                     {formatCurrency(holding.currentValue)}
                                                 </td>
-                                                <td className="py-3 px-4 text-right">
-                                                    <span className={`font-semibold ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                                <td className="py-2 md:py-3 px-2 md:px-4 text-right">
+                                                    <span className={`font-semibold text-xs md:text-base ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                         {formatCurrency(holding.pnl)}
                                                     </span>
                                                 </td>

@@ -64,7 +64,7 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
           <thead>
             <tr className="table-header-row">
               {WATCHLIST_TABLE_HEADER.map((header, index) => (
-                <th key={index} className="table-header py-3 px-4 text-left">
+                <th key={index} className="table-header py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-sm">
                   {header}
                 </th>
               ))}
@@ -73,26 +73,26 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
           <tbody>
             {watchlist.map((stock, index) => (
               <tr key={`${stock.symbol}-${index}`} className="table-row">
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <Link 
                     href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
-                    <div className="font-medium text-gray-100">{stock.company}</div>
-                    <div className="text-sm text-gray-400">{stock.symbol}</div>
+                    <div className="font-medium text-gray-100 text-xs md:text-base">{stock.company}</div>
+                    <div className="text-[10px] md:text-sm text-gray-400">{stock.symbol}</div>
                   </Link>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <Link 
                     href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
-                    <div className="font-mono text-gray-100">
+                    <div className="font-mono text-gray-100 text-xs md:text-base">
                       {stock.currentPrice && stock.currentPrice > 0 ? formatCurrency(stock.currentPrice) : 'N/A'}
                     </div>
                   </Link>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4 text-xs md:text-base">
                   <Link 
                     href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
@@ -100,35 +100,35 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
                     {formatChange(stock.change || 0, stock.changePercent || 0)}
                   </Link>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <Link 
                     href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
-                    <div className="text-gray-100">
+                    <div className="text-gray-100 text-xs md:text-base">
                       {stock.marketCap && stock.marketCap > 0 ? `$${formatNumber(stock.marketCap)}` : 'N/A'}
                     </div>
                   </Link>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <Link 
                     href={`/dashboard/stocks/${stock.symbol}`}
                     className="hover:text-blue-400 transition-colors"
                   >
-                    <div className="text-gray-100">
+                    <div className="text-gray-100 text-xs md:text-base">
                       {stock.pe && stock.pe > 0 ? stock.pe.toFixed(2) : 'N/A'}
                     </div>
                   </Link>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <button
                     onClick={() => handleSetAlert(stock)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-3 py-1 rounded text-sm font-medium transition-colors"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-2 md:px-3 py-1 rounded text-[10px] md:text-sm font-medium transition-colors"
                   >
                     Set Alert
                   </button>
                 </td>
-                <td className="py-4 px-4">
+                <td className="py-2 md:py-4 px-2 md:px-4">
                   <WatchlistButton
                     symbol={stock.symbol}
                     company={stock.company}

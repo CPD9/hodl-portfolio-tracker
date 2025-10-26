@@ -57,15 +57,16 @@ export default function ConsultationsTable({
 
   return (
     <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg border border-gray-700/50 overflow-hidden">
+      <div className="overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow className="border-gray-700/50">
-            <TableHead className="text-gray-400">Consultation</TableHead>
-            <TableHead className="text-gray-400">Advisor</TableHead>
-            <TableHead className="text-gray-400">Status</TableHead>
-            <TableHead className="text-gray-400">Date</TableHead>
-            <TableHead className="text-gray-400">Duration</TableHead>
-            <TableHead className="text-gray-400 text-right">Action</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm py-2 md:py-3 px-2 md:px-4">Consultation</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm py-2 md:py-3 px-2 md:px-4">Advisor</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm py-2 md:py-3 px-2 md:px-4">Status</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm py-2 md:py-3 px-2 md:px-4">Date</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm py-2 md:py-3 px-2 md:px-4">Duration</TableHead>
+            <TableHead className="text-gray-400 text-[10px] md:text-sm text-right py-2 md:py-3 px-2 md:px-4">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -74,34 +75,34 @@ export default function ConsultationsTable({
               key={consultation._id}
               className="border-gray-700/50 hover:bg-gray-700/30 transition"
             >
-              <TableCell className="font-medium text-gray-100">
+              <TableCell className="font-medium text-gray-100 text-xs md:text-base py-2 md:py-4 px-2 md:px-4">
                 {consultation.name}
               </TableCell>
 
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
-                    <User className="w-4 h-4 text-gray-400" />
+              <TableCell className="py-2 md:py-4 px-2 md:px-4">
+                <div className="flex items-center space-x-1 md:space-x-2">
+                  <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                    <User className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
                   </div>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-xs md:text-base">
                     {consultation.advisor?.name || 'Unknown'}
                   </span>
                 </div>
               </TableCell>
 
-              <TableCell>
+              <TableCell className="py-2 md:py-4 px-2 md:px-4">
                 <Badge
                   variant="outline"
-                  className={STATUS_COLORS[consultation.status]}
+                  className={`${STATUS_COLORS[consultation.status]} text-[10px] md:text-xs`}
                 >
                   {STATUS_LABELS[consultation.status]}
                 </Badge>
               </TableCell>
 
-              <TableCell className="text-gray-400">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>
+              <TableCell className="text-gray-400 py-2 md:py-4 px-2 md:px-4">
+                <div className="flex items-center space-x-1 md:space-x-2">
+                  <Calendar className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-[10px] md:text-sm">
                     {consultation.startedAt
                       ? format(new Date(consultation.startedAt), 'PPp')
                       : format(new Date(consultation.createdAt), 'PP')}
@@ -109,11 +110,11 @@ export default function ConsultationsTable({
                 </div>
               </TableCell>
 
-              <TableCell className="text-gray-400">
+              <TableCell className="text-gray-400 py-2 md:py-4 px-2 md:px-4">
                 {consultation.duration ? (
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4" />
-                    <span>
+                  <div className="flex items-center space-x-1 md:space-x-2">
+                    <Clock className="w-3 h-3 md:w-4 md:h-4" />
+                    <span className="text-[10px] md:text-sm">
                       {humanizeDuration(consultation.duration * 1000, {
                         largest: 2,
                         round: true,
@@ -121,19 +122,19 @@ export default function ConsultationsTable({
                     </span>
                   </div>
                 ) : (
-                  <span className="text-gray-600">—</span>
+                  <span className="text-gray-600 text-xs md:text-sm">—</span>
                 )}
               </TableCell>
 
-              <TableCell className="text-right">
+              <TableCell className="text-right py-2 md:py-4 px-2 md:px-4">
                 {consultation.status === 'upcoming' && (
                   <Button
                     asChild
                     size="sm"
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black text-[10px] md:text-sm px-2 md:px-3 py-1"
                   >
                     <Link href={`/dashboard/call/${consultation._id}`}>
-                      <Video className="w-4 h-4 mr-2" />
+                      <Video className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                       Join
                     </Link>
                   </Button>
@@ -143,10 +144,10 @@ export default function ConsultationsTable({
                     asChild
                     size="sm"
                     variant="ghost"
-                    className="text-gray-400"
+                    className="text-gray-400 text-[10px] md:text-sm px-2 md:px-3"
                   >
                     <Link href={`/dashboard/consultation/${consultation._id}`}>
-                      View Details
+                      View
                     </Link>
                   </Button>
                 )}
@@ -155,6 +156,7 @@ export default function ConsultationsTable({
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }
