@@ -17,6 +17,7 @@ type Props = {
 
 const DashboardHeader = ({ user, initialStocks }: Props) => {
   const [isVisible, setIsVisible] = useState(true)
+  const [isCollapsedByClick, setIsCollapsedByClick] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
 
   useEffect(() => {
@@ -51,17 +52,24 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
     menu.classList.toggle('hidden')
   }
 
+  const toggleHeaderCollapse = () => {
+    setIsCollapsedByClick(!isCollapsedByClick)
+  }
+
   const handleLogout = async () => {
     await signOut()
   }
 
+  const shouldShowHeader = isVisible && !isCollapsedByClick
+
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[50] bg-gradient-to-b from-black via-black/95 to-black/80 backdrop-blur-xl border-b border-yellow-500/10 shadow-lg shadow-yellow-500/5 transition-transform duration-300 ${
-      isVisible ? 'translate-y-0' : '-translate-y-full'
-    }`}>
-      <div className="max-w-7xl mx-auto w-full flex justify-between items-center py-3 px-4 lg:px-6 xl:px-8">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 hover:scale-[1.02] transition-all duration-300 group flex-shrink-0">
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-[50] bg-gradient-to-b from-black via-black/95 to-black/80 backdrop-blur-xl border-b border-yellow-500/10 shadow-lg shadow-yellow-500/5 transition-transform duration-300 ${
+        shouldShowHeader ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        <div className="max-w-7xl mx-auto w-full flex justify-between items-center py-3 px-4 lg:px-6 xl:px-8">
+          {/* Logo */}
+          <Link href="/" onClick={toggleHeaderCollapse} className="flex items-center space-x-2 hover:scale-[1.02] transition-all duration-300 group flex-shrink-0">
           <div className="relative">
             <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
             <PixelCharacter size="xl" />
@@ -134,6 +142,18 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
         </div>
       </div>
     </header>
+
+    {/* Floating Chevron Button - Shows when header is collapsed by click */}
+    {isCollapsedByClick && (
+      <button
+        onClick={toggleHeaderCollapse}
+        className="fixed top-2 left-1/2 -translate-x-1/2 z-[60] bg-gradient-to-br from-yellow-500/90 to-yellow-600/90 backdrop-blur-sm text-black p-2 rounded-full shadow-lg shadow-yellow-500/50 hover:shadow-yellow-500/70 transition-all duration-300 hover:scale-110"
+        aria-label="Expand header"
+      >
+        <i className='bx bx-chevron-down text-xl'></i>
+      </button>
+    )}
+    </>
   )
 }
 
