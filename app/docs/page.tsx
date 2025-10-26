@@ -55,6 +55,11 @@ export default function Documentation() {
       icon: 'bx-shield-alt',
       content: [
         {
+          subtitle: '100% Transparent & Verifiable',
+          description:
+            'Every stock token is backed 1:1 by USDC reserves. Verify our holdings on-chain, anytime. Three core pillars ensure complete transparency: (1) On-Chain Verification - all reserves stored in smart contracts on Base blockchain, (2) Real-Time Updates - reserve attestations updated every 24 hours via Chainlink oracles, and (3) Full Transparency - no hidden reserves or fractional backing.',
+        },
+        {
           subtitle: 'How It Works (Hackathon Demo)',
           description:
             'For the hackathon, we demonstrate the smart contract layer: tokenized stock supply is managed on-chain and designed to be backed 1:1 by USDC reserves. Anyone can independently verify the token contracts and their behavior on-chain on Sepolia testnet using the links below.',
@@ -67,6 +72,7 @@ export default function Documentation() {
             'Smart contract holds all stock tokens alongside USDC backing for those tokens',
             'Use Etherscan → Contract → Read Contract to query totalSupply for stock tokens and balanceOf() for USDC holdings',
             'Example: If the contract holds 1,000 AAPL tokens and spot price is $180, then backing should be 1,000 × $180 = $180,000 USDC',
+            'Anyone can verify balances using blockchain explorers - complete transparency for all users',
           ]
         },
         {
@@ -82,16 +88,18 @@ export default function Documentation() {
             'Merkle tree proofs of individual user balances enabling self-verification against total reserves',
             'Third-party audits (similar cadence to USDC/Tether monthly attestations)',
             'Chainlink oracle(s) fetch and verify custodian attestations on-chain every 24 hours',
+            'Every token backed 1:1 with auditable USDC - no fractional reserves',
           ]
         },
         {
           subtitle: 'Custodian Flow (Production)',
+          description: 'Step-by-step process for maintaining 1:1 backing:',
           steps: [
-            'User deposits $180 to the platform',
-            'Platform purchases 1 AAPL share via a licensed broker (e.g., Interactive Brokers, Apex Clearing)',
-            'Custodian holds the underlying share and publishes a cryptographic proof of holdings',
-            'Platform mints 1 AAPL token to the user’s wallet, reflecting 1:1 backing',
-            'Chainlink oracle verifies custodian attestations at a set cadence (e.g., every 24 hours) and updates on-chain state',
+            'Step 1: User deposits $180 to the platform',
+            'Step 2: Platform purchases 1 AAPL share via a licensed broker (e.g., Interactive Brokers, Apex Clearing)',
+            'Step 3: Custodian holds the underlying share and publishes a cryptographic proof of holdings',
+            "Step 4: Platform mints 1 AAPL token to the user's wallet, reflecting 1:1 backing",
+            'Step 5: Chainlink oracle verifies custodian attestations at a set cadence (e.g., every 24 hours) and updates on-chain state',
           ]
         },
         {
