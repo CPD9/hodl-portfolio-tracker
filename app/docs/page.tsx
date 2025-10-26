@@ -95,11 +95,11 @@ export default function Documentation() {
           subtitle: 'Custodian Flow (Production)',
           description: 'Step-by-step process for maintaining 1:1 backing:',
           steps: [
-            'Step 1: User deposits $180 to the platform',
-            'Step 2: Platform purchases 1 AAPL share via a licensed broker (e.g., Interactive Brokers, Apex Clearing)',
-            'Step 3: Custodian holds the underlying share and publishes a cryptographic proof of holdings',
-            "Step 4: Platform mints 1 AAPL token to the user's wallet, reflecting 1:1 backing",
-            'Step 5: Chainlink oracle verifies custodian attestations at a set cadence (e.g., every 24 hours) and updates on-chain state',
+            'User deposits $180 to the platform',
+            'Platform purchases 1 AAPL share via a licensed broker (e.g., Interactive Brokers, Apex Clearing)',
+            'Custodian holds the underlying share and publishes a cryptographic proof of holdings',
+            "Platform mints 1 AAPL token to the user's wallet, reflecting 1:1 backing",
+            'Chainlink oracle verifies custodian attestations at a set cadence (e.g., every 24 hours) and updates on-chain state',
           ]
         },
         {
