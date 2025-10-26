@@ -24,12 +24,12 @@ const Layout = async ({ children }: { children : React.ReactNode }) => {
             <section className="auth-right-section">
                 <div className="z-10 relative lg:mt-4 lg:mb-16">
                     <blockquote className="auth-blockquote">
-                        HODL turned my watchlist into a winning list. The alerts are spot-on, and I feel more confident making moves in the market
+                        Finally, a platform that merges traditional and crypto markets seamlessly. HODL's AI insights and real-time alerts have completely transformed how I trade across both worlds.
                     </blockquote>
                     <div className="flex items-center justify-between">
                         <div>
-                            <cite className="auth-testimonial-author">- Ethan R.</cite>
-                            <p className="max-md:text-xs text-gray-500">Retail Investor</p>
+                            <cite className="auth-testimonial-author">- Kamsy U.</cite>
+                            <p className="max-md:text-xs text-gray-500">Beta User, Hybrid Investor</p>
                         </div>
                         <div className="flex items-center gap-0.5">
                             {[1, 2, 3, 4, 5].map((star) => (
