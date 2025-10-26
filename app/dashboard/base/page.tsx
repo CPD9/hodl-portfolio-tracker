@@ -36,7 +36,7 @@ async function ConsultationsSection() {
     <div>
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
+          <div className="text-center sm:text-left">
             <h2 className="text-xl md:text-2xl font-bold text-yellow-500 mb-2">
               AI Financial Consultations
             </h2>

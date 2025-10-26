@@ -31,8 +31,8 @@ async function ConsultationsContent() {
       <div className="container mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-yellow-500 mb-2 flex items-center">
+          <div className="mb-4 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-yellow-500 mb-2 flex items-center justify-center">
               <PixelCharacter variant="hero" size="lg" className="mr-3" />
               AI Consultations
             </h1>
