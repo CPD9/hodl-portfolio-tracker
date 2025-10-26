@@ -176,7 +176,7 @@ const Home = () => {
                             {loading ? (
                                 <div className="w-32 h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-2xl font-bold text-white">
+                                <p className="text-xl md:text-2xl font-bold text-white">
                                     {portfolioData ? formatCurrency(portfolioData.totalValue + portfolioData.cashBalance) : '$100,000'}
                                 </p>
                             )}
@@ -201,7 +201,7 @@ const Home = () => {
                             {loading ? (
                                 <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-2xl font-bold text-white">
+                                <p className="text-xl md:text-2xl font-bold text-white">
                                     {portfolioData ? formatCurrency(portfolioData.holdings?.filter((h: any) => h.type === 'CRYPTO').reduce((sum: number, h: any) => sum + h.currentValue, 0) || 0) : '$0.00'}
                                 </p>
                             )}
@@ -226,7 +226,7 @@ const Home = () => {
                             {loading ? (
                                 <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-2xl font-bold text-white">
+                                <p className="text-xl md:text-2xl font-bold text-white">
                                     {portfolioData ? formatCurrency(portfolioData.holdings?.filter((h: any) => h.type === 'STOCK').reduce((sum: number, h: any) => sum + h.currentValue, 0) || 0) : '$0.00'}
                                 </p>
                             )}
@@ -251,7 +251,7 @@ const Home = () => {
                             {loading ? (
                                 <div className="w-28 h-8 bg-gray-700 rounded animate-pulse"></div>
                             ) : (
-                                <p className="text-2xl font-bold text-white">
+                                <p className="text-xl md:text-2xl font-bold text-white">
                                     {portfolioData ? formatCurrency(portfolioData.cashBalance) : '$100,000'}
                                 </p>
                             )}
