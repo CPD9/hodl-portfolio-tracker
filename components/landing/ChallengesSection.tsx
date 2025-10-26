@@ -15,7 +15,7 @@ const ChallengesSection = () => {
     {
       icon: 'bx-brain',
       title: 'AI Accuracy',
-      before: 'Frequent hallucinations',
+      before: 'Hallucinations',
       after: 'Zero hallucinations',
       improvement: '100% accuracy',
       description: 'Strict RAG implementation with verified Finnhub data. Tested with 127 users over 3 months'
