@@ -53,8 +53,8 @@ export function StockCryptoSwap() {
   const chainId = useChainId();
   const swapEnv = getSwapEnv();
   const [fromType, setFromType] = useState<'stock' | 'crypto'>('crypto'); // Start with crypto to buy stocks
-  const [selectedStock, setSelectedStock] = useState<Stock>(POPULAR_STOCKS[0]);
-  const [selectedCrypto, setSelectedCrypto] = useState<Crypto>(POPULAR_CRYPTO[2]); // Start with USDC
+  const [selectedStock, setSelectedStock] = useState<Stock>(POPULAR_STOCKS[0]); // Apple
+  const [selectedCrypto, setSelectedCrypto] = useState<Crypto>(POPULAR_CRYPTO[0]); // Start with ETH
   const [amount, setAmount] = useState<string>('1');
   const isSupportedChain = chainId === 8453 || chainId === 84532; // Base or Base Sepolia
 
