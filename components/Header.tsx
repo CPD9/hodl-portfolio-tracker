@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavItems from "@/components/NavItems";
-import OnchainWalletConnect from "@/components/OnchainWalletConnect";
 import PixelCharacter from "@/components/PixelCharacter";
 import UserDropdown from "@/components/UserDropdown";
 import {searchStocks} from "@/lib/actions/finnhub.actions";
@@ -24,9 +23,6 @@ const Header = async ({ user }: { user: User }) => {
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden lg:block">
-                        <OnchainWalletConnect />
-                    </div>
                     <UserDropdown user={user} initialStocks={initialStocks} />
                 </div>
             </div>

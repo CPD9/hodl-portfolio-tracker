@@ -125,25 +125,25 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
             <table className="min-w-full divide-y divide-gray-700">
               <thead>
                 <tr>
-                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-400">Symbol</th>
-                  <th className="py-3 px-4 text-left text-sm font-semibold text-gray-400">Type</th>
-                  <th className="py-3 px-4 text-right text-sm font-semibold text-gray-400">Quantity</th>
-                  <th className="py-3 px-4 text-right text-sm font-semibold text-gray-400">Avg Price</th>
-                  <th className="py-3 px-4 text-right text-sm font-semibold text-gray-400">Current Price</th>
-                  <th className="py-3 px-4 text-right text-sm font-semibold text-gray-400">Value</th>
-                  <th className="py-3 px-4 text-right text-sm font-semibold text-gray-400">P&L</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-sm font-semibold text-gray-400">Symbol</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-sm font-semibold text-gray-400">Type</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-sm font-semibold text-gray-400">Qty</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-sm font-semibold text-gray-400">Avg Price</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-sm font-semibold text-gray-400">Current</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-sm font-semibold text-gray-400">Value</th>
+                  <th className="py-2 md:py-3 px-2 md:px-4 text-right text-[10px] md:text-sm font-semibold text-gray-400">P&L</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">
                 {holdings.map((holding) => (
                   <tr key={`${holding.symbol}-${holding.type}`} className="hover:bg-gray-700 transition-colors">
-                    <td className="py-4 px-4">
-                      <Link href={`/dashboard/stocks/${holding.symbol}`} className="font-semibold text-blue-400 hover:text-blue-300">
+                    <td className="py-2 md:py-4 px-2 md:px-4">
+                      <Link href={`/dashboard/stocks/${holding.symbol}`} className="font-semibold text-blue-400 hover:text-blue-300 text-xs md:text-base">
                         {holding.symbol}
                       </Link>
                     </td>
-                    <td className="py-4 px-4">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    <td className="py-2 md:py-4 px-2 md:px-4">
+                      <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium ${
                         holding.type === 'STOCK' 
                           ? 'bg-blue-900/30 text-blue-400' 
                           : 'bg-purple-900/30 text-purple-400'
@@ -151,21 +151,21 @@ const PortfolioDashboard: React.FC<PortfolioDashboardProps> = ({
                         {holding.type}
                       </span>
                     </td>
-                    <td className="py-4 px-4 text-right text-gray-100">{holding.quantity}</td>
-                    <td className="py-4 px-4 text-right text-gray-100 font-mono">
+                    <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 text-xs md:text-base">{holding.quantity}</td>
+                    <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-mono text-xs md:text-base">
                       {formatCurrency(holding.avgPrice)}
                     </td>
-                    <td className="py-4 px-4 text-right text-gray-100 font-mono">
+                    <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-mono text-xs md:text-base">
                       {formatCurrency(holding.currentPrice)}
                     </td>
-                    <td className="py-4 px-4 text-right text-gray-100 font-semibold">
+                    <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-semibold text-xs md:text-base">
                       {formatCurrency(holding.currentValue)}
                     </td>
-                    <td className="py-4 px-4 text-right">
-                      <div className={`font-semibold ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    <td className="py-2 md:py-4 px-2 md:px-4 text-right">
+                      <div className={`font-semibold text-xs md:text-base ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {formatCurrency(holding.pnl)}
                       </div>
-                      <div className={`text-sm ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      <div className={`text-[10px] md:text-sm ${holding.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {formatPercent(holding.pnlPercentage)}
                       </div>
                     </td>

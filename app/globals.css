@@ -299,7 +299,7 @@
     @apply h-4 w-4;
   }
   .watchlist-title {
-    @apply text-xl md:text-2xl font-bold text-gray-100;
+    @apply text-xl md:text-2xl font-bold text-yellow-500;
   }
   .watchlist-table {
     @apply !relative overflow-hidden !w-full bg-gray-800 border !border-gray-600 !rounded-lg;

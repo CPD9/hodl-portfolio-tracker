@@ -15,24 +15,24 @@ const ChallengesSection = () => {
     {
       icon: 'bx-brain',
       title: 'AI Accuracy',
-      before: 'Frequent hallucinations',
-      after: 'Zero hallucinations',
+      before: 'Frequent Hallucinations',
+      after: 'Zero Hallucinations',
       improvement: '100% accuracy',
       description: 'Strict RAG implementation with verified Finnhub data. Tested with 127 users over 3 months'
     },
     {
       icon: 'bx-dollar',
       title: 'Transaction Costs',
-      before: '$3,955/year',
-      after: '$2/year',
+      before: '$3,955/Year',
+      after: '$2/Year',
       improvement: '99.95% reduction',
       description: 'Base L2 enables ~$0.01 transactions vs $5-50 on Ethereum mainnet for active portfolio management'
     },
     {
       icon: 'bx-search',
       title: 'Stock-Crypto Correlation',
-      before: 'Manual research',
-      after: '68% correlation score',
+      before: 'Manual Research',
+      after: '68% Correlation Score',
       improvement: 'Automated',
       description: 'Multi-signal algorithm: sector overlap (40%), semantic similarity (30%), price correlation (30%)'
     }
@@ -66,13 +66,13 @@ const ChallengesSection = () => {
 
               {/* Before/After Comparison */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
+                <div className="bg-red-900/20 rounded-lg p-3 md:p-4 border border-red-500/30">
                   <p className="text-xs text-gray-400 mb-1">Before</p>
-                  <p className="text-lg font-bold text-red-400">{challenge.before}</p>
+                  <p className="text-xs md:text-sm lg:text-lg font-bold text-red-400 break-words leading-tight">{challenge.before}</p>
                 </div>
-                <div className="bg-green-900/20 rounded-lg p-4 border border-green-500/30">
+                <div className="bg-green-900/20 rounded-lg p-3 md:p-4 border border-green-500/30">
                   <p className="text-xs text-gray-400 mb-1">After</p>
-                  <p className="text-lg font-bold text-green-400">{challenge.after}</p>
+                  <p className="text-xs md:text-sm lg:text-lg font-bold text-green-400 break-words leading-tight">{challenge.after}</p>
                 </div>
               </div>
 

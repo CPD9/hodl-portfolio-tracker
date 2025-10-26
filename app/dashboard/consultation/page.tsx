@@ -30,17 +30,16 @@ async function ConsultationsContent() {
     <div className="min-h-screen p-4 md:p-6 lg:p-8 home-wrapper">
       <div className="container mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-yellow-500 mb-2 flex items-center">
+        <div className="mb-8">
+          <div className="mb-4 text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-yellow-500 mb-2 flex items-center justify-center">
               <PixelCharacter variant="hero" size="lg" className="mr-3" />
               AI Consultations
             </h1>
-            <p className="text-gray-400">
+            <p className="text-sm md:text-base text-gray-400">
               Schedule and manage video consultations with your AI financial advisors
             </p>
           </div>
-
           <NewConsultationButton advisors={serializedAdvisors} />
         </div>
 

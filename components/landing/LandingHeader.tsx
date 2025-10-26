@@ -8,6 +8,7 @@ import PixelCharacter from '@/components/PixelCharacter'
 
 const LandingHeader = () => {
   const [isVisible, setIsVisible] = useState(true)
+  const [isCollapsedByClick, setIsCollapsedByClick] = useState(false)
   const lastScrollYRef = useRef(0)
 
   useEffect(() => {
@@ -40,20 +41,36 @@ const LandingHeader = () => {
     }
   }
 
+  const toggleHeaderCollapse = () => {
+    setIsCollapsedByClick(!isCollapsedByClick)
+  }
+
+  const shouldShowHeader = isVisible && !isCollapsedByClick
+
   return (
-    <header className={`flex justify-between items-center py-4 px-4 lg:px-8 xl:px-12 fixed top-0 left-0 right-0 z-[999] bg-gradient-to-b from-black via-black/95 to-black/80 backdrop-blur-xl border-b border-yellow-500/10 shadow-lg shadow-yellow-500/5 pointer-events-auto transition-transform duration-300 ${
-      isVisible ? 'translate-y-0' : '-translate-y-full'
-    }`}>
-      {/* Logo */}
-      <Link href="/" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 pointer-events-auto group flex-shrink-0">
-        <div className="relative">
-          <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
-          <PixelCharacter size="2xl" />
+    <>
+      <header className={`flex justify-between items-center py-4 px-4 lg:px-8 xl:px-12 fixed top-0 left-0 right-0 z-[999] bg-gradient-to-b from-black via-black/95 to-black/80 backdrop-blur-xl border-b border-yellow-500/10 shadow-lg shadow-yellow-500/5 pointer-events-auto transition-transform duration-300 ${
+        shouldShowHeader ? 'translate-y-0' : '-translate-y-full'
+      }`}>
+        {/* Logo - Click character/text to navigate, click header background to collapse */}
+        <div className="flex items-center space-x-3 flex-shrink-0">
+          <Link href="/" className="flex items-center space-x-3 hover:scale-105 transition-all duration-300 pointer-events-auto group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
+              <PixelCharacter size="2xl" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent group-hover:from-yellow-300 group-hover:via-yellow-400 group-hover:to-yellow-500 transition-all duration-300 whitespace-nowrap">
+              HODL
+            </h1>
+          </Link>
+          <button
+            onClick={toggleHeaderCollapse}
+            className="ml-2 text-yellow-500 hover:text-yellow-400 transition-colors p-0.5"
+            aria-label="Toggle header"
+          >
+            <i className='bx bx-chevron-up text-lg'></i>
+          </button>
         </div>
-        <h1 className="text-3xl md:text-4xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent group-hover:from-yellow-300 group-hover:via-yellow-400 group-hover:to-yellow-500 transition-all duration-300 whitespace-nowrap">
-          HODL
-        </h1>
-      </Link>
 
       {/* Desktop Navigation */}
       <nav className="hidden lg:flex items-center gap-4 xl:gap-5 pointer-events-auto flex-1 justify-center max-w-2xl mx-4">
@@ -200,6 +217,18 @@ const LandingHeader = () => {
         </div>
       </div>
     </header>
+
+    {/* Floating Chevron Button - Shows when header is collapsed by click */}
+    {isCollapsedByClick && (
+      <button
+        onClick={toggleHeaderCollapse}
+        className="fixed top-2 left-1/2 -translate-x-1/2 z-[1000] bg-gradient-to-br from-yellow-500/90 to-yellow-600/90 backdrop-blur-sm text-black p-2 rounded-full shadow-lg shadow-yellow-500/50 hover:shadow-yellow-500/70 transition-all duration-300 hover:scale-110 pointer-events-auto"
+        aria-label="Expand header"
+      >
+        <i className='bx bx-chevron-down text-xl'></i>
+      </button>
+    )}
+    </>
   )
 }
 
