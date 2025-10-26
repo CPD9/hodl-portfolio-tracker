@@ -66,26 +66,42 @@ export function StockCryptoSwap() {
   const fromIsCrypto = fromType === 'crypto';
 
   // Mapping of symbols to ERC20 addresses on Base; extend as needed.
-  // ETH uses sentinel address for native ETH handling
+  // ETH uses sentinel address for native ETH handling in swap execution
   const NATIVE_ETH_SENTINEL = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+  const WETH_ADDRESS = '0x4200000000000000000000000000000000000006';
+
   const TOKEN_ADDRESS: Record<string, string | undefined> = {
     ETH: NATIVE_ETH_SENTINEL, // native ETH (special handling in swap)
-    WETH: '0x4200000000000000000000000000000000000006',
+    WETH: WETH_ADDRESS,
     USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
     DAI: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
     cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
   };
 
+  // QuoterV2 expects WETH address for quotes, not native ETH sentinel
+  const QUOTE_TOKEN_ADDRESS: Record<string, string | undefined> = {
+    ETH: WETH_ADDRESS, // Use WETH for quoting
+    WETH: WETH_ADDRESS,
+    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    DAI: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
+    cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+  };
+
+  // Use TOKEN_ADDRESS for swap execution (supports native ETH sentinel)
   const fromTokenAddress = fromIsCrypto ? TOKEN_ADDRESS[selectedCrypto.symbol] : TOKEN_ADDRESS[selectedCrypto.symbol];
   const toTokenAddress = fromIsCrypto ? TOKEN_ADDRESS['USDC'] : TOKEN_ADDRESS[selectedCrypto.symbol];
+
+  // Use QUOTE_TOKEN_ADDRESS for quoting (requires WETH for ETH)
+  const fromQuoteAddress = fromIsCrypto ? QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol] : QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol];
+  const toQuoteAddress = fromIsCrypto ? QUOTE_TOKEN_ADDRESS['USDC'] : QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol];
 
   // Simple rule for decimals; production should fetch decimals from chain.
   const DECIMALS: Record<string, number> = { ETH: 18, USDC: 6, DAI: 18, WETH: 18, cbBTC: 8 };
   const fromDecimals = fromIsCrypto ? (DECIMALS[selectedCrypto.symbol] ?? 18) : 6; // treat stock->USDC path as 6
 
   const quote = useQuoteV3Single({
-    tokenIn: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
-    tokenOut: (fromIsCrypto ? (TOKEN_ADDRESS['USDC'] as any) : (fromTokenAddress as any)) as any,
+    tokenIn: (fromIsCrypto ? (fromQuoteAddress as any) : (QUOTE_TOKEN_ADDRESS['USDC'] as any)) as any,
+    tokenOut: (fromIsCrypto ? (QUOTE_TOKEN_ADDRESS['USDC'] as any) : (fromQuoteAddress as any)) as any,
     amountIn: amount || '0',
     decimalsIn: fromDecimals,
     fee: 3000,
