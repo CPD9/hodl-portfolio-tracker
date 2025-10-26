@@ -24,9 +24,6 @@ const Header = async ({ user }: { user: User }) => {
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden lg:block">
-                        <OnchainWalletConnect />
-                    </div>
                     <UserDropdown user={user} initialStocks={initialStocks} />
                 </div>
             </div>

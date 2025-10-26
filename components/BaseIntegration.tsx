@@ -216,7 +216,7 @@ const BaseIntegration: React.FC = () => {
           <Button 
             onClick={connectWallet}
             disabled={isPending}
-            className="hidden md:inline-flex bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 rounded-lg font-medium text-sm md:text-base"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 rounded-lg font-medium text-sm md:text-base"
           >
             {isPending ? 'Connecting...' : 'Connect Wallet'}
           </Button>
