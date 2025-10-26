@@ -15,24 +15,24 @@ const ChallengesSection = () => {
     {
       icon: 'bx-brain',
       title: 'AI Accuracy',
-      before: 'Frequent hallucinations',
-      after: 'Zero hallucinations',
+      before: 'Frequent Hallucinations',
+      after: 'Zero Hallucinations',
       improvement: '100% accuracy',
       description: 'Strict RAG implementation with verified Finnhub data. Tested with 127 users over 3 months'
     },
     {
       icon: 'bx-dollar',
       title: 'Transaction Costs',
-      before: '$3,955/year',
-      after: '$2/year',
+      before: '$3,955/Year',
+      after: '$2/Year',
       improvement: '99.95% reduction',
       description: 'Base L2 enables ~$0.01 transactions vs $5-50 on Ethereum mainnet for active portfolio management'
     },
     {
       icon: 'bx-search',
       title: 'Stock-Crypto Correlation',
-      before: 'Manual research',
-      after: '68% correlation score',
+      before: 'Manual Research',
+      after: '68% Correlation Score',
       improvement: 'Automated',
       description: 'Multi-signal algorithm: sector overlap (40%), semantic similarity (30%), price correlation (30%)'
     }
