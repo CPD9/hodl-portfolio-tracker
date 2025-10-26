@@ -29,11 +29,11 @@ const FearGreedIndex = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-3 md:p-4 border border-gray-600 overflow-hidden max-w-4xl mx-auto">
+    <div className="bg-gray-800 rounded-lg p-2 md:p-4 border border-gray-600 overflow-hidden w-full max-w-full md:max-w-4xl mx-auto">
       <div 
         ref={containerRef}
         className="tradingview-widget-container w-full overflow-hidden"
-        style={{ height: '450px', minHeight: '350px', overflow: 'hidden' }}
+        style={{ height: '450px', minHeight: '350px', maxWidth: '100%', overflow: 'hidden' }}
       />
     </div>
   );
