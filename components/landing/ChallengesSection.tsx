@@ -15,7 +15,7 @@ const ChallengesSection = () => {
     {
       icon: 'bx-brain',
       title: 'AI Accuracy',
-      before: 'Hallucinations',
+      before: 'Frequent hallucinations',
       after: 'Zero hallucinations',
       improvement: '100% accuracy',
       description: 'Strict RAG implementation with verified Finnhub data. Tested with 127 users over 3 months'
@@ -68,11 +68,11 @@ const ChallengesSection = () => {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-red-900/20 rounded-lg p-3 md:p-4 border border-red-500/30">
                   <p className="text-xs text-gray-400 mb-1">Before</p>
-                  <p className="text-sm md:text-lg font-bold text-red-400 break-words">{challenge.before}</p>
+                  <p className="text-xs md:text-sm lg:text-lg font-bold text-red-400 break-words leading-tight">{challenge.before}</p>
                 </div>
                 <div className="bg-green-900/20 rounded-lg p-3 md:p-4 border border-green-500/30">
                   <p className="text-xs text-gray-400 mb-1">After</p>
-                  <p className="text-sm md:text-lg font-bold text-green-400 break-words">{challenge.after}</p>
+                  <p className="text-xs md:text-sm lg:text-lg font-bold text-green-400 break-words leading-tight">{challenge.after}</p>
                 </div>
               </div>
 
