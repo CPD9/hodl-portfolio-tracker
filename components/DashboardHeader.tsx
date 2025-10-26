@@ -84,8 +84,6 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
 
         {/* Mobile actions */}
         <div className="lg:hidden flex items-center gap-2">
-          {/* Keep wallet connect visible on mobile */}
-          <OnchainWalletConnect />
           <button
             onClick={toggleMobileMenu}
             className="text-3xl p-3 relative z-[60] bg-gradient-to-br from-yellow-500/20 to-yellow-600/10 rounded-xl hover:from-yellow-500/30 hover:to-yellow-600/20 transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40"

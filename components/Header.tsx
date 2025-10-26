@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavItems from "@/components/NavItems";
-import OnchainWalletConnect from "@/components/OnchainWalletConnect";
 import PixelCharacter from "@/components/PixelCharacter";
 import UserDropdown from "@/components/UserDropdown";
 import {searchStocks} from "@/lib/actions/finnhub.actions";

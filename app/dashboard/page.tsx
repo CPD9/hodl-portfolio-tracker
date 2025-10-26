@@ -279,7 +279,7 @@ const Home = () => {
                             </div>
                             <a 
                                 href="/dashboard/portfolio" 
-                                className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/30"
+                                className="px-3 py-2 md:px-6 md:py-3 text-xs md:text-base bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/30 whitespace-nowrap"
                             >
                                 View Full Portfolio
                             </a>
