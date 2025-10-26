@@ -65,7 +65,7 @@ const LandingHeader = () => {
           </Link>
           <button
             onClick={toggleHeaderCollapse}
-            className="ml-2 text-gray-400 hover:text-yellow-500 transition-colors p-1"
+            className="ml-2 text-yellow-500 hover:text-yellow-400 transition-colors p-1"
             aria-label="Toggle header"
           >
             <i className='bx bx-chevron-up text-xl'></i>
