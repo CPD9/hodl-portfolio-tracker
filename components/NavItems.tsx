@@ -19,7 +19,7 @@ const NavItems = ({initialStocks, vertical = false, onNavigate, dense = false}: 
             {NAV_ITEMS.map(({ href, label }) => {
                 if(href === '/search') return (
                     <li key="search-trigger" className={vertical ? 'w-full' : ''}>
-                        <span className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500/70' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-400 sm:hover:text-yellow-500 transition-colors cursor-pointer`}>
+                        <span className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-500 transition-colors cursor-pointer`}>
                             <SearchCommand
                                 renderAs="text"
                                 label="Search"
@@ -33,7 +33,7 @@ const NavItems = ({initialStocks, vertical = false, onNavigate, dense = false}: 
                     <Link 
                         href={href}
                         onClick={onNavigate}
-                        className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500/70' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-400 sm:hover:text-yellow-500 transition-colors ${
+                        className={`${vertical ? 'block py-2 px-2 rounded text-center hover:underline underline-offset-4 decoration-yellow-500' : 'hover:underline underline-offset-4 decoration-yellow-500/70 whitespace-nowrap'} hover:text-yellow-500 transition-colors ${
                             isActive(href) ? 'text-gray-100' : ''
                         }`}
                     >

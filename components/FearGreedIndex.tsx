@@ -14,7 +14,7 @@ const FearGreedIndex = () => {
         interval: '1h',
         width: '100%',
         isTransparent: true,
-        height: 700,
+        height: 450,
         symbol: 'AAPL',
         showIntervalTabs: true,
         displayMode: 'single',
@@ -29,11 +29,11 @@ const FearGreedIndex = () => {
   }, []);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 md:p-6 border border-gray-600 overflow-hidden">
+    <div className="bg-gray-800 rounded-lg p-3 md:p-4 border border-gray-600 overflow-hidden max-w-4xl mx-auto">
       <div 
         ref={containerRef}
         className="tradingview-widget-container w-full overflow-hidden"
-        style={{ height: '700px', minHeight: '700px', overflow: 'hidden' }}
+        style={{ height: '450px', minHeight: '350px', overflow: 'hidden' }}
       />
     </div>
   );
