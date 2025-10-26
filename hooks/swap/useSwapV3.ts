@@ -1,7 +1,7 @@
 import { Address } from 'viem';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi';
 import swapRouterAbi from '@/lib/swap/abis/swapRouter.json';
-import { NATIVE_ETH, getUniversalRouter } from '@/lib/swap/addresses';
+import { NATIVE_ETH, getSwapRouter } from '@/lib/swap/addresses';
 
 export type SwapV3Params = {
   routerAddress?: Address; // If not provided, will try env var
@@ -25,9 +25,9 @@ export function useSwapV3() {
   const { isLoading: isConfirming, isSuccess, error: confirmError } = useWaitForTransactionReceipt({ hash });
 
   function execute(params: SwapV3Params) {
-    // Use Universal Router from addresses config as fallback
-    const universalRouter = getUniversalRouter(chainId);
-    const router = (params.routerAddress || getSwapRouterFromEnv() || universalRouter);
+    // Use SwapRouter from addresses config as fallback
+    const swapRouter = getSwapRouter(chainId);
+    const router = (params.routerAddress || getSwapRouterFromEnv() || swapRouter);
     if (!router) throw new Error('Swap Router address not configured');
     if (!address) throw new Error('Wallet not connected');
 

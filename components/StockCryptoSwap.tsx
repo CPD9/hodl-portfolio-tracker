@@ -11,7 +11,7 @@ import { useAccount, useChainId } from 'wagmi';
 import { useState } from 'react';
 import { useQuoteV3Single } from '@/hooks/swap/useQuoteV3';
 import { useAllowance } from '@/hooks/swap/useAllowance';
-import { getUniversalRouter } from '@/lib/swap/addresses';
+import { getSwapRouter } from '@/lib/swap/addresses';
 import { getSwapEnv } from '@/lib/swap/config';
 import { parseUnits, formatUnits, maxUint256 } from 'viem';
 import { useSwapV3, getSwapRouterFromEnv } from '@/hooks/swap/useSwapV3';
@@ -91,8 +91,8 @@ export function StockCryptoSwap() {
     fee: 3000,
   });
 
-  // Allowance against Universal Router (swap executor)
-  const router = (getUniversalRouter(chainId) || '') as `0x${string}`;
+  // Allowance against SwapRouter (swap executor)
+  const router = (getSwapRouter(chainId) || '') as `0x${string}`;
   const allowance = useAllowance({
     token: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
     spender: router,
@@ -133,9 +133,9 @@ export function StockCryptoSwap() {
     if (!amount || Number(amount) <= 0) return false;
     if (!quote.amountOut) return false;
     if (needsApproval) return false;
-    // Check if router is available (env var or Universal Router)
-    const universalRouter = getUniversalRouter(chainId);
-    if (!getSwapRouterFromEnv() && !universalRouter) return false;
+    // Check if router is available (env var or SwapRouter)
+    const swapRouter = getSwapRouter(chainId);
+    if (!getSwapRouterFromEnv() && !swapRouter) return false;
     return true;
   })();
 
