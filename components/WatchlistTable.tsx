@@ -58,13 +58,13 @@ const WatchlistTable: React.FC<WatchlistTableProps> = ({ watchlist, userId }) =>
         onClose={() => setAlertDialogOpen(false)}
         stock={selectedStock}
       />
-      <div className="bg-gray-800 rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg overflow-hidden border border-yellow-500/20">
         <div className="overflow-x-auto">
           <table className="watchlist-table">
-          <thead>
+          <thead className="bg-gradient-to-r from-yellow-500/10 to-purple-500/10 border-b border-yellow-500/20">
             <tr className="table-header-row">
               {WATCHLIST_TABLE_HEADER.map((header, index) => (
-                <th key={index} className="table-header py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-sm">
+                <th key={index} className="table-header py-2 md:py-3 px-2 md:px-4 text-left text-[10px] md:text-sm text-yellow-400 font-semibold">
                   {header}
                 </th>
               ))}

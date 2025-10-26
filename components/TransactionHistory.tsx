@@ -139,14 +139,15 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
             <tbody className="divide-y divide-gray-700">
               {filteredTransactions.map((tx) => (
                 <tr key={tx.id} className="hover:bg-gray-700 transition-colors">
-                  <td className="py-2 md:py-4 px-2 md:px-4 text-[10px] md:text-sm text-gray-400">
-                    {formatDate(tx.timestamp)}
+                  <td className="py-2 md:py-4 px-2 md:px-4 text-[10px] md:text-sm text-gray-400 whitespace-nowrap">
+                    <div className="hidden md:block">{formatDate(tx.timestamp)}</div>
+                    <div className="block md:hidden text-[9px]">{new Date(tx.timestamp).toLocaleDateString()}</div>
                   </td>
                   <td className="py-2 md:py-4 px-2 md:px-4">
                     <span className="font-semibold text-gray-100 text-xs md:text-base">{tx.symbol}</span>
                   </td>
                   <td className="py-2 md:py-4 px-2 md:px-4">
-                    <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium ${
+                    <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium whitespace-nowrap ${
                       tx.type === 'STOCK' 
                         ? 'bg-blue-900/30 text-blue-400' 
                         : 'bg-purple-900/30 text-purple-400'
@@ -170,14 +171,14 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions })
                     </div>
                   </td>
                   <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 text-xs md:text-base">{tx.quantity}</td>
-                  <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-mono text-xs md:text-base">
+                  <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-mono text-[10px] md:text-sm">
                     {formatCurrency(tx.price)}
                   </td>
-                  <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-semibold text-xs md:text-base">
+                  <td className="py-2 md:py-4 px-2 md:px-4 text-right text-gray-100 font-semibold text-[10px] md:text-sm">
                     {formatCurrency(tx.total)}
                   </td>
                   <td className="py-2 md:py-4 px-2 md:px-4 text-center">
-                    <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium ${
+                    <span className={`px-1 md:px-2 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-medium whitespace-nowrap ${
                       tx.status === 'COMPLETED'
                         ? 'bg-green-900/30 text-green-400'
                         : tx.status === 'PENDING'

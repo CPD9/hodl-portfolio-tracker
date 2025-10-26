@@ -168,56 +168,56 @@ const GamificationPage = async () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Top 3 Podium */}
                             <div className="space-y-4">
-                                <h3 className="text-lg font-semibold text-gray-100 mb-4">Top Performers</h3>
+                                <h3 className="text-base md:text-lg font-semibold text-gray-100 mb-4">Top Performers</h3>
                                 
                                 {/* 1st Place */}
-                                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border border-yellow-500/30 rounded-lg">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                            <span className="text-sm font-bold text-gray-900">1</span>
+                                <div className="flex items-center justify-between p-3 md:p-4 bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border border-yellow-500/30 rounded-lg">
+                                    <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                                        <div className="w-7 h-7 md:w-8 md:h-8 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span className="text-xs md:text-sm font-bold text-gray-900">1</span>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-100">CryptoKing_2024</p>
-                                            <p className="text-sm text-gray-400">+47.2% this month</p>
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-gray-100 text-xs md:text-base truncate">CryptoKing_2024</p>
+                                            <p className="text-xs md:text-sm text-gray-400 truncate">+47.2% this month</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-lg font-bold text-yellow-400">$2.1M</p>
-                                        <p className="text-xs text-gray-400">Portfolio</p>
+                                    <div className="text-right flex-shrink-0 ml-2">
+                                        <p className="text-sm md:text-lg font-bold text-yellow-400">$2.1M</p>
+                                        <p className="text-[10px] md:text-xs text-gray-400">Portfolio</p>
                                     </div>
                                 </div>
 
                                 {/* 2nd Place */}
-                                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-700/50 to-gray-600/30 border border-gray-500/30 rounded-lg">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
-                                            <span className="text-sm font-bold text-gray-900">2</span>
+                                <div className="flex items-center justify-between p-3 md:p-4 bg-gradient-to-r from-gray-700/50 to-gray-600/30 border border-gray-500/30 rounded-lg">
+                                    <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                                        <div className="w-7 h-7 md:w-8 md:h-8 bg-gray-400 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span className="text-xs md:text-sm font-bold text-gray-900">2</span>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-100">StockMaster_Pro</p>
-                                            <p className="text-sm text-gray-400">+38.7% this month</p>
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-gray-100 text-xs md:text-base truncate">StockMaster_Pro</p>
+                                            <p className="text-xs md:text-sm text-gray-400 truncate">+38.7% this month</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-lg font-bold text-gray-300">$1.8M</p>
-                                        <p className="text-xs text-gray-400">Portfolio</p>
+                                    <div className="text-right flex-shrink-0 ml-2">
+                                        <p className="text-sm md:text-lg font-bold text-gray-300">$1.8M</p>
+                                        <p className="text-[10px] md:text-xs text-gray-400">Portfolio</p>
                                     </div>
                                 </div>
 
                                 {/* 3rd Place */}
-                                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-900/30 to-orange-800/20 border border-orange-500/30 rounded-lg">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-                                            <span className="text-sm font-bold text-gray-900">3</span>
+                                <div className="flex items-center justify-between p-3 md:p-4 bg-gradient-to-r from-orange-900/30 to-orange-800/20 border border-orange-500/30 rounded-lg">
+                                    <div className="flex items-center space-x-2 md:space-x-3 min-w-0 flex-1">
+                                        <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span className="text-xs md:text-sm font-bold text-gray-900">3</span>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-100">DeFi_Wizard</p>
-                                            <p className="text-sm text-gray-400">+35.1% this month</p>
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-gray-100 text-xs md:text-base truncate">DeFi_Wizard</p>
+                                            <p className="text-xs md:text-sm text-gray-400 truncate">+35.1% this month</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-lg font-bold text-orange-400">$1.5M</p>
-                                        <p className="text-xs text-gray-400">Portfolio</p>
+                                    <div className="text-right flex-shrink-0 ml-2">
+                                        <p className="text-sm md:text-lg font-bold text-orange-400">$1.5M</p>
+                                        <p className="text-[10px] md:text-xs text-gray-400">Portfolio</p>
                                     </div>
                                 </div>
                             </div>
@@ -312,6 +312,7 @@ const GamificationPage = async () => {
                         scriptUrl={`${scriptUrl}stock-heatmap.js`}
                         config={HEATMAP_WIDGET_CONFIG}
                         height={600}
+                        className="text-center"
                     />
                 </div>
                 <div className="md-col-span xl:col-span-2">

@@ -238,9 +238,9 @@ console.log(data.usd) // $3,245.67`
         <div className="container mx-auto px-4 lg:px-20 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <PixelCharacter size="sm" />
-            <span className="text-2xl font-bold text-yellow-500">HODL</span>
-            <span className="text-gray-500 mx-2">/</span>
-            <span className="text-lg text-gray-400">Documentation</span>
+            <span className="text-xl md:text-2xl font-bold text-yellow-500">HODL</span>
+            <span className="text-gray-500 mx-1 md:mx-2">/</span>
+            <span className="text-sm md:text-lg text-gray-400">Documentation</span>
           </Link>
           <Link
             href="/sign-up"
