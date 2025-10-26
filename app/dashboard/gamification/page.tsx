@@ -1,13 +1,8 @@
-import { Award, BarChart3, Star, Target, TrendingUp, Trophy, Users, Video, Zap } from 'lucide-react';
+import { Award, Star, Target, TrendingUp, Trophy, Users, Video } from 'lucide-react';
 import {
-    HEATMAP_WIDGET_CONFIG,
-    MARKET_DATA_WIDGET_CONFIG,
-    MARKET_OVERVIEW_WIDGET_CONFIG,
-    TOP_STORIES_WIDGET_CONFIG
+    HEATMAP_WIDGET_CONFIG
 } from "@/lib/constants";
 
-import AITradingCompanion from "@/components/AITradingCompanion";
-import BaseIntegration from "@/components/BaseIntegration";
 import { Button } from "@/components/ui/button";
 import ConsultationsTable from "@/components/consultation/ConsultationsTable";
 import CryptoHeatmap from "@/components/CryptoHeatmap";
@@ -318,46 +313,6 @@ const GamificationPage = async () => {
                 </div>
                 <div className="md-col-span xl:col-span-2">
                     <CryptoHeatmap />
-                </div>
-            </section>
-
-            {/* AI Trading Companion Section */}
-            <section className="w-full mb-8">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-2xl font-bold text-purple-500 mb-6 text-center flex items-center justify-center">
-                        <BarChart3 className="w-6 h-6 mr-3" />
-                        AI Trading Companion
-                    </h2>
-                    <AITradingCompanion />
-                </div>
-            </section>
-
-            {/* Base Integration Section */}
-            <section className="w-full mb-8">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-2xl font-bold text-yellow-500 mb-6 text-center flex items-center justify-center">
-                        <Zap className="w-6 h-6 mr-3" />
-                        Base Chain Integration
-                    </h2>
-                    <BaseIntegration />
-                </div>
-            </section>
-
-            {/* Additional TradingView Widgets */}
-            <section className="grid w-full gap-8 home-section">
-                <div className="h-full md:col-span-1 xl:col-span-1">
-                    <TradingViewWidget
-                        scriptUrl={`${scriptUrl}timeline.js`}
-                        config={TOP_STORIES_WIDGET_CONFIG}
-                        height={600}
-                    />
-                </div>
-                <div className="h-full md:col-span-1 xl:col-span-2">
-                    <TradingViewWidget
-                        scriptUrl={`${scriptUrl}market-quotes.js`}
-                        config={MARKET_DATA_WIDGET_CONFIG}
-                        height={600}
-                    />
                 </div>
             </section>
         </div>
