@@ -279,9 +279,9 @@ const Home = () => {
                             </div>
                             <a 
                                 href="/dashboard/portfolio" 
-                                className="px-3 py-2 md:px-6 md:py-3 text-xs md:text-base bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/30 whitespace-nowrap"
+                                className="px-3 py-2 md:px-6 md:py-3 text-xs md:text-base bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/30 text-center leading-tight"
                             >
-                                View Full Portfolio
+                                <span className="md:inline block">View Full</span> <span className="md:inline block">Portfolio</span>
                             </a>
                         </div>
                         <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-6 border border-yellow-500/20 shadow-2xl shadow-yellow-500/10">
