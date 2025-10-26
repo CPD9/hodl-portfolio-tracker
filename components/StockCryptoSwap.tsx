@@ -43,7 +43,6 @@ const POPULAR_STOCKS: Stock[] = [
 
 const POPULAR_CRYPTO: Crypto[] = [
   { symbol: 'ETH', name: 'Ethereum', price: 2450.30 },
-  { symbol: 'BTC', name: 'Bitcoin', price: 42150.00 },
   { symbol: 'USDC', name: 'USD Coin', price: 1.00 },
   { symbol: 'cbBTC', name: 'Coinbase BTC', price: 42150.00 },
 ];
@@ -67,20 +66,21 @@ export function StockCryptoSwap() {
   const fromIsCrypto = fromType === 'crypto';
 
   // Mapping of symbols to ERC20 addresses on Base; extend as needed.
+  // ETH uses sentinel address for native ETH handling
+  const NATIVE_ETH_SENTINEL = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
   const TOKEN_ADDRESS: Record<string, string | undefined> = {
-    ETH: undefined, // native ETH (use WETH for swaps)
+    ETH: NATIVE_ETH_SENTINEL, // native ETH (special handling in swap)
     WETH: '0x4200000000000000000000000000000000000006',
     USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
     DAI: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
     cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
-    BTC: undefined, // non-erc20 placeholder
   };
 
   const fromTokenAddress = fromIsCrypto ? TOKEN_ADDRESS[selectedCrypto.symbol] : TOKEN_ADDRESS[selectedCrypto.symbol];
   const toTokenAddress = fromIsCrypto ? TOKEN_ADDRESS['USDC'] : TOKEN_ADDRESS[selectedCrypto.symbol];
 
   // Simple rule for decimals; production should fetch decimals from chain.
-  const DECIMALS: Record<string, number> = { USDC: 6, DAI: 18, WETH: 18, cbBTC: 8 };
+  const DECIMALS: Record<string, number> = { ETH: 18, USDC: 6, DAI: 18, WETH: 18, cbBTC: 8 };
   const fromDecimals = fromIsCrypto ? (DECIMALS[selectedCrypto.symbol] ?? 18) : 6; // treat stock->USDC path as 6
 
   const quote = useQuoteV3Single({
@@ -92,7 +92,9 @@ export function StockCryptoSwap() {
   });
 
   // Allowance against SwapRouter (swap executor)
+  // Skip allowance check for native ETH
   const router = (getSwapRouter(chainId) || '') as `0x${string}`;
+  const isNativeETH = fromIsCrypto && selectedCrypto.symbol === 'ETH';
   const allowance = useAllowance({
     token: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
     spender: router,
@@ -102,6 +104,8 @@ export function StockCryptoSwap() {
 
   const needsApproval = (() => {
     try {
+      // Native ETH never needs approval
+      if (isNativeETH) return false;
       if (!amount || !fromDecimals) return false;
       const amt = parseUnits(amount || '0', fromDecimals);
       return allowance.allowance < amt;
