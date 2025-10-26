@@ -1,23 +1,23 @@
 'use client';
 
-import { ArrowDownUp, Bitcoin, DollarSign, TrendingUp, Shield, CheckCircle } from 'lucide-react';
+import { ArrowDownUp, Bitcoin, CheckCircle, DollarSign, Shield, TrendingUp } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Swap, SwapAmountInput, SwapButton, SwapMessage, SwapToast, SwapToggleButton } from '@coinbase/onchainkit/swap';
+import { formatUnits, maxUint256, parseUnits } from 'viem';
+import { getSwapRouterFromEnv, useSwapV3 } from '@/hooks/swap/useSwapV3';
+import { useAccount, useChainId } from 'wagmi';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wallet } from '@coinbase/onchainkit/wallet';
-import { useAccount, useChainId } from 'wagmi';
-import { useState } from 'react';
-import { useQuoteV3Single } from '@/hooks/swap/useQuoteV3';
-import { useAllowance } from '@/hooks/swap/useAllowance';
-import { getUniversalRouter } from '@/lib/swap/addresses';
-import { getSwapEnv } from '@/lib/swap/config';
-import { parseUnits, formatUnits, maxUint256 } from 'viem';
-import { useSwapV3, getSwapRouterFromEnv } from '@/hooks/swap/useSwapV3';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Swap, SwapAmountInput, SwapButton, SwapMessage, SwapToast, SwapToggleButton } from '@coinbase/onchainkit/swap';
 import type { Token as OkToken } from '@coinbase/onchainkit/token';
+import { Wallet } from '@coinbase/onchainkit/wallet';
+import { getSwapEnv } from '@/lib/swap/config';
+import { getSwapRouter } from '@/lib/swap/addresses';
+import { useAllowance } from '@/hooks/swap/useAllowance';
+import { useQuoteV3Single } from '@/hooks/swap/useQuoteV3';
+import { useState } from 'react';
 
 interface Stock {
   symbol: string;
@@ -43,7 +43,6 @@ const POPULAR_STOCKS: Stock[] = [
 
 const POPULAR_CRYPTO: Crypto[] = [
   { symbol: 'ETH', name: 'Ethereum', price: 2450.30 },
-  { symbol: 'BTC', name: 'Bitcoin', price: 42150.00 },
   { symbol: 'USDC', name: 'USD Coin', price: 1.00 },
   { symbol: 'cbBTC', name: 'Coinbase BTC', price: 42150.00 },
 ];
@@ -67,32 +66,51 @@ export function StockCryptoSwap() {
   const fromIsCrypto = fromType === 'crypto';
 
   // Mapping of symbols to ERC20 addresses on Base; extend as needed.
+  // ETH uses sentinel address for native ETH handling in swap execution
+  const NATIVE_ETH_SENTINEL = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+  const WETH_ADDRESS = '0x4200000000000000000000000000000000000006';
+
   const TOKEN_ADDRESS: Record<string, string | undefined> = {
-    ETH: undefined, // native ETH (use WETH for swaps)
-    WETH: '0x4200000000000000000000000000000000000006',
+    ETH: NATIVE_ETH_SENTINEL, // native ETH (special handling in swap)
+    WETH: WETH_ADDRESS,
     USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
     DAI: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
     cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
-    BTC: undefined, // non-erc20 placeholder
   };
 
+  // QuoterV2 expects WETH address for quotes, not native ETH sentinel
+  const QUOTE_TOKEN_ADDRESS: Record<string, string | undefined> = {
+    ETH: WETH_ADDRESS, // Use WETH for quoting
+    WETH: WETH_ADDRESS,
+    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    DAI: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
+    cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
+  };
+
+  // Use TOKEN_ADDRESS for swap execution (supports native ETH sentinel)
   const fromTokenAddress = fromIsCrypto ? TOKEN_ADDRESS[selectedCrypto.symbol] : TOKEN_ADDRESS[selectedCrypto.symbol];
   const toTokenAddress = fromIsCrypto ? TOKEN_ADDRESS['USDC'] : TOKEN_ADDRESS[selectedCrypto.symbol];
 
+  // Use QUOTE_TOKEN_ADDRESS for quoting (requires WETH for ETH)
+  const fromQuoteAddress = fromIsCrypto ? QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol] : QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol];
+  const toQuoteAddress = fromIsCrypto ? QUOTE_TOKEN_ADDRESS['USDC'] : QUOTE_TOKEN_ADDRESS[selectedCrypto.symbol];
+
   // Simple rule for decimals; production should fetch decimals from chain.
-  const DECIMALS: Record<string, number> = { USDC: 6, DAI: 18, WETH: 18, cbBTC: 8 };
+  const DECIMALS: Record<string, number> = { ETH: 18, USDC: 6, DAI: 18, WETH: 18, cbBTC: 8 };
   const fromDecimals = fromIsCrypto ? (DECIMALS[selectedCrypto.symbol] ?? 18) : 6; // treat stock->USDC path as 6
 
   const quote = useQuoteV3Single({
-    tokenIn: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
-    tokenOut: (fromIsCrypto ? (TOKEN_ADDRESS['USDC'] as any) : (fromTokenAddress as any)) as any,
+    tokenIn: (fromIsCrypto ? (fromQuoteAddress as any) : (QUOTE_TOKEN_ADDRESS['USDC'] as any)) as any,
+    tokenOut: (fromIsCrypto ? (QUOTE_TOKEN_ADDRESS['USDC'] as any) : (fromQuoteAddress as any)) as any,
     amountIn: amount || '0',
     decimalsIn: fromDecimals,
     fee: 3000,
   });
 
-  // Allowance against Universal Router (swap executor)
-  const router = (getUniversalRouter(chainId) || '') as `0x${string}`;
+  // Allowance against SwapRouter (swap executor)
+  // Skip allowance check for native ETH
+  const router = getSwapRouter(chainId) as `0x${string}` | undefined;
+  const isNativeETH = fromIsCrypto && selectedCrypto.symbol === 'ETH';
   const allowance = useAllowance({
     token: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
     spender: router,
@@ -102,6 +120,8 @@ export function StockCryptoSwap() {
 
   const needsApproval = (() => {
     try {
+      // Native ETH never needs approval
+      if (isNativeETH) return false;
       if (!amount || !fromDecimals) return false;
       const amt = parseUnits(amount || '0', fromDecimals);
       return allowance.allowance < amt;
@@ -133,9 +153,9 @@ export function StockCryptoSwap() {
     if (!amount || Number(amount) <= 0) return false;
     if (!quote.amountOut) return false;
     if (needsApproval) return false;
-    // Check if router is available (env var or Universal Router)
-    const universalRouter = getUniversalRouter(chainId);
-    if (!getSwapRouterFromEnv() && !universalRouter) return false;
+    // Check if router is available (env var or SwapRouter)
+    const swapRouter = getSwapRouter(chainId);
+    if (!getSwapRouterFromEnv() && !swapRouter) return false;
     return true;
   })();
 
