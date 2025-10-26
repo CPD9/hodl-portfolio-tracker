@@ -103,13 +103,13 @@ const CryptoHeatmap: React.FC = () => {
   return (
     <div className="bg-gray-800 rounded-lg p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0 mb-6">
         <div className="flex items-center space-x-3">
           <Coins className="w-6 h-6 text-yellow-400" />
           <h3 className="text-lg font-semibold text-gray-100">Crypto Market Heatmap</h3>
           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
         </div>
-        <div className="flex items-center space-x-4 text-sm text-gray-400">
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 text-xs md:text-sm text-gray-400">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
             <span>Gainers</span>

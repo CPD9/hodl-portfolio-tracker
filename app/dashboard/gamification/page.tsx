@@ -309,6 +309,7 @@ const GamificationPage = async () => {
                 <div className="md:col-span-1 xl:col-span-1">
                     <TradingViewWidget
                         title="Traditional Stock Heatmap"
+                        titleClassName="text-center"
                         scriptUrl={`${scriptUrl}stock-heatmap.js`}
                         config={HEATMAP_WIDGET_CONFIG}
                         height={600}
