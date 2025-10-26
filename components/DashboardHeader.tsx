@@ -68,16 +68,25 @@ const DashboardHeader = ({ user, initialStocks }: Props) => {
         shouldShowHeader ? 'translate-y-0' : '-translate-y-full'
       }`}>
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center py-3 px-4 lg:px-6 xl:px-8">
-          {/* Logo */}
-          <Link href="/" onClick={toggleHeaderCollapse} className="flex items-center space-x-2 hover:scale-[1.02] transition-all duration-300 group flex-shrink-0">
-          <div className="relative">
-            <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
-            <PixelCharacter size="xl" />
+          {/* Logo - Click character/text to navigate, click button to collapse */}
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-2 hover:scale-[1.02] transition-all duration-300 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-yellow-500/10 blur-xl rounded-full group-hover:bg-yellow-500/15 transition-colors"></div>
+                <PixelCharacter size="xl" />
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent whitespace-nowrap">
+                HODL
+              </h1>
+            </Link>
+            <button
+              onClick={toggleHeaderCollapse}
+              className="ml-1 text-gray-400 hover:text-yellow-500 transition-colors p-1"
+              aria-label="Toggle header"
+            >
+              <i className='bx bx-chevron-up text-xl'></i>
+            </button>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold m-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent whitespace-nowrap">
-            HODL
-          </h1>
-        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center flex-1 justify-center max-w-4xl mx-4">
