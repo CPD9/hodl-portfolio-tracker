@@ -186,7 +186,7 @@ export default function ProofOfReserves({ compact = false }: { compact?: boolean
             <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
               Proof of Reserves
             </h2>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-gray-400" suppressHydrationWarning>
               Real-time on-chain verification • Last updated: {lastRefresh.toLocaleTimeString()}
             </p>
           </div>
