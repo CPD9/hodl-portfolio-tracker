@@ -1,23 +1,23 @@
 'use client';
 
-import { ArrowDownUp, Bitcoin, DollarSign, TrendingUp, Shield, CheckCircle } from 'lucide-react';
+import { ArrowDownUp, Bitcoin, CheckCircle, DollarSign, Shield, TrendingUp } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Swap, SwapAmountInput, SwapButton, SwapMessage, SwapToast, SwapToggleButton } from '@coinbase/onchainkit/swap';
+import { formatUnits, maxUint256, parseUnits } from 'viem';
+import { getSwapRouterFromEnv, useSwapV3 } from '@/hooks/swap/useSwapV3';
+import { useAccount, useChainId } from 'wagmi';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Wallet } from '@coinbase/onchainkit/wallet';
-import { useAccount, useChainId } from 'wagmi';
-import { useState } from 'react';
-import { useQuoteV3Single } from '@/hooks/swap/useQuoteV3';
-import { useAllowance } from '@/hooks/swap/useAllowance';
-import { getSwapRouter } from '@/lib/swap/addresses';
-import { getSwapEnv } from '@/lib/swap/config';
-import { parseUnits, formatUnits, maxUint256 } from 'viem';
-import { useSwapV3, getSwapRouterFromEnv } from '@/hooks/swap/useSwapV3';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Swap, SwapAmountInput, SwapButton, SwapMessage, SwapToast, SwapToggleButton } from '@coinbase/onchainkit/swap';
 import type { Token as OkToken } from '@coinbase/onchainkit/token';
+import { Wallet } from '@coinbase/onchainkit/wallet';
+import { getSwapEnv } from '@/lib/swap/config';
+import { getSwapRouter } from '@/lib/swap/addresses';
+import { useAllowance } from '@/hooks/swap/useAllowance';
+import { useQuoteV3Single } from '@/hooks/swap/useQuoteV3';
+import { useState } from 'react';
 
 interface Stock {
   symbol: string;
@@ -109,7 +109,7 @@ export function StockCryptoSwap() {
 
   // Allowance against SwapRouter (swap executor)
   // Skip allowance check for native ETH
-  const router = (getSwapRouter(chainId) || '') as `0x${string}`;
+  const router = getSwapRouter(chainId) as `0x${string}` | undefined;
   const isNativeETH = fromIsCrypto && selectedCrypto.symbol === 'ETH';
   const allowance = useAllowance({
     token: (fromIsCrypto ? (fromTokenAddress as any) : (TOKEN_ADDRESS['USDC'] as any)) as any,
