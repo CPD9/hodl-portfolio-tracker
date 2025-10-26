@@ -66,13 +66,13 @@ const ChallengesSection = () => {
 
               {/* Before/After Comparison */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-red-900/20 rounded-lg p-4 border border-red-500/30">
+                <div className="bg-red-900/20 rounded-lg p-3 md:p-4 border border-red-500/30">
                   <p className="text-xs text-gray-400 mb-1">Before</p>
-                  <p className="text-lg font-bold text-red-400">{challenge.before}</p>
+                  <p className="text-sm md:text-lg font-bold text-red-400 break-words">{challenge.before}</p>
                 </div>
-                <div className="bg-green-900/20 rounded-lg p-4 border border-green-500/30">
+                <div className="bg-green-900/20 rounded-lg p-3 md:p-4 border border-green-500/30">
                   <p className="text-xs text-gray-400 mb-1">After</p>
-                  <p className="text-lg font-bold text-green-400">{challenge.after}</p>
+                  <p className="text-sm md:text-lg font-bold text-green-400 break-words">{challenge.after}</p>
                 </div>
               </div>
 
