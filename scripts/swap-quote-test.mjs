@@ -5,7 +5,7 @@
 import 'dotenv/config';
 import { createPublicClient, http, parseUnits, formatUnits } from 'viem';
 import { base, baseSepolia } from 'viem/chains';
-import quoterAbi from '../lib/swap/abis/quoterV2.json' assert { type: 'json' };
+import quoterAbi from '../lib/swap/abis/quoterV2.json' with { type: 'json' };
 
 async function main() {
   const sepoliaRpc = process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL;
