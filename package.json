@@ -11,6 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "test:db": "node scripts/test-db.mjs",
+    "test:swap:quote": "node scripts/swap-quote-test.mjs",
     "validate:farcaster": "node scripts/validate-farcaster-manifest.js"
   },
   "dependencies": {
@@ -35,7 +36,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "dotenv": "^16.4.5",
-  "framer-motion": "^11.0.0",
+    "framer-motion": "^11.18.2",
     "humanize-duration": "^3.33.1",
     "ingest": "^1.0.0",
     "inngest": "^3.40.1",

@@ -34,6 +34,9 @@ const ProofOfReservesSection = dynamic(() => import('@/components/landing/ProofO
 const FeaturesSection = dynamic(() => import('@/components/landing/FeaturesSection'), {
   loading: () => <div className="min-h-screen" />,
 })
+const SwapDemoSection = dynamic(() => import('@/components/landing/SwapDemoSection'), {
+  loading: () => <div className="min-h-screen" />,
+})
 const StatsSection = dynamic(() => import('@/components/landing/StatsSection'), {
   loading: () => <div className="min-h-screen" />,
 })
@@ -109,7 +112,12 @@ export default function LandingPage() {
       <div data-aos="fade-up">
         <FeaturesSection />
       </div>
-      
+
+      {/* Stock-Crypto Swap Demo Section */}
+      <div data-aos="fade-up">
+        <SwapDemoSection />
+      </div>
+
       {/* Challenges Section */}
       <div data-aos="fade-up">
         <ChallengesSection />

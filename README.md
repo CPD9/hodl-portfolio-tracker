@@ -413,8 +413,8 @@ BASE_CONFIG = {
 - ✓ Gas estimation and optimization
 - ✓ Smart contract read operations (DeFi protocols)
 - ✓ Wallet integration with Base network
-- 🔜 Smart contract write operations (trading)
-- 🔜 Token swaps via Base DEXs
+- ✓ Smart contract write operations (trading)
+- ✓ Token swaps via Base DEXs (Uniswap V3)
 
 **API Integrations**:
 - **[Base](https://base.org/)** - Layer 2 blockchain built on Ethereum by Coinbase
@@ -429,6 +429,45 @@ Navigate to `/base` in the app to see:
 3. **Transaction History** - Track all Base network activity
 4. **Portfolio Summary** - Unified view of traditional stocks + Base crypto assets
 5. **DeFi Positions** - Monitor yields from Base protocols
+
+## Swap Setup (Uniswap V3 on Base)
+
+The app supports on-chain token swaps on Base using Uniswap V3. A simple flow is wired in `components/StockCryptoSwap.tsx` (crypto → USDC single-hop), with an advanced modal powered by Coinbase OnchainKit.
+
+### Configure environment
+
+Copy the example and fill in addresses for your target network:
+
+```bash
+cp .env.local.example .env.local
+```
+
+Required variables:
+
+- `NEXT_PUBLIC_UNISWAP_V3_QUOTER_ADDRESS` – Uniswap V3 QuoterV2 address on your chain (used for quotes)
+- `NEXT_PUBLIC_UNISWAP_V3_SWAP_ROUTER_ADDRESS` – Uniswap V3 SwapRouter address on your chain (used to execute swaps)
+- `NEXT_PUBLIC_SLIPPAGE_BPS` – Slippage tolerance in basis points (default 50 = 0.50%)
+- `NEXT_PUBLIC_SWAP_DEADLINE_SEC` – Tx deadline in seconds from now (default 120)
+- `NEXT_PUBLIC_SWAP_CHAIN` – `base` or `baseSepolia` (used for UI hints)
+
+Notes:
+
+- Universal Router addresses are already embedded for Base and Base Sepolia for allowance purposes.
+- Native ETH swaps are not enabled in the simple flow; select WETH instead. The Advanced modal supports broader routes.
+- Ensure your wallet is on Base or Base Sepolia; the UI will prompt otherwise.
+
+### Test on Base Sepolia (recommended)
+
+1) Fund a wallet with Base Sepolia ETH from the faucet.
+2) Obtain compatible test tokens with liquidity (e.g., WETH, USDC) on Base Sepolia.
+3) Set the Quoter and Swap Router addresses for Base Sepolia in `.env.local`.
+4) Run the app and try a small WETH → USDC swap in the Stock ↔ Crypto Swap card.
+
+If quotes don’t appear, check the Quoter address. If swaps are disabled, check the Router address and that you’ve approved the token to the Universal Router.
+
+### Testing guide
+
+See `docs/SWAP_TESTING.md` for a step-by-step Base Sepolia smoke test, including a read-only Quoter script and troubleshooting tips.
 
 ## Hackathon Details
 
