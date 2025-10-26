@@ -158,15 +158,15 @@ export default function ProofOfReserves({ compact = false }: { compact?: boolean
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Total Reserves:</span>
-            <span className="text-gray-100 font-semibold">{formatUSDC(totalActual)}</span>
+            <span className="text-gray-100 font-semibold text-xs md:text-sm truncate ml-2">{formatUSDC(totalActual)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Required:</span>
-            <span className="text-gray-100 font-semibold">{formatUSDC(totalRequired)}</span>
+            <span className="text-gray-100 font-semibold text-xs md:text-sm truncate ml-2">{formatUSDC(totalRequired)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Backing Ratio:</span>
-            <span className={`font-bold ${getStatusColor(overallRatio)}`}>
+            <span className="text-gray-400 whitespace-nowrap">Backing Ratio:</span>
+            <span className={`font-bold text-xs md:text-sm ${getStatusColor(overallRatio)}`}>
               {overallRatio.toFixed(2)}%
             </span>
           </div>
@@ -198,7 +198,6 @@ export default function ProofOfReserves({ compact = false }: { compact?: boolean
           className="gap-2 border-yellow-500/30 hover:border-yellow-500/50"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
         </Button>
       </div>
 
@@ -212,52 +211,52 @@ export default function ProofOfReserves({ compact = false }: { compact?: boolean
               className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/50 hover:border-yellow-500/30 transition-all"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3 min-w-0">
                   {getStatusIcon(reserve.isFullyBacked)}
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-100">{reserve.symbol}</h3>
+                  <div className="min-w-0">
+                    <h3 className="text-base md:text-lg font-bold text-gray-100">{reserve.symbol}</h3>
                     <a
                       href={`https://base-sepolia.blockscout.com/address/${reserve.address}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-gray-500 hover:text-yellow-400 flex items-center gap-1"
+                      className="text-[10px] md:text-xs text-gray-500 hover:text-yellow-400 flex items-center gap-1 truncate"
                     >
                       {reserve.address.slice(0, 6)}...{reserve.address.slice(-4)}
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-3 h-3 flex-shrink-0" />
                     </a>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className={`text-2xl font-bold ${getStatusColor(reserve.ratio)}`}>
+                <div className="text-right flex-shrink-0 ml-2">
+                  <div className={`text-base md:text-2xl font-bold ${getStatusColor(reserve.ratio)}`}>
                     {reserve.ratio.toFixed(2)}%
                   </div>
-                  <div className="text-xs text-gray-500">Backing Ratio</div>
+                  <div className="text-[10px] md:text-xs text-gray-500 whitespace-nowrap">Backing Ratio</div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-700/50">
+              <div className="grid grid-cols-2 gap-2 md:gap-4 mt-4 pt-4 border-t border-gray-700/50">
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Total Supply</div>
-                  <div className="text-sm font-semibold text-gray-200">
+                  <div className="text-[10px] md:text-xs text-gray-500 mb-1">Total Supply</div>
+                  <div className="text-xs md:text-sm font-semibold text-gray-200 truncate">
                     {formatTokens(reserve.totalSupply)} tokens
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Required Reserves</div>
-                  <div className="text-sm font-semibold text-gray-200">
+                  <div className="text-[10px] md:text-xs text-gray-500 mb-1">Required Reserves</div>
+                  <div className="text-xs md:text-sm font-semibold text-gray-200 truncate">
                     {formatUSDC(reserve.requiredReserves)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Actual Reserves</div>
-                  <div className="text-sm font-semibold text-green-400">
+                  <div className="text-[10px] md:text-xs text-gray-500 mb-1">Actual Reserves</div>
+                  <div className="text-xs md:text-sm font-semibold text-green-400 truncate">
                     {formatUSDC(reserve.actualReserves)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Status</div>
+                  <div className="text-[10px] md:text-xs text-gray-500 mb-1">Status</div>
                   <div
-                    className={`text-sm font-semibold ${
+                    className={`text-xs md:text-sm font-semibold ${
                       reserve.isFullyBacked ? 'text-green-400' : 'text-yellow-400'
                     }`}
                   >
