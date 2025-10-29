@@ -139,6 +139,9 @@ Connect with Base-based DeFi protocols for yield farming, liquidity provision, a
 **Real-Time Workflows**  
 Powered by Inngest, automate event-driven processes like price updates, alert scheduling, automated reporting, and AI-driven insights.
 
+**AI automated Trading**
+Ask the chatbot to buy stocks or crypto and it will automate the proceess and you authorize. Eg. "Buy me microsoft stocks"
+
 **AI-Powered Alerts & Summaries**  
 Generate personalized market summaries, daily digests, and earnings report notifications for data-driven decisions.
 
